@@ -15,6 +15,7 @@ import com.colaman.common.base.recyclerview.adapter.BaseRecyclerViewAdapter
 import com.colaman.common.common.manager.ImageManager
 import com.colaman.common.entity.Constants
 import com.colaman.common.common.helper.AnimationHelper
+import com.colaman.common.common.recyclerview.layoutmanager.WrapLinearlayoutManager
 
 /**
  * <pre>
@@ -112,10 +113,10 @@ fun RecyclerView.bindLinearAdapter(
         isVertical: Boolean = true,
         isReverse: Boolean = false
 ) {
-    layoutManager = LinearLayoutManager(
-            context,
-            if (isVertical) LinearLayoutManager.VERTICAL else LinearLayoutManager.HORIZONTAL,
-            isReverse
+    layoutManager = WrapLinearlayoutManager(
+        context,
+        if (isVertical) LinearLayoutManager.VERTICAL else LinearLayoutManager.HORIZONTAL,
+        isReverse
     )
     recyclerViewAdapter.bindRecyclerView(this)
     adapter = recyclerViewAdapter

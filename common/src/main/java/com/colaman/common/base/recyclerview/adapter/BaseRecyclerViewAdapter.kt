@@ -27,8 +27,8 @@ open class BaseRecyclerViewAdapter : ListAdapter<BaseViewHolder> {
     }
 
     constructor(
-            context: Context?,
-            datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
+        context: Context?,
+        datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
     ) : super(context, datas) {
         if (context is LifecycleOwner) {
             bindLifeCycleOwner(context)
@@ -36,7 +36,7 @@ open class BaseRecyclerViewAdapter : ListAdapter<BaseViewHolder> {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position)?.layoutRes ?: -1
+        return getItem(position)?.initLayouRes() ?: -1
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -53,14 +53,15 @@ open class BaseRecyclerViewAdapter : ListAdapter<BaseViewHolder> {
     open fun getItem(position: Int) = viewmodels[position]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
+        val binding =
+            DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
         val holder = BaseViewHolder(
-                context = context,
-                view = binding.root,
-                binding = binding,
-                lifecycleOwner = lifecycleOwner,
-                itemType = viewType,
-                viewGroup = parent
+            context = context,
+            view = binding.root,
+            binding = binding,
+            lifecycleOwner = lifecycleOwner,
+            itemType = viewType,
+            viewGroup = parent
         )
         /**
          * 注册点击监听
@@ -108,7 +109,8 @@ open class BaseRecyclerViewAdapter : ListAdapter<BaseViewHolder> {
      */
     protected fun catchRecyclerViewScroll() {
 
-        recyclerView?.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+        recyclerView?.addOnChildAttachStateChangeListener(object :
+            RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
                 val viewmodel = view.tag
                 if (viewmodel != null && viewmodel is RecyclerItemViewModel<*, *>) {

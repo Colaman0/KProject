@@ -40,7 +40,7 @@ import java.util.*
 
 class FeaturesRecyclerViewAdapter(
     context: Context?,
-    datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?>
+    datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
 ) :
     BaseRecyclerViewAdapter(context, datas) {
     val oldDatas = mutableListOf<RecyclerItemViewModel<out ViewDataBinding, out Any>?>()
@@ -105,15 +105,15 @@ class FeaturesRecyclerViewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (disableLoadmore && position == itemCount - 1) {
-            return loadMoreItemViewModel!!.layoutRes
+        if (disableLoadmore && getAdapterSize() > 0 && position == itemCount - 1) {
+            return loadMoreItemViewModel!!.initLayouRes()
         }
         return super.getItemViewType(position)
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
-            if (disableLoadmore && position == itemCount - 1) {
+            if (disableLoadmore && getAdapterSize() > 0 && position == itemCount - 1) {
                 holder.bindViewModel(loadMoreItemViewModel!!, position)
             } else {
                 super.onBindViewHolder(holder, position)
@@ -132,6 +132,7 @@ class FeaturesRecyclerViewAdapter(
          */
         if (getDatas().size == 0) {
             notifyDataSetChanged()
+
             return
         }
         /**
@@ -175,12 +176,12 @@ class FeaturesRecyclerViewAdapter(
      */
     fun switchLoadMore(disable: Boolean, refreshNow: Boolean = false) {
         if (disableLoadmore != disable) {
+            disableLoadmore = disable
             if (disable) {
                 loadMoreItemViewModel?.state = LOADMORE_STATE.NOTHING
             }
             if (refreshNow) {
                 recyclerView?.post {
-                    disableLoadmore = disable
                     notifyItemChanged(itemCount)
                 }
             }

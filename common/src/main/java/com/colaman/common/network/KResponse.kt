@@ -27,7 +27,6 @@ class KResponse<T>(var datas: T) : IKResponse<T> {
 
     override fun getData(): T {
         return datas
-
     }
 
     override fun getMessage(): String {

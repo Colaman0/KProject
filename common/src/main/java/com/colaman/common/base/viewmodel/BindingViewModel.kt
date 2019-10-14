@@ -1,7 +1,6 @@
 package com.colaman.common.base.viewmodel
 
 import androidx.databinding.ViewDataBinding
-import com.colaman.common.BR
 
 
 /**
@@ -40,6 +39,7 @@ open class BindingViewModel<B : ViewDataBinding> : BaseViewModel() {
     /**
      * xml中如果不是用viewmodel作为name来绑定viewmodel，则需要重写这个方法，或者手动调用setVariable来设置数据
      */
-    fun getDefaultVariableId() = BR.viewmodel
+    fun getDefaultVariableId() = 1
+
 
 }

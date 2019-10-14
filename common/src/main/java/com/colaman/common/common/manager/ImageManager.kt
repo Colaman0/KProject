@@ -1,7 +1,7 @@
 package com.colaman.common.common.manager
 
 import com.colaman.common.common.helper.GlideImageLoader
-import com.colaman.common.imp.IImageLoad
+import com.colaman.common.impl.IImageLoad
 
 /**
  * <pre>

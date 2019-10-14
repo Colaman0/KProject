@@ -12,7 +12,9 @@ import com.colaman.common.databinding.ItemLoadmoreBinding
  *     desc   : 默认的loadmoreitem
  * </pre>
  */
-open class CommonLoadMoreVModel(var text: String = "") : BaseLoadmoreViewModel<ItemLoadmoreBinding, Any>() {
+open class CommonLoadMoreVModel(var text: String = "") :
+    BaseLoadmoreViewModel<ItemLoadmoreBinding, Any>() {
+    override fun initLayouRes() = R.layout.item_loadmore
 
 
     override fun onStateChange(state: LOADMORE_STATE) {
@@ -23,8 +25,7 @@ open class CommonLoadMoreVModel(var text: String = "") : BaseLoadmoreViewModel<I
         }
     }
 
-    override val layoutRes: Int
-        get() = R.layout.item_loadmore
+    override fun isSame(data: Any) = false
 
     override
     fun onBindView(holder: BaseViewHolder?) {

@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.colaman.common.imp.IRxData
-import com.colaman.common.imp.IStatus
+import com.colaman.common.impl.IStatus
 import io.reactivex.Observable
 
 /**

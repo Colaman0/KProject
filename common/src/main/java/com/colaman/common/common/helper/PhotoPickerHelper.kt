@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import com.colaman.common.common.expand.toActivity
 import com.colaman.common.common.manager.PermissionManager
 import com.colaman.common.entity.Constants
 import com.yanzhenjie.permission.Permission
@@ -30,7 +29,7 @@ object PhotoPickerHelper {
             PermissionManager.getPermissionHelper().requestPermission(context, Permission.Group.CAMERA, Permission.Group.STORAGE) {
                 if (it) {
                     // 调用matisse，传入参数
-                    showPhotoPicker(context.toActivity(), maxNum, photoType, canCapture, requestCode)
+                    showPhotoPicker(context as Activity, maxNum, photoType, canCapture, requestCode)
                 } else {
                     Toast.makeText(context, " we can't user the camera without permission", Toast.LENGTH_SHORT).show()
                 }

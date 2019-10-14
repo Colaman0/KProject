@@ -1,5 +1,7 @@
 package com.colaman.common.imp
 
+import com.colaman.common.impl.IStatus
+
 /**
  * <pre>
  *     author : kyle

@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import com.colaman.common.base.ImageLoaderConfig;
-import com.colaman.common.entity.ImageLoaderConfig;
 
 import io.reactivex.Observable;
 
@@ -23,10 +21,6 @@ public interface IImageLoad {
     void loadCircleImage(@NonNull Context context, String url, @NonNull ImageView imageView);
 
     Observable<Bitmap> downLoadBitmap(Context context, final String source);
-
-    void loadImage(@NonNull Context context, String url, @NonNull ImageView imageView, ImageLoaderConfig config);
-
-    void loadImage(Context context, String url, ImageView imageView, ImageLoaderConfig config);
 
     void loadDrawable(@NonNull Context context, @NonNull ImageView imageView, @DrawableRes int drawableRes);
 

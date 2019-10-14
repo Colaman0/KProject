@@ -12,7 +12,8 @@ import com.colaman.common.impl.OnItemClickListener
  * Function : recyclerview的itemviewmodel ,继承自[BindingViewModel],可以用databinding
  *
  */
-open abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : BindingViewModel<B>(), IDiffComparator<VM>,
+open abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : BindingViewModel<B>(),
+    IDiffComparator<VM>,
     OnItemClickListener {
     /**
      * viewmodel默认是显示的，特殊情况可以设置成false，让viewmodel不可见
@@ -40,10 +41,7 @@ open abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : Bindi
         binding?.root?.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    /**
-     *  需要和泛型B的binding相同
-     */
-    abstract val layoutRes: Int
+    abstract fun initLayouRes(): Int
 
     /**
      * 具体view的操作代码写在这个方法内

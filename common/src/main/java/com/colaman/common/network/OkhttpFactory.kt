@@ -2,6 +2,7 @@ package com.colaman.common.common.network
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 /**
@@ -16,8 +17,11 @@ object OkhttpFactory {
     private const val mDefaultReadTimeOut = 10L
     private const val mDefaultWriteTimeOut = 10L
     private const val mDefaultRetryOnConnectionFailure = true
-    private val mDefaultInterceptors = mutableListOf<Interceptor>()
-    private val mDefaultNetworkInterceptors= mutableListOf<Interceptor>()
+    private val mDefaultInterceptors = mutableListOf<Interceptor>(
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY },
+
+    )
+    private val mDefaultNetworkInterceptors = mutableListOf<Interceptor>()
 
     /**
      * 获取一个okhttpclient
@@ -38,7 +42,12 @@ object OkhttpFactory {
         interceptor: MutableList<Interceptor> = mDefaultInterceptors,
         networkInterceptor: MutableList<Interceptor> = mDefaultNetworkInterceptors
     ): OkHttpClient {
-        val builder = getHttpClientBuilder(connectTimeOut, writeTimeOut, readTimeOut, retryOnConnectionFailure)
+        val builder = getHttpClientBuilder(
+            connectTimeOut,
+            writeTimeOut,
+            readTimeOut,
+            retryOnConnectionFailure
+        )
         /**
          * 添加应用拦截器
          */
@@ -99,4 +108,5 @@ object OkhttpFactory {
         interceptors.addAll(mDefaultNetworkInterceptors)
         return interceptors
     }
+
 }

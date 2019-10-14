@@ -149,14 +149,6 @@ public class GlideImageLoader implements IImageLoad {
     }
 
     @Override
-    public void loadImage(Context context, String url, ImageView imageView, ImageLoaderConfig config) {
-        if (imageView == null || context == null) {
-            return;
-        }
-        loadImage(context, url, imageView, getOptionsByConfig(config));
-    }
-
-    @Override
     public void loadDrawable(Context context, ImageView imageView, int drawableRes) {
         if (imageView == null || context == null) {
             return;

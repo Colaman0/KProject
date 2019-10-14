@@ -42,7 +42,7 @@ abstract class BaseActivity<B : ViewDataBinding> : SupportActivity(), IStatus {
     var mImmersionBar: ImmersionBar? = null
     private val activityResults = mutableListOf<activityResult>()
     var statusLayout: StatusLayout? = null
-    protected var binding: B? = null
+    lateinit var binding: B
 
 
     val context: Context
@@ -75,11 +75,11 @@ abstract class BaseActivity<B : ViewDataBinding> : SupportActivity(), IStatus {
      * @param rootView View activity的根view
      */
     fun initBindind(rootView: View) {
-        binding = if (rootView is StatusLayout) {
+        binding = (if (rootView is StatusLayout) {
             DataBindingUtil.bind(rootView.getDefaultContentView())
         } else {
             DataBindingUtil.bind(rootView)
-        }
+        })!!
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
