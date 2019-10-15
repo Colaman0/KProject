@@ -1,6 +1,7 @@
 package com.colaman.common.common.network
 
 import com.colaman.common.imp.IKResponse
+import retrofit2.Response
 
 /**
  * <pre>

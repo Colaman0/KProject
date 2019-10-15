@@ -1,6 +1,5 @@
 package com.colaman.common.common.network
 
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import retrofit2.Converter
@@ -18,14 +17,14 @@ object RetrofitFactory {
     /**
      * 默认的baseurl
      */
-    const val baseurl: String = ""
+    const val baseurl: String = "https://www.v2ex.com/"
 
     private val mGsonCallAdapter by lazy {
         GsonConverterFactory.create()
     }
 
     private val mRxjavaAdapter by lazy {
-        RxJava2CallAdapterFactory.create()
+        com.colaman.common.network.rxjava2.RxJava2CallAdapterFactory.create()
     }
 
     /**

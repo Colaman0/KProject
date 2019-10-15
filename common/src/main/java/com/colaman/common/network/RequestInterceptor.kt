@@ -20,6 +20,5 @@ class RequestInterceptor : Interceptor {
 
 
 object RequestManager {
-    private val rquestsMap = HashMap()
 
 }

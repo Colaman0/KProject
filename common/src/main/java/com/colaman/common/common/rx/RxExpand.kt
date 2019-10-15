@@ -1,5 +1,6 @@
 package com.colaman.common.common.rx
 
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.LogUtils
@@ -7,6 +8,7 @@ import com.btcpool.common.http.impl.IExceptionAdapter
 import com.colaman.common.base.recyclerview.PageHelper
 import com.colaman.common.common.network.KErrorExceptionFactory
 import com.colaman.common.common.param.KError
+import com.colaman.common.entity.HttpModel
 import com.colaman.common.entity.PageDTO
 import com.colaman.common.imp.IKResponse
 import com.colaman.common.imp.IRxConsumer
@@ -15,6 +17,8 @@ import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import okhttp3.Request
+import retrofit2.Response
 
 /**
  * <pre>
@@ -55,6 +59,17 @@ val <T> Observable<T>.kErrorAdapters by lazy {
  */
 val <T> Observable<T>.rxConsumers by lazy {
     return@lazy mutableListOf<IRxConsumer<T>>()
+}
+
+/**
+ * 拓展出一个属性出来，用来添加网络请求request
+ */
+val <T> Observable<T>.httpRequest by lazy {
+    return@lazy HttpModel()
+}
+
+fun <T> Observable<T>.initHttp(request: Request?) {
+    httpRequest.request = request
 }
 
 /**
@@ -156,6 +171,7 @@ fun <T> Observable<T>.doOnKError(callback: (error: KError) -> Unit): Observable<
  */
 fun <T> Observable<T>.fullSubscribe() =
     doFinally {
+        LogUtils.d(httpRequest.request)
         rxConsumers.forEach {
             it.onFinally()
         }

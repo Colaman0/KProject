@@ -1,9 +1,12 @@
 package com.colaman.kproject
 
 import android.view.View
+import com.blankj.utilcode.util.LogUtils
 import com.colaman.common.base.BaseActivity
 import com.colaman.common.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
 import com.colaman.common.common.expand.bindLinearAdapter
+import com.colaman.common.common.rx.fullSubscribe
+import com.colaman.kproject.api.Api
 import com.colaman.kproject.databinding.ActivityRecyclerViewBinding
 import com.colaman.kproject.viewmodel.ItemTextViewmodel
 
@@ -16,6 +19,11 @@ class RecyclerViewActivity : BaseActivity<ActivityRecyclerViewBinding>() {
 
     override fun initView() {
         binding.recyclerview.bindLinearAdapter(this, adapter)
+        Api.getTab()
+            .doOnNext {
+                LogUtils.d(it)
+            }
+            .fullSubscribe()
     }
 
 

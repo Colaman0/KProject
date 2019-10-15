@@ -18,7 +18,7 @@ object OkhttpFactory {
     private const val mDefaultWriteTimeOut = 10L
     private const val mDefaultRetryOnConnectionFailure = true
     private val mDefaultInterceptors = mutableListOf<Interceptor>(
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY },
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
     )
     private val mDefaultNetworkInterceptors = mutableListOf<Interceptor>()
