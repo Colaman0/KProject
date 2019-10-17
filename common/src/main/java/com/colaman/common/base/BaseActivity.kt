@@ -11,17 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.colaman.common.R
+import com.colaman.common.entity.Constants
 import com.colaman.common.impl.IStatus
 import com.colaman.statuslayout.StatusLayout
 import com.gyf.barlibrary.ImmersionBar
 import me.yokeyword.fragmentation.SupportActivity
+import kotlin.system.exitProcess
 
 
 /**
@@ -36,7 +41,7 @@ import me.yokeyword.fragmentation.SupportActivity
  */
 typealias activityResult = (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
 
-abstract class BaseActivity<B : ViewDataBinding> : SupportActivity(), IStatus {
+abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus {
     // 状态栏颜色
     private val mDefaultStatusBarColorRes = R.color.white
     var mImmersionBar: ImmersionBar? = null
@@ -209,6 +214,33 @@ abstract class BaseActivity<B : ViewDataBinding> : SupportActivity(), IStatus {
         activityResults.forEach {
             it.invoke(requestCode, resultCode, data)
         }
+    }
+
+    var lastClick = 0L
+    override fun onBackPressed() {
+        /**
+         * 当app只有一个activity的时候，触发双击退出应用, 多于一个的时候正常
+         */
+        if (ActivityUtils.getActivityList().size <= 1) {
+            val currentTimestamp = System.currentTimeMillis()
+            if (currentTimestamp - lastClick < Constants.DOUBLE_CLICK_TIME) {
+                finish()
+                exitProcess(0)
+            } else {
+                ToastUtils.showShort("再按一次退出应用")
+                lastClick = currentTimestamp
+            }
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+
+    /**
+     * 结束activity
+     */
+    fun back(view: View?) {
+        finish()
     }
 
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jakewharton.retrofit2.adapter.rxjava2;
+package com.colaman.common.network.rxjava2;
 
 import retrofit2.Response;
 

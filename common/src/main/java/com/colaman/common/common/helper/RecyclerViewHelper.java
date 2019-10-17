@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.colaman.common.common.recyclerview.SimpleDecortaion;
+import com.colaman.common.common.recyclerview.SimpleDecoration;
 
 
 /**
@@ -122,7 +122,7 @@ public class RecyclerViewHelper {
      * @return
      */
     public static RecyclerView.ItemDecoration getLinearlayoutItemDecoration(Context context, int orientation) {
-        return new SimpleDecortaion();
+        return new SimpleDecoration(context, orientation);
     }
 
     /**

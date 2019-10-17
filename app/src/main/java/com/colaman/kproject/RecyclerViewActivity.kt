@@ -27,7 +27,13 @@ class RecyclerViewActivity : BaseActivity<ActivityRecyclerViewBinding>() {
             .doOnNext {
                 LogUtils.d(it)
             }
-            .bindStatusImpl(CommonDialog(this@RecyclerViewActivity))
+            .bindStatusImpl(
+                CommonDialog(this@RecyclerViewActivity).setBuilder(
+                    CommonDialog.CommonDialogBuilder(
+                        textColor = R.color.colorAccent, textSize = 24, progressSize = 40
+                    )
+                )
+            )
             .fullSubscribe()
     }
 

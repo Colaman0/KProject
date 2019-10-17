@@ -13,12 +13,13 @@ import com.colaman.common.BR
 import com.colaman.common.R
 import com.colaman.common.databinding.DialogCommonBinding
 import com.colaman.common.impl.IStatus
+import kotlinx.android.synthetic.main.dialog_common.*
 
 /**
  *
  *     author : kyle
  *     time   : 2019/10/16
- *     desc   : 通用dialog
+ *     desc   : 通用dialog,实现了IStatus接口
  *
  */
 class CommonDialog(context: Context) : Dialog(context, R.style.CommonDialog), IStatus {
@@ -30,12 +31,13 @@ class CommonDialog(context: Context) : Dialog(context, R.style.CommonDialog), IS
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_common, null)
         setContentView(view)
         mBinding = DataBindingUtil.bind(view)!!
-        mBinding.setVariable(BR.dialog, builder ?: getDefaultBuilder())
+        builder = builder ?: getDefaultBuilder()
+        mBinding.setVariable(BR.dialog, builder)
+        progress_bar.setProgressColor(ContextCompat.getColor(context, builder!!.progressColor))
     }
 
     fun setBuilder(builder: CommonDialogBuilder): CommonDialog {
         this.builder = builder
-        mBinding.setVariable(BR.dialog, builder)
         return this
     }
 

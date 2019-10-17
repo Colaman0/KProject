@@ -4,6 +4,7 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
         <variable
             name="dialog"
             type="com.colaman.common.view.CommonDialog.CommonDialogBuilder" />
@@ -18,15 +19,19 @@
         android:padding="16dp">
 
         <com.colaman.common.view.ColorProgressBar
+            android:id="@+id/progress_bar"
             style="@style/Widget.AppCompat.ProgressBar"
+            bindSize="@{dialog.progressSize}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:progress_color="@color/white" />
 
         <TextView
+            bindTextSize="@{dialog.textSize}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{dialog.text}" />
+            android:text="@{dialog.text}"
+            android:textColor="@{ContextCompat.getColor(context,dialog.textColor)}" />
 
     </LinearLayout>
 </layout>

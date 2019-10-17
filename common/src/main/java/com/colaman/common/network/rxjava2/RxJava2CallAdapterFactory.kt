@@ -65,7 +65,7 @@ class RxJava2CallAdapterFactory private constructor(private val scheduler: Sched
         val rawType = CallAdapter.Factory.getRawType(returnType)
 
         if (rawType == Completable::class.java) {
-            // Completable is not parameterized (which is what the rest of this method deals with) so it
+            // Complextable is not parameterized (which is what the rest of this method deals with) so it
             // can only be created with a single configuration.
             return RxJava2CallAdapter(
                 Void::class.java,

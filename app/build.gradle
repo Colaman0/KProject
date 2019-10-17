@@ -3,12 +3,32 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
+apply from: "../config.gradle"
 
+def androidRoot = rootProject.ext.android
+def libs = rootProject.ext.dependencies
 
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    compileSdkVersion androidRoot.compileSdkVersion
+    defaultConfig {
+        applicationId androidRoot.applicationId
+        minSdkVersion androidRoot.minSdkVersion
+        targetSdkVersion androidRoot.targetSdkVersion
+        versionCode androidRoot.versionCode
+        versionName androidRoot.versionName
+        multiDexEnabled true
+        proguardFiles androidRoot.proguardFile
+        signingConfig signingConfigs.debug
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        dexOptions {
+            jumboMode = true
+        }
+    }
+
     defaultConfig {
         applicationId "com.colaman.kproject"
         minSdkVersion 21
@@ -16,11 +36,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

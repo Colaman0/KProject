@@ -46,60 +46,6 @@ fun View.singleClick(time: Int = Constants.View.SINGLE_CLICK_TIME, action: () ->
 }
 
 /**
- * 给view加上点击事件
- * @receiver View
- * @param action Function0<Unit>
- */
-@BindingAdapter("onclick")
-fun View.click(action: () -> Unit) {
-    setOnClickListener {
-        action.invoke()
-    }
-}
-
-/**
- * 监听EditText内容变化
- *
- * @param action [onTextChangeListener]接口，在xml中只需要绑定viewmodel中对应一个方法就行了，需要有一个string类型参数
- */
-@BindingAdapter("textchange")
-fun EditText.textChange(action: onTextChangeListener) {
-    addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-            action.onTextChange(s.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        }
-    })
-}
-
-/**
- * 加载网络图片拓展方法
- * @receiver ImageView
- * @param url String 网络url
- */
-@BindingAdapter("loadUrl")
-fun ImageView.loadUrl(url: String) {
-    ImageManager.getImageLoader().loadImage(context, url, this)
-}
-
-
-/**
- * 加载圆形网络图片
- * @receiver ImageView
- * @param url String 网络url
- */
-@BindingAdapter("loadCircleUrl")
-fun ImageView.loadCircleUrl(url: String) {
-    ImageManager.getImageLoader().loadCircleImage(context, url, this)
-}
-
-
-/**
  * 绑定[LinearLayoutManager]
  *
  * @param context
