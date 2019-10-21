@@ -2,13 +2,12 @@ package com.colaman.kproject
 
 import android.view.View
 import com.blankj.utilcode.util.LogUtils
-import com.colaman.common.base.BaseActivity
-import com.colaman.common.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
-import com.colaman.common.common.expand.bindLinearAdapter
-import com.colaman.common.common.rx.bindStatusImpl
-import com.colaman.common.common.rx.fullSubscribe
-import com.colaman.common.impl.IStatus
-import com.colaman.common.view.CommonDialog
+import com.colaman.kyle.base.BaseActivity
+import com.colaman.kyle.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.expand.bindLinearAdapter
+import com.colaman.kyle.common.rx.bindStatusImpl
+import com.colaman.kyle.common.rx.fullSubscribe
+import com.colaman.kyle.view.CommonDialog
 import com.colaman.kproject.api.Api
 import com.colaman.kproject.databinding.ActivityRecyclerViewBinding
 import com.colaman.kproject.viewmodel.ItemTextViewmodel

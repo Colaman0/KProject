@@ -1,2 +1,2 @@
 include ':app', ':common'
-rootProject.name='KProject'
+rootProject.name='kyle'

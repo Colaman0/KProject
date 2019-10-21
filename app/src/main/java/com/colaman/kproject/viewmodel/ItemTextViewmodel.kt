@@ -1,7 +1,7 @@
 package com.colaman.kproject.viewmodel
 
-import com.colaman.common.base.recyclerview.RecyclerItemViewModel
-import com.colaman.common.base.recyclerview.adapter.BaseViewHolder
+import com.colaman.kyle.base.recyclerview.RecyclerItemViewModel
+import com.colaman.kyle.base.recyclerview.adapter.BaseViewHolder
 import com.colaman.kproject.R
 import com.colaman.kproject.databinding.ItemTextBinding
 

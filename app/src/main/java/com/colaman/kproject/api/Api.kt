@@ -1,8 +1,7 @@
 package com.colaman.kproject.api
 
-import android.database.Observable
-import com.colaman.common.common.network.BaseApi
-import com.colaman.common.common.rx.switchApiThread
+import com.colaman.kyle.common.network.BaseApi
+import com.colaman.kyle.common.rx.switchApiThread
 
 /**
  *
