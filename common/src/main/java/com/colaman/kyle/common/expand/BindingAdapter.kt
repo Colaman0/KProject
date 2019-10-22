@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.colaman.kyle.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
 import com.colaman.kyle.common.manager.ImageManager
 
 /**

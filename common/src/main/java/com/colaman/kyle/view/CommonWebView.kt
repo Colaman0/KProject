@@ -11,7 +11,6 @@ import com.blankj.utilcode.util.GsonUtils
 import com.colaman.kyle.base.BaseActivity
 import com.colaman.kyle.databinding.LayoutCommonWebviewBinding
 import com.colaman.kyle.impl.IBackpressInterceptor
-import com.google.gson.Gson
 import com.tencent.smtt.export.external.interfaces.SslError
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler
 import com.tencent.smtt.sdk.WebChromeClient

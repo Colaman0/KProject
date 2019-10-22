@@ -1,4 +1,4 @@
-package com.colaman.kyle.base.recyclerview.adapter
+package com.colaman.kyle.common.recyclerview.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.colaman.kyle.base.recyclerview.RecyclerItemViewModel
+import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
+import com.colaman.kyle.base.recyclerview.adapter.BaseRecyclerViewAdapter
+import com.colaman.kyle.base.recyclerview.adapter.BaseViewHolder
 import com.colaman.kyle.base.viewmodel.BaseLoadmoreViewModel
 import com.colaman.kyle.base.viewmodel.CommonLoadMoreVModel
 import com.colaman.kyle.common.rx.binLife

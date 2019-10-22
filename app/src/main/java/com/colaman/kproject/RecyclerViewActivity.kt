@@ -3,7 +3,7 @@ package com.colaman.kproject
 import android.view.View
 import com.blankj.utilcode.util.LogUtils
 import com.colaman.kyle.base.BaseActivity
-import com.colaman.kyle.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
 import com.colaman.kyle.common.expand.bindLinearAdapter
 import com.colaman.kyle.common.rx.bindStatusImpl
 import com.colaman.kyle.common.rx.fullSubscribe
