@@ -4,9 +4,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.colaman.kyle.base.recyclerview.RecyclerItemViewModel
-import com.colaman.kyle.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
-import com.colaman.kyle.base.recyclerview.adapter.LOADMORE_STATE
+import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
+import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.recyclerview.adapter.LOADMORE_STATE
 
 /**
  * <pre>

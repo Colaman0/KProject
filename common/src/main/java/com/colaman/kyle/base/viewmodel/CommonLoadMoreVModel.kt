@@ -1,7 +1,7 @@
 package com.colaman.kyle.base.viewmodel
 
 import com.colaman.kyle.base.recyclerview.adapter.BaseViewHolder
-import com.colaman.kyle.base.recyclerview.adapter.LOADMORE_STATE
+import com.colaman.kyle.common.recyclerview.adapter.LOADMORE_STATE
 import com.colaman.kyle.R
 import com.colaman.kyle.databinding.ItemLoadmoreBinding
 

@@ -1,0 +1,36 @@
+### 项目代码结构使用说明
+---
+### WebView
+`CommonWebView`  带有下拉刷新和进度条的webview
+##### Method:
+> * load(url: String) 加载网站
+> * bindActivity(activity: BaseActivity<*>) 绑定一个activity，用于监听返回事件
+> * callJs(builder: JSBuilder) 调用js方法，传入一个JSBuilder，
+> * JSBuilder 构建JS方法的 Builder类
+
+---
+# Recyclerivew 相关
+### FeaturesRecyclerViewAdapter
+> #### `FeaturesRecyclerViewAdapter`封装了一些常见的adapter方法,使用的时候直接add ItemViewModel再刷新。可以调用`RecyclerView.bindLinearAdapter` ` RecyclerView.bindGridAdapter`快速初始化
+
+#### Method:
+> * `add` `addAll` `remove` `clear` 添加Itemviewmodel
+> * `bindRecyclerView` 绑定recyclerview，这个方法必须调用
+> * `bindLifeCycleOwner` 绑定生命周期，用于给itemviewmodel监听生命周期，必须调用
+> * `diffNotifydatasetchanged`  diffutils的刷新，不用其他的刷新方法
+> * `switchLoadMore(disable: Boolean, refreshNow: Boolean = false)`  开启/关闭loadmore，默认是关闭，一般在添加/删除数据后调用，然后diffNotifydatasetchanged刷新数据
+> * `setLoadMoreItem` 设置loadmore的样式
+> * `addLoadmoreListener` 添加loadmore的监听器
+> * `addFooter` `addHeader`添加头部view和底部view，会跟着recyclerivew滑动，只是`add`或者`remove`的时候不影响header footer
+
+
+### RecyclerItemViewModel
+> #### 配合`FeaturesRecyclerViewAdapter`使用，把recyclerview的每个item都拆分成一个`RecyclerItemViewModel` ，另外用到databinding的时候，xml里用`viewmodel`去作为当前itemviewmodel的别称，如果要用其他别称，重写`getDefaultVariableId`方法返回BR值
+### Method:
+> * `initLayouRes` 重写返回xml资源值
+> * `onBindView(holder: BaseViewHolder?)`  具体的操作view代码写在这个方法内，`BaseViewHolder`封装了一些基础的方法
+> * `refreshBindingData` 用于databingding绑定对象到view上
+> * `onViewAttached` `onViewDetached` 判断当前itemviewmodel在屏幕上是否可见
+> * `onItemClick` item点击的回调，范围是整个item
+> * `isSame` 配合泛型中的VM使用，刷新adapter用到了diffutils，这个方法判断两个itemviewmodel是否相同，可以用`entity`/`itemviewmodel`本身来作为判断条件
+

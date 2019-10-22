@@ -1,6 +1,6 @@
 package com.colaman.kyle.base.recyclerview
 
-import com.colaman.kyle.base.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
 
 /**
  * <pre>

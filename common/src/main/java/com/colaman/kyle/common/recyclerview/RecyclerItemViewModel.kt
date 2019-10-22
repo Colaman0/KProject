@@ -1,4 +1,4 @@
-package com.colaman.kyle.base.recyclerview
+package com.colaman.kyle.common.recyclerview
 
 import android.view.View
 import androidx.databinding.ViewDataBinding

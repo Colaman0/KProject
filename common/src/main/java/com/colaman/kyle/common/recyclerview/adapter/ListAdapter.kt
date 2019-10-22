@@ -3,7 +3,7 @@ package com.colaman.kyle.base.recyclerview.adapter
 import android.content.Context
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.colaman.kyle.base.recyclerview.RecyclerItemViewModel
+import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
 
 /**
  * Create by kyle on 2019/1/9
