@@ -4,6 +4,7 @@ import com.btcpool.common.http.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
 import com.google.gson.JsonIOException
 import com.google.gson.JsonParseException
+import kotlinx.serialization.json.JsonUnknownKeyException
 import org.json.JSONException
 
 /**
@@ -17,7 +18,8 @@ class GsonExceptionAdapter : IExceptionAdapter<KError> {
     override fun isCreate(throwable: Throwable): Boolean {
         return throwable is JsonParseException ||
                 throwable is JsonIOException ||
-                throwable is JSONException
+                throwable is JSONException ||
+                throwable is JsonUnknownKeyException
     }
 
     override fun createException(throwable: Throwable) = KError(throwable, "Json解析错误")
