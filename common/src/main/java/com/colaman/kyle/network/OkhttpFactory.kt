@@ -1,5 +1,6 @@
 package com.colaman.kyle.common.network
 
+import com.colaman.kyle.network.toUnsafe
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -83,6 +84,7 @@ object OkhttpFactory {
             .readTimeout(readTimeOut, TimeUnit.SECONDS)
             .writeTimeout(writeTimeOut, TimeUnit.SECONDS)
             .retryOnConnectionFailure(retryOnConnectionFailure)
+            .toUnsafe()
 
 
     /**
