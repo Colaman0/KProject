@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.btcpool.common.http.impl.IExceptionAdapter
 import com.colaman.kyle.base.recyclerview.PageHelper
 import com.colaman.kyle.common.network.KErrorExceptionFactory
+import com.colaman.kyle.common.network.KResponse
 import com.colaman.kyle.common.param.KError
 import com.colaman.kyle.entity.HttpModel
 import com.colaman.kyle.entity.PageDTO
@@ -169,7 +170,6 @@ fun <T> Observable<T>.doOnKError(callback: (error: KError) -> Unit): Observable<
  */
 fun <T> Observable<T>.fullSubscribe() =
     doFinally {
-        LogUtils.d(httpRequest.request)
         rxConsumers.forEach {
             it.onFinally()
         }
@@ -206,7 +206,6 @@ fun <T> Observable<T>.analysisExcetpion(throwable: Throwable): KError {
         exceptionFactory.addExceptionCreator(it)
     }
     val error = exceptionFactory.analysisExcetpion(throwable = throwable)
-    LogUtils.e("Type = ${error.errorType} ->  messsage =  ${error.kMessage}")
     kErrorCallback.callError(error)
     return error
 }
@@ -271,7 +270,6 @@ fun <T> Observable<PageDTO<T>>.handlePage(pageHelper: PageHelper): Observable<T>
         }
     }
 }
-
 
 /**
  * 包裹一个KError的lamda回调，因为拓展属性没法像正常属性一样延迟赋值lamda函数，所以添加这个类来处理

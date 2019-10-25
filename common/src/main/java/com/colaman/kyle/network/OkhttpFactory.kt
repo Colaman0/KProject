@@ -1,6 +1,5 @@
-package com.colaman.kyle.common.network
+package com.colaman.kyle.network
 
-import com.colaman.kyle.network.toUnsafe
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

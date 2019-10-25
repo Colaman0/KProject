@@ -4,6 +4,7 @@ import android.content.Entity
 import com.colaman.kproject.databinding.ActivityMainBinding
 import com.colaman.kproject.entity.PersonEntity
 import com.colaman.kyle.base.BaseActivity
+import com.colaman.kyle.common.helper.PhotoPickerHelper
 import com.colaman.kyle.view.CommonWebView
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -13,12 +14,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.webView.load("https://bbs.hupu.com/bxj")
             .bindActivity(this)
 
-        binding.webView.callJs(CommonWebView.JSBuilder()
-            .method("testJs")
-            .addParam(1)
-            .addParam(2.345)
-            .addParam("test")
-            .addParam(PersonEntity())
+        binding.webView.callJs(
+            CommonWebView.JSBuilder()
+                .method("testJs")
+                .addParam(1)
+                .addParam(2.345)
+                .addParam("test")
+                .addParam(PersonEntity())
         )
+        PhotoPickerHelper.pickPhoto(this, 1, canCapture = true)
     }
 }

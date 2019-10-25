@@ -1,7 +1,7 @@
 package com.colaman.kproject.api
 
-import com.colaman.common.common.network.KResponse
 import com.colaman.kproject.model.V2Entity
+import com.colaman.kyle.common.network.KResponse
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.GET

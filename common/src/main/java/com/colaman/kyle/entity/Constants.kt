@@ -10,7 +10,8 @@ object Constants {
     val DOUBLE_CLICK_TIME = 500
 
     object PATH {
-        const val FILE_PROVIDER_PATH = BuildConfig.APPLICATION_ID + ".fileprovider"
+        // fileprovider完整名
+        const val FILE_PROVIDER_PATH = "com.colaman.kyle.fileprovider"
     }
 
 

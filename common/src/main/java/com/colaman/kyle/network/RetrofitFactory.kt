@@ -1,5 +1,6 @@
 package com.colaman.kyle.common.network
 
+import com.colaman.kyle.network.OkhttpFactory
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import retrofit2.Converter

@@ -1,6 +1,6 @@
 package com.colaman.kproject.api
 
-import com.colaman.kyle.common.network.BaseApi
+import com.colaman.kyle.network.BaseApi
 import com.colaman.kyle.common.rx.switchApiThread
 
 /**
@@ -13,6 +13,6 @@ import com.colaman.kyle.common.rx.switchApiThread
 object Api : BaseApi<IApi>() {
     override fun getApiClass() = IApi::class.java
 
-    fun getTab() = getApi().getTab("apple").switchApiThread()
+    fun getTab() = getApi().getV2Json().switchApiThread()
 
 }

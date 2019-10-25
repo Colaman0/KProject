@@ -16,6 +16,10 @@
 package com.colaman.common.network.rxjava2;
 
 
+import com.colaman.kyle.network.rxjava2.BodyObservable;
+import com.colaman.kyle.network.rxjava2.CallObservable;
+import com.colaman.kyle.network.rxjava2.ResultObservable;
+
 import java.lang.reflect.Type;
 
 import io.reactivex.BackpressureStrategy;

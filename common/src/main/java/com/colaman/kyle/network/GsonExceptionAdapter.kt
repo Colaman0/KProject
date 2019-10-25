@@ -1,4 +1,4 @@
-package com.colaman.kyle.common.network
+package com.colaman.kyle.network
 
 import com.btcpool.common.http.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
