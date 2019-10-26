@@ -6,10 +6,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SnackbarUtils
 import com.colaman.kyle.base.recyclerview.adapter.BaseRecyclerViewAdapter
 import com.colaman.kyle.entity.Constants
 import com.colaman.kyle.common.helper.AnimationHelper
+import com.colaman.kyle.common.helper.TimeHelper
 import com.colaman.kyle.common.recyclerview.layoutmanager.WrapLinearlayoutManager
+import com.colaman.kyle.common.rx.fullSubscribe
+import com.colaman.kyle.view.SnackBarConfig
+import com.google.android.material.snackbar.Snackbar
+import java.util.concurrent.TimeUnit
 
 /**
  * <pre>
@@ -48,10 +54,10 @@ fun View.singleClick(time: Int = Constants.View.SINGLE_CLICK_TIME, action: () ->
  * @param isReverse     是否翻转
  */
 fun RecyclerView.bindLinearAdapter(
-        context: Context,
-        recyclerViewAdapter: BaseRecyclerViewAdapter,
-        isVertical: Boolean = true,
-        isReverse: Boolean = false
+    context: Context,
+    recyclerViewAdapter: BaseRecyclerViewAdapter,
+    isVertical: Boolean = true,
+    isReverse: Boolean = false
 ) {
     layoutManager = WrapLinearlayoutManager(
         context,
@@ -72,18 +78,18 @@ fun RecyclerView.bindLinearAdapter(
  * @param isReverse     是否翻转
  */
 fun RecyclerView.bindGridAdapter(
-        context: Context,
-        recyclerViewAdapter: BaseRecyclerViewAdapter,
-        spancount: Int = 1,
-        isVertical: Boolean = true,
-        isReverse: Boolean = false,
-        spanSizeLookup: ((Int) -> Int)? = null
+    context: Context,
+    recyclerViewAdapter: BaseRecyclerViewAdapter,
+    spancount: Int = 1,
+    isVertical: Boolean = true,
+    isReverse: Boolean = false,
+    spanSizeLookup: ((Int) -> Int)? = null
 ) {
     val manager = GridLayoutManager(
-            context,
-            spancount,
-            if (isVertical) GridLayoutManager.VERTICAL else GridLayoutManager.HORIZONTAL,
-            isReverse
+        context,
+        spancount,
+        if (isVertical) GridLayoutManager.VERTICAL else GridLayoutManager.HORIZONTAL,
+        isReverse
     )
     layoutManager = manager
     if (spanSizeLookup != null) {
@@ -107,10 +113,10 @@ fun View.scaleWidth(scale: Float, duration: Long = 500) {
 
 fun View.animateSize(scale: Float, duration: Long = 500) {
     animate()
-            .scaleXBy(scale)
-            .scaleYBy(scale)
-            .setDuration(duration)
-            .start()
+        .scaleXBy(scale)
+        .scaleYBy(scale)
+        .setDuration(duration)
+        .start()
 }
 
 fun View.scrollX(x: Float, duration: Long = 500) {
@@ -123,10 +129,45 @@ fun View.scrollY(y: Float, duration: Long = 500) {
 
 fun View.scroll(x: Float, y: Float, duration: Long = 500) {
     animate()
-            .translationXBy(x)
-            .translationXBy(y)
-            .setDuration(duration)
-            .start()
+        .translationXBy(x)
+        .translationXBy(y)
+        .setDuration(duration)
+        .start()
+}
+
+/**
+ * 设定snackbar多久之后dismiss
+ * @receiver Snackbar
+ * @param time Int
+ * @param unit TimeUnit
+ * @return Snackbar
+ */
+fun Snackbar.durationTime(time: Int, unit: TimeUnit): Snackbar {
+    untilTime(unit.toMillis(time.toLong()) + System.currentTimeMillis())
+    return this
+}
+
+
+/**
+ * 在规定时间后把snackbar关掉
+ * @receiver Snackbar
+ * @param endTime Long
+ * @return Snackbar
+ */
+fun Snackbar.untilTime(endTime: Long): Snackbar {
+    TimeHelper.globalTimer
+        .takeUntil { it > endTime }
+        .doFinally {
+            dismiss()
+        }
+        .fullSubscribe()
+    return this
+}
+
+fun SnackbarUtils.init(view: View, snackBarConfig: SnackBarConfig): SnackbarUtils {
+    val utils = SnackbarUtils.with(view)
+
+    return utils
 }
 
 
