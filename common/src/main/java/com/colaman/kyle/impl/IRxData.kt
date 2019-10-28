@@ -1,6 +1,7 @@
 package com.colaman.kyle.imp
 
 import com.colaman.kyle.common.rx.RxData
+import com.colaman.kyle.impl.IRxConsumer
 
 
 /**

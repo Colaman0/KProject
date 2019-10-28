@@ -3,7 +3,7 @@ package com.colaman.kyle.common.rx;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
-import com.colaman.kyle.imp.IRxConsumer;
+import com.colaman.kyle.impl.IRxConsumer;
 
 /**
  * <pre>

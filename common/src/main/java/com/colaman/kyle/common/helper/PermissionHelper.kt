@@ -3,7 +3,7 @@ package com.colaman.kyle.common.helper
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import com.colaman.kyle.R
-import com.colaman.kyle.imp.IPermissions
+import com.colaman.kyle.impl.IPermissions
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import com.yanzhenjie.permission.Rationale

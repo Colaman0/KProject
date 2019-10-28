@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 
-import com.colaman.kyle.imp.IRxObserverLife;
+import com.colaman.kyle.impl.IRxObserverLife;
 
 
 /**

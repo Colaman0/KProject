@@ -1,7 +1,7 @@
 package com.colaman.kyle.common.manager
 
 import com.colaman.kyle.common.helper.PermissionHelper
-import com.colaman.kyle.imp.IPermissions
+import com.colaman.kyle.impl.IPermissions
 
 /**
  * <pre>

@@ -24,6 +24,7 @@ android {
         proguardFiles root.proguardFile
         signingConfig signingConfigs.debug
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexKeepFile file('maindexlist.txt') // keep specific classes
         dexOptions {
             jumboMode = true
         }

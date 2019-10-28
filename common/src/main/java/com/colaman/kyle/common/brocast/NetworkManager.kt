@@ -10,6 +10,10 @@ import android.net.NetworkInfo
 import android.os.Build
 import android.util.Log
 import com.blankj.utilcode.util.LogUtils
+import com.colaman.kyle.common.rx.fullSubscribe
+import com.colaman.kyle.network.NetworkStatusListener
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -18,16 +22,41 @@ import com.blankj.utilcode.util.LogUtils
  *     desc   : 网络状态变化广播接收器
  *
  */
-object NetworkBroadcastReceiver : BroadcastReceiver() {
+object NetworkManager : BroadcastReceiver() {
+    private val statusEmitter = PublishSubject.create<Intent>()
+    private val networkListener = mutableListOf<NetworkStatusListener>()
+    private lateinit var connectivityManager: ConnectivityManager
+
+    init {
+        observeStatus()
+    }
+
     @SuppressLint("ObsoleteSdkInt")
     override fun onReceive(context: Context?, intent: Intent?) {
-        val networkInfo = intent?.extras?.get("networkInfo")
-        if (networkInfo != null && networkInfo is NetworkInfo) {
-            LogUtils.d("networkInfo = ${networkInfo}")
-            val connectManager =
-                context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager =
+            context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (intent != null) {
+            statusEmitter.onNext(intent)
         }
+    }
 
+    /**
+     * 订阅网络变化的状态
+     */
+    private fun observeStatus() {
+        statusEmitter
+            .debounce(1, TimeUnit.SECONDS)
+            .doOnNext {
+                val networkAvailable = networkAvailable(connectivityManager)
+                val networkType = getNetworkType(connectivityManager)
+                networkListener.forEach {
+                    it.onNetworkChange()
+                    it.onNetworkAvailable(networkAvailable)
+                    it.onNetworkType(networkType)
+                }
+            }
+            .retry()
+            .fullSubscribe()
     }
 
 
@@ -106,7 +135,10 @@ object NetworkBroadcastReceiver : BroadcastReceiver() {
         } else {
             return pingNetwork()
         }
+    }
 
+    fun addNetworkListener(listener: NetworkStatusListener) {
+        networkListener.add(listener)
     }
 
 }

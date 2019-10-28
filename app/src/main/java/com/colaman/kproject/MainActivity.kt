@@ -3,10 +3,13 @@ package com.colaman.kproject
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SnackbarUtils
 import com.colaman.kproject.databinding.ActivityMainBinding
 import com.colaman.kyle.base.BaseActivity
+import com.colaman.kyle.common.brocast.NetworkManager
 import com.colaman.kyle.common.helper.SnackBarHelper
+import com.colaman.kyle.network.NetworkStatusListener
 import com.colaman.kyle.view.SnackBarConfig
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -36,6 +39,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .show()
 
 
+        NetworkManager.addNetworkListener(object : NetworkStatusListener {
+            override fun onNetworkType(type: String) {
+                LogUtils.d("网络类型=$type")
+            }
+
+            override fun onNetworkChange() {
+            }
+
+            override fun onNetworkAvailable(available: Boolean) {
+                LogUtils.d("网络畅通=$available")
+            }
+        })
     }
 
     fun jump(view: View?) {

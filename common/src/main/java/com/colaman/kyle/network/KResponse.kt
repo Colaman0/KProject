@@ -1,6 +1,6 @@
 package com.colaman.kyle.common.network
 
-import com.colaman.kyle.imp.IKResponse
+import com.colaman.kyle.impl.IKResponse
 
 /**
  * <pre>

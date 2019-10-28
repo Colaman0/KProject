@@ -1,6 +1,6 @@
 package com.colaman.kyle.network
 
-import com.btcpool.common.http.impl.IExceptionAdapter
+import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
 import com.google.gson.JsonIOException
 import com.google.gson.JsonParseException

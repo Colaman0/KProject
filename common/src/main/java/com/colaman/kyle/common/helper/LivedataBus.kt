@@ -16,12 +16,11 @@ object LivedataBus {
         HashMap<String, NotStickyLiveData<*>>()
     }
 
-
     fun <T> getChannel(target: String, type: Class<T>): NotStickyLiveData<T> {
         if (!eventMap.containsKey(target)) {
-            eventMap.put(target, NotStickyLiveData<T>())
+            eventMap[target] = NotStickyLiveData<T>()
         }
-        return eventMap.get(target) as NotStickyLiveData<T>
+        return eventMap[target] as NotStickyLiveData<T>
     }
 
     fun getChannel(target: String): MutableLiveData<Any> {

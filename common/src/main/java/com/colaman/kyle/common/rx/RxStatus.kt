@@ -1,6 +1,6 @@
 package com.colaman.kyle.common.rx
 
-import com.colaman.kyle.imp.IRxConsumer
+import com.colaman.kyle.impl.IRxConsumer
 import com.colaman.kyle.impl.IStatus
 
 /**

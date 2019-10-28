@@ -1,6 +1,4 @@
-package com.colaman.kyle.imp
-
-import com.btcpool.common.http.impl.IExceptionAdapter
+package com.colaman.kyle.impl
 
 
 /**

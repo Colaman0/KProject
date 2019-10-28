@@ -1,8 +1,8 @@
 package com.colaman.kyle.common.network
 
-import com.btcpool.common.http.impl.IExceptionAdapter
+import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
-import com.colaman.kyle.imp.IExceptionFactory
+import com.colaman.kyle.impl.IExceptionFactory
 import com.colaman.kyle.network.GsonExceptionAdapter
 import com.colaman.kyle.network.NetworkExceptionAdapter
 
