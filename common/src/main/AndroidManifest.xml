@@ -1,17 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.colaman.kyle">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <application>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.colaman.kyle.fileprovider"
             android:exported="false"
-            android:multiprocess="true"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            android:multiprocess="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path" />
         </provider>
+
+        <receiver android:name=".common.brocast.NetworkBroadcastReceiver" />
     </application>
 
 </manifest>

@@ -1,12 +1,13 @@
 package com.colaman.kyle.common.helper
 
 import android.annotation.SuppressLint
-import android.provider.Settings
-import androidx.lifecycle.MutableLiveData
+import android.app.Activity
+import android.app.Application
+import android.os.Bundle
 import com.blankj.utilcode.util.SnackbarUtils
+import com.colaman.kyle.common.rx.fullSubscribe
 import com.colaman.kyle.view.SnackBarConfig
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
 
 /**
  *
@@ -15,29 +16,101 @@ import java.util.*
  *     desc   : snackbar辅助类
  *
  */
-object SnackBarHelper {
-    @SuppressLint("StaticFieldLeak")
-    private var head: SnackBarConfig? = null
-
-    val barStatusLivedata by lazy {
-        MutableLiveData<SnackBarConfig>()
+@SuppressLint("StaticFieldLeak")
+object SnackBarHelper : Application.ActivityLifecycleCallbacks {
+    /**
+     * 正在展示的snackbar
+     */
+    val visibleSnackbar by lazy {
+        mutableListOf<Snackbar?>()
     }
 
-    fun push(config: SnackBarConfig, now: Boolean = false) {
-        if (now) {
-            head = config
-            head?.snackbar?.show()
-        } else {
-            if (head != null) {
-                head!!.next = config
-            } else {
-                head = config
-                config.snackbar?.dismiss()
+    val waitSnackbar by lazy {
+        mutableListOf<SnackBarConfig>()
+    }
+
+    var currentSnackbarConfig: SnackBarConfig? = null
+
+    var currentActivity: Activity? = null
+
+    init {
+        TimeHelper.globalTimer
+            .filter { currentSnackbarConfig != null && it > currentSnackbarConfig!!.endTime!! }
+            .doOnNext {
+                reset()
             }
-        }
-        barStatusLivedata.postValue(head?.apply {
-            visible = true
-        })
+            .fullSubscribe()
     }
 
+    override fun onActivityPaused(activity: Activity) {
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+
+    }
+
+    private fun showSnackbar(activity: Activity?) {
+        if (activity != null &&
+            currentSnackbarConfig != null &&
+            !currentSnackbarConfig!!.activityExist(activity)
+        ) {
+            visibleSnackbar.add(configToSnackbar(currentSnackbarConfig!!, activity))
+        }
+    }
+
+    override fun onActivityDestroyed(activity: Activity) {
+
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+    }
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        currentActivity = activity
+        // 显示新的snackbar
+        showSnackbar(activity)
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+    }
+
+    fun push(config: SnackBarConfig) {
+        reset()
+        currentSnackbarConfig = config
+        showSnackbar(currentActivity)
+    }
+
+    /**
+     * 重置
+     */
+    private fun reset() {
+        currentSnackbarConfig?.activities?.clear()
+        currentSnackbarConfig = null
+        // dismiss所有snackbar
+        visibleSnackbar.forEach { it?.dismiss() }
+        visibleSnackbar.clear()
+    }
+
+
+    fun configToSnackbar(config: SnackBarConfig, activity: Activity): Snackbar {
+        config.addActivity(activity)
+        val snackbar = SnackbarUtils.with(activity.window.decorView)
+            .run {
+                if (!config.actionText.isNullOrBlank()) {
+                    setAction(config.actionText!!, config.actionListener!!)
+                }
+                setBgColor(config.bgColor!!)
+                setBgResource(config.bgResource!!)
+                setMessage(config.msg!!)
+                setDuration(SnackbarUtils.LENGTH_INDEFINITE)
+                setMessageColor(config.msgColor!!)
+                show()
+            }
+
+        return snackbar
+    }
 }
+
