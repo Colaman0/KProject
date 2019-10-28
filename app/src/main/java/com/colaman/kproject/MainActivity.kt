@@ -38,7 +38,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
             .show()
 
-
         NetworkManager.addNetworkListener(object : NetworkStatusListener {
             override fun onNetworkType(type: String) {
                 LogUtils.d("网络类型=$type")

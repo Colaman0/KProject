@@ -38,7 +38,7 @@ fun <T, C : IKResponse<T>> Observable<C>.analysisResponse(): Observable<T> =
         if (it.isSuccess() && it.getData() != null) {
             Observable.just(it.getData())
         } else {
-            Observable.empty()
+            Observable.error(Throwable("后台数据返回null"))
         }
     }
 
@@ -190,6 +190,17 @@ fun <T> Observable<T>.fullSubscribe() =
             it.onSuscrible()
         }
     })
+
+/**
+ * 重置一些拓展属性
+ */
+fun <T> Observable<T>.reset() {
+    rxConsumers.clear()
+    rxLiveDatas.clear()
+    httpRequest.request = null
+    kErrorAdapters.clear()
+    kErrorCallback.lamdaRunnable = null
+}
 
 /**
  * 分析过滤错误 在onError里实现,onNext里发生错误不会调用doOnError，所以需要在onError里实现

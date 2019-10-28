@@ -9,7 +9,6 @@ package com.colaman.kyle.common.rx;
  */
 public class RxData<T> {
 
-
     public enum STATUS {
         SUCCESS, FAIL, COMPLETE, UNSUSCRIBE,SUSCRIBERIB
     }

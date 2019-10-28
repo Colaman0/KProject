@@ -10,6 +10,7 @@ import android.net.NetworkInfo
 import android.os.Build
 import android.util.Log
 import com.blankj.utilcode.util.LogUtils
+import com.colaman.kyle.common.helper.NetworkViewManager
 import com.colaman.kyle.common.rx.fullSubscribe
 import com.colaman.kyle.network.NetworkStatusListener
 import io.reactivex.subjects.PublishSubject
@@ -24,7 +25,9 @@ import java.util.concurrent.TimeUnit
  */
 object NetworkManager : BroadcastReceiver() {
     private val statusEmitter = PublishSubject.create<Intent>()
-    private val networkListener = mutableListOf<NetworkStatusListener>()
+    private val networkListener = mutableListOf<NetworkStatusListener>().apply {
+        add(NetworkViewManager)
+    }
     private lateinit var connectivityManager: ConnectivityManager
 
     init {
