@@ -46,7 +46,4 @@ class RecyclerViewActivity : BaseActivity<ActivityRecyclerViewBinding>() {
         adapter.switchLoadMore(false, false)
         adapter.diffNotifydatasetchanged()
     }
-
-
-
 }

@@ -1,17 +1,18 @@
-package com.colaman.kyle.base.fragment
+package com.colaman.kyle.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import com.colaman.kyle.base.fragment.BaseFragment
 
 /**
  *     author : kyle
  *     time   : 2019/6/26
  *     desc   : 懒加载fragment, 需要实现
  */
-abstract class LazyFragment< B : ViewDataBinding> : BaseFragment< B>() {
+abstract class LazyFragment< B : ViewDataBinding> : BaseFragment<B>() {
 
     var isCreateView = false
     var isUserVisibility = false

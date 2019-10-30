@@ -12,6 +12,7 @@ import com.colaman.kyle.impl.IKResponse
 import com.colaman.kyle.impl.IRxConsumer
 import com.colaman.kyle.impl.IStatus
 import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -190,6 +191,7 @@ fun <T> Observable<T>.fullSubscribe() =
             it.onSuscrible()
         }
     })
+
 
 /**
  * 重置一些拓展属性
