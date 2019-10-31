@@ -9,6 +9,8 @@ import com.blankj.utilcode.util.SnackbarUtils
 import com.colaman.kproject.databinding.ActivityMainBinding
 import com.colaman.kyle.base.BaseActivity
 import com.colaman.kyle.common.brocast.NetworkManager
+import com.colaman.kyle.common.expand.hide
+import com.colaman.kyle.common.expand.visible
 import com.colaman.kyle.common.helper.SnackBarHelper
 import com.colaman.kyle.common.rx.fullSubscribe
 import com.colaman.kyle.network.NetworkStatusListener
@@ -70,14 +72,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     fun jump(view: View?) {
-        startActivity(Intent(this, MainActivity::class.java))
+//        startActivity(Intent(this, MainActivity::class.java))
+        binding.btnShow?.isSelected = false
     }
 
     fun show(view: View?) {
-        SnackBarHelper.push(
-            SnackBarConfig(
-                msg = System.currentTimeMillis().toString()
-            )
-        )
+        binding.btnShow?.isSelected = true
+
     }
 }

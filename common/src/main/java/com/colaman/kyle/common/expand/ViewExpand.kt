@@ -2,20 +2,23 @@ package com.colaman.kyle.common.expand
 
 import android.content.Context
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SnackbarUtils
 import com.colaman.kyle.base.recyclerview.adapter.BaseRecyclerViewAdapter
-import com.colaman.kyle.entity.Constants
 import com.colaman.kyle.common.helper.AnimationHelper
 import com.colaman.kyle.common.helper.TimeHelper
 import com.colaman.kyle.common.recyclerview.layoutmanager.WrapLinearlayoutManager
 import com.colaman.kyle.common.rx.fullSubscribe
+import com.colaman.kyle.entity.Constants
 import com.colaman.kyle.view.SnackBarConfig
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.TimeUnit
+
 
 /**
  * <pre>
@@ -164,10 +167,55 @@ fun Snackbar.untilTime(endTime: Long): Snackbar {
     return this
 }
 
-fun SnackbarUtils.init(view: View, snackBarConfig: SnackBarConfig): SnackbarUtils {
-    val utils = SnackbarUtils.with(view)
 
-    return utils
+/**
+ * 带有动画隐藏view
+ * @receiver View
+ */
+fun View.hide() {
+    val animation = AlphaAnimation(1f, 0f)
+        .apply {
+            duration = 500
+            fillAfter = true
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    visibility = View.GONE
+                    isEnabled = false
+                }
+
+                override fun onAnimationStart(animation: Animation?) {
+                }
+            })
+        }
+    startAnimation(animation)
+}
+
+/**
+ * 带有动画展示view
+ * @receiver View
+ */
+fun View.visible() {
+    val animation = AlphaAnimation(0f, 1f)
+        .apply {
+            duration = 500
+            fillAfter = true
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    visibility = View.VISIBLE
+                    isEnabled = true
+                }
+
+                override fun onAnimationStart(animation: Animation?) {
+                }
+            })
+        }
+    startAnimation(animation)
 }
 
 

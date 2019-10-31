@@ -283,6 +283,21 @@ fun <T> Observable<PageDTO<T>>.handlePage(pageHelper: PageHelper): Observable<T>
 }
 
 /**
+ * 把function 应用到list中的每个item去变化然后再合并成list
+ * @receiver Observable<out Iterable<T>>
+ * @param function Function1<T, R>
+ * @return Observable<List<R>>
+ */
+fun <T, R> Observable<out Iterable<T>>.transformItem(function: (T) -> R): Observable<List<R>> =
+    flatMap {
+        Observable.fromIterable(it)
+            .map { function.invoke(it) }
+            .toList()
+            .toObservable()
+    }
+
+
+/**
  * 包裹一个KError的lamda回调，因为拓展属性没法像正常属性一样延迟赋值lamda函数，所以添加这个类来处理
  *
  * @property lamdaRunnable

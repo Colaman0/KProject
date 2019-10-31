@@ -13,11 +13,11 @@
         tools:context="com.colaman.kproject.MainActivity">
 
 
-
         <Button
             android:id="@+id/btn_show"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_select"
             android:onClick="show"
             android:text="显示"
             app:layout_constraintBottom_toBottomOf="parent"
