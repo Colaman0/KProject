@@ -9,5 +9,6 @@ package com.colaman.kyle.common.param
  */
 enum class Error {
     UNKNOW,
-    NETWORK
+    NETWORK,
+    JSON,
 }

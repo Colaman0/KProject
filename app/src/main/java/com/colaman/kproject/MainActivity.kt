@@ -12,9 +12,13 @@ import com.colaman.kyle.common.brocast.NetworkManager
 import com.colaman.kyle.common.expand.hide
 import com.colaman.kyle.common.expand.visible
 import com.colaman.kyle.common.helper.SnackBarHelper
+import com.colaman.kyle.common.rx.RxLivedata
+import com.colaman.kyle.common.rx.bindRxLivedata
+import com.colaman.kyle.common.rx.bindStatusImpl
 import com.colaman.kyle.common.rx.fullSubscribe
 import com.colaman.kyle.network.NetworkStatusListener
 import com.colaman.kyle.view.SnackBarConfig
+import com.colaman.kyle.view.StatusToast
 import io.reactivex.Observable
 import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
@@ -58,17 +62,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         })
 
-
-
-        Observable.interval(0, 1, TimeUnit.SECONDS)
-            .retry()
-            .doOnNext {
-                if (it > 5) {
-                    throw NullPointerException()
-                }
-                Log.d("cola", "data = $it")
-            }
-            .subscribe()
+        Observable.interval(1, TimeUnit.SECONDS)
+            .take(5)
+            .bindRxLivedata(
+                RxLivedata<Long>()
+            )
+            .bindStatusImpl(StatusToast("success", "failed", "start"))
+            .fullSubscribe()
     }
 
     fun jump(view: View?) {

@@ -8,10 +8,11 @@ package com.colaman.kyle.common.param
  *              也可以根据errorType做错误类型判断
  * </pre>
  */
-open class KError (
+open class KError(
     val kThrowable: Throwable,
     val kMessage: String = kThrowable.message.toString(),
     val kCause: String = kThrowable.cause.toString(),
-    val errorType: Error = Error.UNKNOW
-):Throwable()
+    val errorType: Error = Error.UNKNOW,
+    val kTips: String = ""
+) : Throwable()
 

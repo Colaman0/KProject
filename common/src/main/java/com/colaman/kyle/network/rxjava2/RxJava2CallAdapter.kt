@@ -16,8 +16,7 @@
 package com.colaman.kyle.network.rxjava2
 
 
-import com.colaman.kyle.common.rx.initHttp
-
+import com.colaman.kyle.common.rx.getExpandConfig
 import java.lang.reflect.Type
 
 import io.reactivex.BackpressureStrategy
@@ -66,7 +65,7 @@ internal class RxJava2CallAdapter(
         if (isMaybe) {
             return observable.singleElement()
         }
-        observable.initHttp(call.request())
+        observable.getExpandConfig().httpRequest = call.request()
         return if (isCompletable) {
             observable.ignoreElements()
         } else observable

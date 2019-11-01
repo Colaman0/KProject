@@ -17,3 +17,19 @@ fun dp2px(context: Context, value: Int) = if (value > 0) {
     value
 }
 
+val Any.tags by lazy {
+    return@lazy HashMap<String, Any>()
+}
+
+inline fun <reified T> Any.getTag(key: String): T? {
+    val data = tags[key]
+    if (data is T) {
+        return data
+    }
+    return null
+}
+
+fun Any.putTag(key: String, value: Any) {
+    tags[key] = value
+}
+

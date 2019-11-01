@@ -14,34 +14,34 @@ import io.reactivex.Observable
  * desc   : 实现了IRxData，负责把网络请求的observable数据封装状态，通过livedata发射出去
 </pre> *
  */
-class RxLivedata<T> : MutableLiveData<RxData<T>>(), IRxData<T> {
+open class RxLivedata<T> : MutableLiveData<RxData<T>>(), IRxData<T> {
     override fun onFinally() {
     }
 
     var currentObservable: Observable<T>? = null
 
     override fun onNext(t: T) {
-        super.setValue(RxData(t))
+        super.postValue(RxData(t))
     }
 
     override fun onError(throwable: Throwable) {
-        super.setValue(RxData(throwable))
+        super.postValue(RxData(throwable))
     }
 
     override fun onComplete() {
-        super.setValue(RxData(RxData.STATUS.COMPLETE))
+        super.postValue(RxData(RxData.STATUS.COMPLETE))
     }
 
     override fun onUnsucrible() {
-        super.setValue(RxData(RxData.STATUS.UNSUSCRIBE))
+        super.postValue(RxData(RxData.STATUS.UNSUSCRIBE))
     }
 
     override fun onSuscrible() {
-        super.setValue(RxData(RxData.STATUS.SUSCRIBERIB))
+        super.postValue(RxData(RxData.STATUS.SUSCRIBERIB))
     }
 
     override fun sendData(data: RxData<T>) {
-        super.setValue(data)
+        super.postValue(data)
     }
 
     fun bindObservable(observable: Observable<T>): RxLivedata<T> {

@@ -1,5 +1,6 @@
 package com.colaman.kyle.network
 
+import com.colaman.kyle.common.param.Error
 import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
 import java.net.ConnectException
@@ -20,5 +21,6 @@ class NetworkExceptionAdapter : IExceptionAdapter<KError> {
                 throwable is ConnectException
     }
 
-    override fun createException(throwable: Throwable) = KError(throwable, "网络错误")
+    override fun createException(throwable: Throwable) =
+        KError(throwable, kTips = "网络错误", errorType = Error.NETWORK)
 }

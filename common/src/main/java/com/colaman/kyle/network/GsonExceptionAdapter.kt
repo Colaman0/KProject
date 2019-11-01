@@ -1,5 +1,7 @@
 package com.colaman.kyle.network
 
+import com.colaman.kyle.common.expand.getTag
+import com.colaman.kyle.common.param.Error
 import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
 import com.google.gson.JsonIOException
@@ -22,5 +24,6 @@ class GsonExceptionAdapter : IExceptionAdapter<KError> {
                 throwable is JsonUnknownKeyException
     }
 
-    override fun createException(throwable: Throwable) = KError(throwable, "Json解析错误")
+    override fun createException(throwable: Throwable) =
+        KError(throwable, kTips = "Json解析错误", errorType = Error.JSON)
 }

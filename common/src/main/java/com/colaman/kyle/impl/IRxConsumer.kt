@@ -8,7 +8,7 @@ package com.colaman.kyle.impl
  * 去往集合里添加，把数据分发出去，然后可以做一些对应的操作，
  * 比如[IStatus]和[com.colaman.kyle.common.rx.bindStatusImpl]的转换
  */
-interface IRxConsumer<T> {
+interface IRxConsumer<T > {
     /**
      * 四个方法都是给网络请求返回的observable调用
      *

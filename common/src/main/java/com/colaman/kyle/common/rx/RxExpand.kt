@@ -2,12 +2,16 @@ package com.colaman.kyle.common.rx
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.blankj.utilcode.util.LogUtils
 import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.base.recyclerview.PageHelper
+import com.colaman.kyle.common.expand.getTag
+import com.colaman.kyle.common.expand.putTag
 import com.colaman.kyle.common.network.KErrorExceptionFactory
 import com.colaman.kyle.common.param.KError
 import com.colaman.kyle.entity.HttpModel
 import com.colaman.kyle.entity.PageDTO
+import com.colaman.kyle.entity.RxjavaExpandConfig
 import com.colaman.kyle.impl.IKResponse
 import com.colaman.kyle.impl.IRxConsumer
 import com.colaman.kyle.impl.IStatus
@@ -26,6 +30,16 @@ import okhttp3.Request
  * </pre>
  */
 
+const val expandConfigKey = "rxjava_key"
+
+fun <T> Observable<T>.getExpandConfig(): RxjavaExpandConfig {
+    var config = getTag<RxjavaExpandConfig>(expandConfigKey)
+    if (config == null) {
+        config = RxjavaExpandConfig()
+        putTag(expandConfigKey, config)
+    }
+    return config
+}
 
 /**
  * 处理网络请求response
@@ -43,53 +57,21 @@ fun <T, C : IKResponse<T>> Observable<C>.analysisResponse(): Observable<T> =
         }
     }
 
-
 /**
- * 拓展出一个属性出来，用来添加KError的错误适配器
+ * 处理网络请求response
+ *
+ * @param T 把原有response返回，只是处理了一下data==null的情况
+ * @return
  */
-val <T> Observable<T>.kErrorAdapters by lazy {
-    return@lazy mutableListOf<IExceptionAdapter<KError>>()
-}
-
-
-/**
- * 拓展出一个属性出来，用来添加[IRxConsumer]
- */
-val <T> Observable<T>.rxConsumers by lazy {
-    return@lazy mutableListOf<IRxConsumer<T>>()
-}
-
-/**
- * 拓展出一个属性出来，用来添加网络请求request
- */
-val <T> Observable<T>.httpRequest by lazy {
-    return@lazy HttpModel()
-}
-
-fun <T> Observable<T>.initHttp(request: Request?) {
-    httpRequest.request = request
-}
-
-/**
- * 拓展出一个属性出来，用来添加RxLivedata
- */
-val <T> Observable<T>.rxLiveDatas by lazy {
-    return@lazy mutableListOf<RxLivedata<T>>()
-}
-
-/**
- * 拓展出一个属性出来，用来添加IStatus实现类
- */
-val <T> Observable<T>.statusImpls by lazy {
-    return@lazy mutableListOf<IStatus?>()
-}
-
-/**
- * 拓展出一个属性出来，用来添加IStatus实现类
- */
-val <T> Observable<T>.kErrorCallback by lazy {
-    return@lazy KErrorLamdaRunnable()
-}
+fun <T, C : IKResponse<T>> Observable<C>.nullDataFilter(): Observable<C> =
+    flatMap {
+        //  reponse如果是成功的话，就直接返回data
+        if (it.isSuccess() && it.getData() != null) {
+            Observable.just(it)
+        } else {
+            Observable.error(Throwable("后台数据返回null"))
+        }
+    }
 
 
 /**
@@ -100,7 +82,7 @@ val <T> Observable<T>.kErrorCallback by lazy {
  * @return
  */
 fun <T> Observable<T>.addKErrorAdatpers(vararg factory: IExceptionAdapter<KError>): Observable<T> {
-    kErrorAdapters.addAll(factory)
+    getExpandConfig().kErrorAdapters.addAll(factory)
     return this
 }
 
@@ -110,8 +92,10 @@ fun <T> Observable<T>.addKErrorAdatpers(vararg factory: IExceptionAdapter<KError
  * @param receiver Array<out IRxConsumer<T>> 实现了[IRxConsumer]的类
  * @return Observable<T>
  */
-fun <T> Observable<T>.addConsumerReceiver(vararg receiver: IRxConsumer<T>): Observable<T> {
-    rxConsumers.addAll(receiver)
+fun <T> Observable<T>.addConsumerReceiver(vararg receiver: IRxConsumer<Any>): Observable<T> {
+    receiver.forEach {
+        getExpandConfig().rxConsumers.add(it)
+    }
     return this
 }
 
@@ -142,8 +126,8 @@ fun <T> Observable<T>.bindStatusImpl(vararg status: IStatus): Observable<T> {
  * @return
  */
 fun <T> Observable<T>.bindRxLivedata(vararg livedata: RxLivedata<T>): Observable<T> {
-    rxConsumers.addAll(livedata)
     livedata.forEach {
+        getExpandConfig().rxConsumers.add(it as IRxConsumer<in Any>)
         it.bindObservable(this)
     }
     return this
@@ -158,7 +142,7 @@ fun <T> Observable<T>.bindRxLivedata(vararg livedata: RxLivedata<T>): Observable
  * @return
  */
 fun <T> Observable<T>.doOnKError(callback: (error: KError) -> Unit): Observable<T> {
-    kErrorCallback.lamdaRunnable = callback
+    getExpandConfig().kErrorCallback.lamdaRunnable = callback
     return this
 }
 
@@ -169,40 +153,30 @@ fun <T> Observable<T>.doOnKError(callback: (error: KError) -> Unit): Observable<
  */
 fun <T> Observable<T>.fullSubscribe() =
     doFinally {
-        rxConsumers.forEach {
+        getExpandConfig().rxConsumers.forEach {
             it.onFinally()
         }
     }.subscribe({ data ->
-        rxConsumers.forEach {
-            it.onNext(data)
+        getExpandConfig().rxConsumers.forEach {
+            it.onNext(data!!)
         }
     }, { throwable ->
         // 分析过滤错误发射出去
         val kThrowable = analysisExcetpion(throwable)
-        rxConsumers.forEach {
+        getExpandConfig().rxConsumers.forEach {
             it.onError(kThrowable)
         }
+        LogUtils.e(kThrowable)
     }, {
-        rxConsumers.forEach {
+        getExpandConfig().rxConsumers.forEach {
             it.onComplete()
         }
     }, {
-        rxConsumers.forEach {
+        getExpandConfig().rxConsumers.forEach {
             it.onSuscrible()
         }
     })
 
-
-/**
- * 重置一些拓展属性
- */
-fun <T> Observable<T>.reset() {
-    rxConsumers.clear()
-    rxLiveDatas.clear()
-    httpRequest.request = null
-    kErrorAdapters.clear()
-    kErrorCallback.lamdaRunnable = null
-}
 
 /**
  * 分析过滤错误 在onError里实现,onNext里发生错误不会调用doOnError，所以需要在onError里实现
@@ -213,11 +187,11 @@ fun <T> Observable<T>.reset() {
 fun <T> Observable<T>.analysisExcetpion(throwable: Throwable): KError {
     // 实例化一个KErrorExceptionFactory去过滤筛选错误
     val exceptionFactory = KErrorExceptionFactory()
-    kErrorAdapters.forEach {
+    getExpandConfig().kErrorAdapters.forEach {
         exceptionFactory.addExceptionCreator(it)
     }
     val error = exceptionFactory.analysisExcetpion(throwable = throwable)
-    kErrorCallback.callError(error)
+    getExpandConfig().kErrorCallback.callError(error)
     return error
 }
 
