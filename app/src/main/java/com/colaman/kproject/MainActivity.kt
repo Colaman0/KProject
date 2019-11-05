@@ -1,9 +1,15 @@
 package com.colaman.kproject
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Outline
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewOutlineProvider
+import androidx.cardview.widget.CardView
+import androidx.leanback.widget.ShadowOverlayContainer
+import androidx.leanback.widget.ShadowOverlayHelper
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SnackbarUtils
 import com.colaman.kproject.databinding.ActivityMainBinding
@@ -19,6 +25,8 @@ import com.colaman.kyle.common.rx.fullSubscribe
 import com.colaman.kyle.network.NetworkStatusListener
 import com.colaman.kyle.view.SnackBarConfig
 import com.colaman.kyle.view.StatusToast
+import com.google.android.material.shadow.ShadowDrawableWrapper
+import com.google.android.material.shape.MaterialShapeDrawable
 import io.reactivex.Observable
 import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
@@ -35,45 +43,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val config = SnackBarConfig(
             msg = System.currentTimeMillis().toString()
         )
-        SnackbarUtils.with(window.decorView)
-            .run {
-                if (!config.actionText.isNullOrBlank()) {
-                    setAction(config.actionText!!, config.actionListener!!)
-                }
-                setBgColor(config.bgColor!!)
-                setBgResource(config.bgResource!!)
-                setMessage(config.msg!!)
-                setDuration(SnackbarUtils.LENGTH_INDEFINITE)
-                setMessageColor(config.msgColor!!)
-                setDuration(config.duration!!)
-            }
-            .show()
 
-        NetworkManager.addNetworkListener(object : NetworkStatusListener {
-            override fun onNetworkType(type: String) {
-                LogUtils.d("网络类型=$type")
-            }
-
-            override fun onNetworkChange() {
-            }
-
-            override fun onNetworkAvailable(available: Boolean) {
-                LogUtils.d("网络畅通=$available")
-            }
-        })
-
-        Observable.interval(1, TimeUnit.SECONDS)
-            .take(5)
-            .bindRxLivedata(
-                RxLivedata<Long>()
-            )
-            .bindStatusImpl(StatusToast("success", "failed", "start"))
-            .fullSubscribe()
     }
 
     fun jump(view: View?) {
 //        startActivity(Intent(this, MainActivity::class.java))
-        binding.btnShow?.isSelected = false
+
     }
 
     fun show(view: View?) {

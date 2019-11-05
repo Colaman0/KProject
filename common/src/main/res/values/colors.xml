@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_half_black">#80000000</color>
+    <color name="shadow_hack_level_1">#1ADDDDDD</color>
+    <color name="shadow_hack_level_2">#33DDDDDD</color>
+    <color name="shadow_hack_level_3">#4DDDDDDD</color>
+    <color name="shadow_hack_level_4">#66DDDDDD</color>
+    <color name="shadow_hack_level_5">#80DDDDDD</color>
+    <color name="shadow_hack_level_6">#99DDDDDD</color>
+    <color name="shadow_hack_level_7">#B3DDDDDD</color>
+    <color name="shadow_hack_level_8">#CCDDDDDD</color>
+    <color name="shadow_hack_level_9">#E6DDDDDD</color>
+    <color name="shadow_hack_level_10">#DDDDDD</color>
 </resources>
