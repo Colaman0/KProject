@@ -33,3 +33,18 @@ fun Any.putTag(key: String, value: Any) {
     tags[key] = value
 }
 
+/**
+ * 作为布尔值判断的lamda简写
+ */
+fun Boolean?.yes(callback: () -> Unit) {
+    if (this == true) {
+        callback()
+    }
+}
+
+fun Boolean?.no(callback: () -> Unit) {
+    if (this == false) {
+        callback()
+    }
+}
+

@@ -1,5 +1,8 @@
 package com.colaman.kproject
 
+import com.colaman.kyle.common.expand.no
+import com.colaman.kyle.common.expand.yes
+
 /**
  *
  *     author : kyle
@@ -9,6 +12,12 @@ package com.colaman.kproject
  */
 
 fun main(args: Array<String>) {
+    (null).yes {
+        print("yes")
+    }
 
+    (null).no {
+        print("yes")
+    }
 }
 

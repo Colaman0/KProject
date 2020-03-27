@@ -10,12 +10,7 @@ def ano = rootProject.ext.annotationProcessor
 
 android {
     signingConfigs {
-        release {
-            storeFile file('F:\\personal\\kproject\\kyle.jks')
-            storePassword '123456'
-            keyAlias = 'kyle'
-            keyPassword '123456'
-        }
+
     }
     compileSdkVersion root.compileSdkVersion
     buildToolsVersion root.buildToolsVersion
@@ -42,7 +37,7 @@ android {
             multiDexEnabled true
             applicationIdSuffix ".release"
             proguardFiles root.proguardFile
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
 
         debug {
