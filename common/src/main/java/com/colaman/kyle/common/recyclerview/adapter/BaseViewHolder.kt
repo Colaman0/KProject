@@ -1,4 +1,4 @@
-package com.colaman.kyle.base.recyclerview.adapter
+package com.colaman.kyle.common.recyclerview.adapter
 
 import android.content.Context
 import android.view.View
@@ -16,12 +16,12 @@ import com.colaman.kyle.impl.OnItemClickListener
  *     desc   :
  * </pre>
  */
-open class BaseViewHolder : RecyclerView.ViewHolder {
+open class BaseViewHolder<B : ViewDataBinding> : RecyclerView.ViewHolder {
     companion object {
         const val TAG = 0x000001
     }
 
-    var binding: ViewDataBinding? = null
+    var binding: B? = null
     var context: Context? = null
     var lifecycleOwner: LifecycleOwner? = null
     var itemType = 0
@@ -33,7 +33,7 @@ open class BaseViewHolder : RecyclerView.ViewHolder {
     constructor(
             context: Context?,
             view: View,
-            binding: ViewDataBinding,
+            binding: B,
             lifecycleOwner: LifecycleOwner?,
             itemType: Int,
             viewGroup: ViewGroup
@@ -71,7 +71,7 @@ open class BaseViewHolder : RecyclerView.ViewHolder {
      *
      * @param viewModel
      */
-    fun bindViewModel(viewModel: RecyclerItemViewModel<out ViewDataBinding, *>, position: Int) {
+    fun bindViewModel(viewModel: RecyclerItemViewModel<B, Any>, position: Int) {
         this@BaseViewHolder.viewModel = viewModel
         // 设置tag，以便adapter通过view来获取当前显示的view上绑定的viewmodel
         itemView.tag = viewModel

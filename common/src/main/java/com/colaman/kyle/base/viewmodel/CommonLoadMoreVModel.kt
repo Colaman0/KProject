@@ -1,6 +1,6 @@
 package com.colaman.kyle.base.viewmodel
 
-import com.colaman.kyle.base.recyclerview.adapter.BaseViewHolder
+import com.colaman.kyle.common.recyclerview.adapter.BaseViewHolder
 import com.colaman.kyle.common.recyclerview.adapter.LOADMORE_STATE
 import com.colaman.kyle.R
 import com.colaman.kyle.databinding.ItemLoadmoreBinding
@@ -13,8 +13,8 @@ import com.colaman.kyle.databinding.ItemLoadmoreBinding
  * </pre>
  */
 open class CommonLoadMoreVModel(var text: String = "") :
-    BaseLoadmoreViewModel<ItemLoadmoreBinding, Any>() {
-    override fun initLayouRes() = R.layout.item_loadmore
+        BaseLoadmoreViewModel<ItemLoadmoreBinding, Any>() {
+    override fun initLayoutRes() = R.layout.item_loadmore
 
 
     override fun onStateChange(state: LOADMORE_STATE) {
@@ -27,8 +27,8 @@ open class CommonLoadMoreVModel(var text: String = "") :
 
     override fun isSame(data: Any) = false
 
-    override
-    fun onBindView(holder: BaseViewHolder?) {
+
+    override fun onBindView(holder: BaseViewHolder<ItemLoadmoreBinding>) {
 
     }
 

@@ -2,7 +2,7 @@ package com.colaman.kyle.common.recyclerview
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
-import com.colaman.kyle.base.recyclerview.adapter.BaseViewHolder
+import com.colaman.kyle.common.recyclerview.adapter.BaseViewHolder
 import com.colaman.kyle.base.viewmodel.BindingViewModel
 import com.colaman.kyle.imp.IDiffComparator
 import com.colaman.kyle.impl.OnItemClickListener
@@ -12,13 +12,13 @@ import com.colaman.kyle.impl.OnItemClickListener
  * Function : recyclerview的itemviewmodel ,继承自[BindingViewModel],可以用databinding
  *
  */
-open abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : BindingViewModel<B>(),
+abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : BindingViewModel<B>(),
     IDiffComparator<VM>,
     OnItemClickListener {
     /**
      * viewmodel默认是显示的，特殊情况可以设置成false，让viewmodel不可见
      */
-    var isVisible = true
+    private var isVisible = true
         set(value) {
             if (value != field && binding != null) {
                 /**
@@ -30,7 +30,7 @@ open abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : Bindi
         }
 
     var isAttached = false
-    private var mHolder: BaseViewHolder? = null
+    private var mHolder: BaseViewHolder<B>? = null
 
 
     override fun setViewDatabinding(binding: ViewDataBinding?) {
@@ -41,12 +41,12 @@ open abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : Bindi
         binding?.root?.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    abstract fun initLayouRes(): Int
+    abstract fun initLayoutRes(): Int
 
     /**
      * 具体view的操作代码写在这个方法内
      */
-    abstract fun onBindView(holder: BaseViewHolder?)
+    abstract fun onBindView(holder: BaseViewHolder<B>)
 
 
     /**

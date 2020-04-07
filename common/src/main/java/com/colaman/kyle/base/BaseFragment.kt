@@ -25,7 +25,7 @@ import me.yokeyword.fragmentation.SupportFragment
  */
 abstract class BaseFragment<B : ViewDataBinding> : SupportFragment() {
 
-    var statusLayout: StatusLayout? = null
+    private var statusLayout: StatusLayout? = null
     protected var binding: B? = null
 
     abstract fun initLayoutRes(): Int
@@ -60,7 +60,7 @@ abstract class BaseFragment<B : ViewDataBinding> : SupportFragment() {
             } else {
                 LayoutInflater.from(context!!).inflate(initLayoutRes(), container, false)
             }
-        initBindind(rootView!!)
+        initBinding(rootView!!)
         return rootView
     }
 
@@ -68,7 +68,7 @@ abstract class BaseFragment<B : ViewDataBinding> : SupportFragment() {
      * 初始化databinding
      * @param rootView View activity的根view
      */
-    fun initBindind(rootView: View) {
+    private fun initBinding(rootView: View) {
         binding = if (rootView is StatusLayout) {
             DataBindingUtil.bind(rootView.getDefaultContentView())
         } else {

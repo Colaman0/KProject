@@ -12,7 +12,7 @@ open class BindingViewModel<B : ViewDataBinding> : BaseViewModel() {
     /**
      * 设置一个默认的variableId,用于xml中绑定当前viewmodel
      */
-    var variableId = getDefaultVariableId()
+    private var variableId = getDefaultVariableId()
 
 
     open fun setViewDatabinding(binding: ViewDataBinding?) {
@@ -21,6 +21,7 @@ open class BindingViewModel<B : ViewDataBinding> : BaseViewModel() {
             refreshBindingData(variableId)
         } catch (e: Exception) {
         }
+        
     }
 
     fun getViewDatabing() = binding

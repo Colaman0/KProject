@@ -17,11 +17,11 @@ import com.colaman.kyle.common.recyclerview.adapter.LOADMORE_STATE
  */
 abstract class BaseLoadmoreViewModel<B : ViewDataBinding, VM : Any>() : RecyclerItemViewModel<B, VM>() {
     protected var adapter: FeaturesRecyclerViewAdapter? = null
-    protected var recyclerView: RecyclerView? = null
+    private var recyclerView: RecyclerView? = null
 
-    protected var reverseLayout = false
-    protected var orientationFlag = RecyclerView.VERTICAL
-    protected val loadmoreCallBacks = mutableListOf<() -> Unit>()
+    private var reverseLayout = false
+    private var orientationFlag = RecyclerView.VERTICAL
+    private val loadmoreCallBacks = mutableListOf<() -> Unit>()
 
     /**
      * loadmore当前的状态
@@ -46,7 +46,7 @@ abstract class BaseLoadmoreViewModel<B : ViewDataBinding, VM : Any>() : Recycler
      *
      * @param adapter
      */
-    fun bindAdatper(adapter: FeaturesRecyclerViewAdapter) {
+    fun bindAdapter(adapter: FeaturesRecyclerViewAdapter) {
         this@BaseLoadmoreViewModel.adapter = adapter
         recyclerView = adapter.recyclerView
         var layoutManager = recyclerView?.layoutManager

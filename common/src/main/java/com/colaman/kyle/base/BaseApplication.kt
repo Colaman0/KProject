@@ -1,5 +1,6 @@
 package com.colaman.kyle.base
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -25,6 +26,7 @@ open class BaseApplication : MultiDexApplication() {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         private var context: Context? = null
         fun getAppContext() = context
     }

@@ -14,9 +14,9 @@ import com.colaman.kyle.base.fragment.BaseFragment
  */
 abstract class LazyFragment< B : ViewDataBinding> : BaseFragment<B>() {
 
-    var isCreateView = false
-    var isUserVisibility = false
-    var isFirstLoadFlag = true
+    private var isCreateView = false
+    private var isUserVisibility = false
+    private var isFirstLoadFlag = true
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -52,7 +52,7 @@ abstract class LazyFragment< B : ViewDataBinding> : BaseFragment<B>() {
     /**
      * 分发处理事件
      */
-    fun dispatchLoadEvent() {
+    private fun dispatchLoadEvent() {
         if (isUserVisibility && isCreateView && isFirstLoadFlag) {
             isFirstLoadFlag = false
             lazyLoad()

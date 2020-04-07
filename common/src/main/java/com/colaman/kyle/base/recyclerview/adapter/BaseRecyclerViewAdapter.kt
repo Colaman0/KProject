@@ -9,6 +9,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
+import com.colaman.kyle.common.recyclerview.adapter.BaseViewHolder
+import com.colaman.kyle.common.recyclerview.adapter.ListAdapter
 import com.colaman.kyle.impl.OnItemClickListener
 
 /**
@@ -18,50 +20,47 @@ import com.colaman.kyle.impl.OnItemClickListener
  *     desc   :
  * </pre>
  */
-open class BaseRecyclerViewAdapter : ListAdapter<BaseViewHolder> {
+open class BaseRecyclerViewAdapter(context: Context?, datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()) : ListAdapter<BaseViewHolder<ViewDataBinding>>(context, datas) {
     var lifecycleOwner: LifecycleOwner? = null
     var clickCallback = mutableListOf<OnItemClickListener>()
 
-    val layoutInflater by lazy {
+    private val layoutInflater: LayoutInflater by lazy {
         LayoutInflater.from(context)
     }
 
-    constructor(
-        context: Context?,
-        datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
-    ) : super(context, datas) {
+    init {
         if (context is LifecycleOwner) {
             bindLifeCycleOwner(context)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position)?.initLayouRes() ?: -1
+        return getItem(position)?.initLayoutRes() ?: -1
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
         val data = getItem(position)
         if (data != null) {
             /**
              * 把对应的viewmodel绑定到viewholder上
              */
-            holder.bindViewModel(data, position)
+            holder.bindViewModel(data as RecyclerItemViewModel<ViewDataBinding, Any>, position)
         }
     }
 
 
     open fun getItem(position: Int) = viewmodels[position]
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ViewDataBinding> {
         val binding =
-            DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
+                DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
         val holder = BaseViewHolder(
-            context = context,
-            view = binding.root,
-            binding = binding,
-            lifecycleOwner = lifecycleOwner,
-            itemType = viewType,
-            viewGroup = parent
+                context = context,
+                view = binding.root,
+                binding = binding,
+                lifecycleOwner = lifecycleOwner,
+                itemType = viewType,
+                viewGroup = parent
         )
         /**
          * 注册点击监听
@@ -110,7 +109,7 @@ open class BaseRecyclerViewAdapter : ListAdapter<BaseViewHolder> {
     protected fun catchRecyclerViewScroll() {
 
         recyclerView?.addOnChildAttachStateChangeListener(object :
-            RecyclerView.OnChildAttachStateChangeListener {
+                RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
                 val viewmodel = view.tag
                 if (viewmodel != null && viewmodel is RecyclerItemViewModel<*, *>) {

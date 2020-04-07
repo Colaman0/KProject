@@ -1,4 +1,4 @@
-package com.colaman.kyle.base.recyclerview.adapter
+package com.colaman.kyle.common.recyclerview.adapter
 
 import android.content.Context
 import androidx.databinding.ViewDataBinding
@@ -9,7 +9,7 @@ import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
  * Create by kyle on 2019/1/9
  * Function : 操作数据源的adapter
  */
-abstract class ListAdapter<VH : BaseViewHolder> : RecyclerView.Adapter<VH> {
+abstract class ListAdapter<VH : BaseViewHolder<ViewDataBinding>> : RecyclerView.Adapter<VH> {
     protected open var viewmodels = mutableListOf<RecyclerItemViewModel<out ViewDataBinding, out Any>?>()
     open var recyclerView: RecyclerView? = null
     open var context: Context? = null

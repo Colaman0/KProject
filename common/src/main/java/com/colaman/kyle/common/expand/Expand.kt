@@ -42,6 +42,7 @@ fun Boolean?.yes(callback: () -> Unit) {
     }
 }
 
+
 fun Boolean?.no(callback: () -> Unit) {
     if (this == false) {
         callback()

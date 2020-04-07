@@ -61,7 +61,7 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
             rootView = LayoutInflater.from(this).inflate(initLayoutRes(), null)
         }
         setContentView(rootView)
-        initBindind(rootView!!)
+        initBinding(rootView!!)
         initStatusLayout()
         initStatusBar()
         initView()
@@ -73,7 +73,7 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
      * 初始化databinding
      * @param rootView View activity的根view
      */
-    fun initBindind(rootView: View) {
+    private fun initBinding(rootView: View) {
         binding = (if (rootView is StatusLayout) {
             DataBindingUtil.bind(rootView.getDefaultContentView())
         } else {
@@ -89,7 +89,7 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun onDestroy() {
         super.onDestroy()
-        destoryStatusBar()
+        destroyStatusBar()
     }
 
     @LayoutRes
@@ -104,11 +104,11 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
     private fun initStatusBar() {
         mImmersionBar = ImmersionBar.with(this)
         mImmersionBar!!
-            .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
-            .keyboardEnable(true)
-            .statusBarDarkFont(true, 0.2f)
-            .statusBarColor(setStatusBarColor())
-            .init()
+                .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
+                .keyboardEnable(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(setStatusBarColor())
+                .init()
     }
 
     /**
@@ -121,7 +121,7 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
     /**
      * 释放关于状态栏的资源
      */
-    private fun destoryStatusBar() {
+    private fun destroyStatusBar() {
         if (mImmersionBar != null) {
             mImmersionBar!!.destroy()
         }
@@ -141,7 +141,7 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
         return Intent(this, activity)
     }
 
-    fun goToAcitivty(activity: Class<*>) {
+    fun goToActivity(activity: Class<*>) {
         startActivity(getDefaultIntent(activity))
     }
 
@@ -184,11 +184,11 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
      * 这两个方法是为了拓展出更多不同statuslayout的实现而声明的，比如特定情况下拓展出CustomStatusLayout用于绑定rxjava流
      * 就可以重写其中一个方法来给出具体实现
      */
-    open protected fun getStatusLayoutInstance(context: Context, @LayoutRes layoutRes: Int) =
-        StatusLayout.init(context, layoutRes)
+    protected open fun getStatusLayoutInstance(context: Context, @LayoutRes layoutRes: Int) =
+            StatusLayout.init(context, layoutRes)
 
-    open protected fun getStatusLayoutInstance(view: View) =
-        StatusLayout.init(view)
+    protected open fun getStatusLayoutInstance(view: View) =
+            StatusLayout.init(view)
 
     /**
      * 添加[onActivityResult]的回调监听，

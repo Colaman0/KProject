@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
 import com.colaman.kyle.base.recyclerview.adapter.BaseRecyclerViewAdapter
-import com.colaman.kyle.base.recyclerview.adapter.BaseViewHolder
 import com.colaman.kyle.base.viewmodel.BaseLoadmoreViewModel
 import com.colaman.kyle.base.viewmodel.CommonLoadMoreVModel
 import com.colaman.kyle.common.rx.binLife
@@ -89,7 +88,7 @@ class FeaturesRecyclerViewAdapter(
      */
     fun initLoadMoreItemViewModel(): BaseLoadmoreViewModel<*, *> {
         val viewmodel = CommonLoadMoreVModel()
-        viewmodel.bindAdatper(this)
+        viewmodel.bindAdapter(this)
         return viewmodel
     }
 
@@ -107,7 +106,7 @@ class FeaturesRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (disableLoadmore && getAdapterSize() > 0 && position == itemCount - 1) {
-            return loadMoreItemViewModel!!.initLayouRes()
+            return loadMoreItemViewModel!!.initLayoutRes()
         }
         return super.getItemViewType(position)
     }
