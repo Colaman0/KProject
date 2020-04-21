@@ -19,6 +19,7 @@ import com.colaman.kyle.R
 import com.colaman.kyle.common.helper.DoubleClickExitInterceptor
 import com.colaman.kyle.impl.IBackpressInterceptor
 import com.colaman.kyle.impl.IStatus
+import com.colaman.kyle.viewmodel.LifeViewModel
 import com.colaman.statuslayout.StatusLayout
 import com.gyf.barlibrary.ImmersionBar
 
@@ -29,19 +30,20 @@ import com.gyf.barlibrary.ImmersionBar
  *
  * 1.通过重写[needStatusLayout]返回值来确定是否需要使用[StatusLayout]作为根布局，默认为true，控制[statusLayout]对象来控制页面状态
  *
- * 2.[binding]为页面的binding，但是不包括[statusLayout]  [viewModel]是绑定到页面的viewmodel，具体逻辑都在viewmodel内部
+ * 2.[binding]为页面的binding，但是不包括[statusLayout]  [viewModel]是绑定到页面的viewModel，具体逻辑都在viewModel内部
  *
  * 3.[mImmersionBar] 设置状态栏相关属性
  */
 typealias activityResult = (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
 
-abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus {
+abstract class BaseActivity<B : ViewDataBinding, VM : LifeViewModel> : AppCompatActivity(), IStatus {
     // 状态栏颜色
     private val mDefaultStatusBarColorRes = R.color.white
     var mImmersionBar: ImmersionBar? = null
     private val activityResults = mutableListOf<activityResult>()
     var statusLayout: StatusLayout? = null
     lateinit var binding: B
+    var viewModel: VM? = null
 
 
     val context: Context
@@ -52,6 +54,9 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 初始化，绑定生命周期
+        viewModel = createViewModel()
+        viewModel?.bindLife(this)
         super.onCreate(savedInstanceState)
         val rootView: View?
         if (needStatusLayout()) {
@@ -65,7 +70,6 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
         initStatusLayout()
         initStatusBar()
         initView()
-
     }
 
 
@@ -97,6 +101,7 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity(), IStatus 
 
     protected abstract fun initView()
 
+    abstract fun createViewModel(): VM?
 
     /**
      * 设置状态栏颜色

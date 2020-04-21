@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="activity"
+            type="android.app.Activity" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,10 +26,10 @@
 
             <com.colaman.kyle.view.ColorProgressBar
                 android:id="@+id/progress_bar"
-                app:progress_color="@color/black"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="3dp" />
+                android:layout_height="3dp"
+                app:progress_color="@color/black" />
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

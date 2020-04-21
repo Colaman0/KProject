@@ -1,6 +1,7 @@
 package com.colaman.kyle.base.viewmodel
 
 import androidx.databinding.ViewDataBinding
+import androidx.databinding.library.baseAdapters.BR
 
 
 /**
@@ -21,7 +22,7 @@ open class BindingViewModel<B : ViewDataBinding> : BaseViewModel() {
             refreshBindingData(variableId)
         } catch (e: Exception) {
         }
-        
+
     }
 
     fun getViewDatabing() = binding
@@ -40,7 +41,7 @@ open class BindingViewModel<B : ViewDataBinding> : BaseViewModel() {
     /**
      * xml中如果不是用viewmodel作为name来绑定viewmodel，则需要重写这个方法，或者手动调用setVariable来设置数据
      */
-    fun getDefaultVariableId() = 1
+    fun getDefaultVariableId() = BR.viewmodel
 
 
 }

@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner
  *     desc   : 带有生命周期相关处理的viewmodel基类
  * </pre>
  */
-open class LifeViewModel : DefaultLifecycleObserver {
+abstract class LifeViewModel : DefaultLifecycleObserver {
     var lifecycleOwner: LifecycleOwner? = null
 
     /**
@@ -27,5 +27,4 @@ open class LifeViewModel : DefaultLifecycleObserver {
     fun bindParentViewModel(viewModel: LifeViewModel?) {
         bindLife(viewModel?.lifecycleOwner)
     }
-
 }
