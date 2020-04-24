@@ -37,8 +37,8 @@ abstract class BaseFragment<B : ViewDataBinding> : SupportFragment() {
     private var mImmersionBar: ImmersionBar? = null
         get() {
             if (field === null) {
-                if (activity is BaseActivity<*>) field =
-                    (activity as BaseActivity<*>).mImmersionBar
+                if (activity is BaseActivity<*,*>) field =
+                    (activity as BaseActivity<*,*>).mImmersionBar
             }
             return field
         }

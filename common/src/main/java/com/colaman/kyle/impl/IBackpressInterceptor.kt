@@ -16,5 +16,5 @@ interface IBackpressInterceptor {
      * @param activity BaseActivity<*>
      * @return Boolean
      */
-    fun OnInterceptor(activity: BaseActivity<*>): Boolean
+    fun OnInterceptor(activity: BaseActivity<*,*>): Boolean
 }

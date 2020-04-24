@@ -38,7 +38,7 @@ object VersionHelper {
      */
     fun checkVersion(
         api: Observable<IVersion>,
-        activity: BaseActivity<*>? = ActivityUtils.getTopActivity() as BaseActivity<*>,
+        activity: BaseActivity<*,*>? = ActivityUtils.getTopActivity() as BaseActivity<*,*>,
         dialog: Dialog? = CommonDialog(activity!!),
         callback: (() -> Unit)? = null
     ) {

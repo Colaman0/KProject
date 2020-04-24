@@ -25,13 +25,16 @@ import com.colaman.kyle.common.rx.fullSubscribe
 import com.colaman.kyle.network.NetworkStatusListener
 import com.colaman.kyle.view.SnackBarConfig
 import com.colaman.kyle.view.StatusToast
+import com.colaman.kyle.viewmodel.LifeViewModel
 import com.google.android.material.shadow.ShadowDrawableWrapper
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.reactivex.Observable
 import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding, LifeViewModel>() {
+    override fun createViewModel() = null
+
     override fun initLayoutRes() = R.layout.activity_main
 
     override fun initView() {
@@ -41,7 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val config = SnackBarConfig(
-            msg = System.currentTimeMillis().toString()
+                msg = System.currentTimeMillis().toString()
         )
 
     }

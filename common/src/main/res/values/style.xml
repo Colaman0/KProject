@@ -17,4 +17,9 @@
         //就是用来控制灰度的值，当为1时，界面除了我们的dialog内容是高亮显示的，dialog以外的区域是黑色的，完全看不到其他内容
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+
+    <style name="TextStyle">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
 </resources>

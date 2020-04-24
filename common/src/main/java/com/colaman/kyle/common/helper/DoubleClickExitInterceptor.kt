@@ -17,7 +17,7 @@ import kotlin.system.exitProcess
 class DoubleClickExitInterceptor : IBackpressInterceptor {
     var lastClick = 0L
 
-    override fun OnInterceptor(activity: BaseActivity<*>): Boolean {
+    override fun OnInterceptor(activity: BaseActivity<*,*>): Boolean {
         /**
          * 当app只有一个activity的时候，触发双击退出应用, 多于一个的时候正常
          */

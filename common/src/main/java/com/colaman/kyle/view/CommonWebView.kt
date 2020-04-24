@@ -38,12 +38,12 @@ class CommonWebView : FrameLayout {
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
 
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attributeSet,
-        defStyleAttr
+            context,
+            attributeSet,
+            defStyleAttr
     ) {
         val view = LayoutInflater.from(context)
-            .inflate(com.colaman.kyle.R.layout.layout_common_webview, null)
+                .inflate(com.colaman.kyle.R.layout.layout_common_webview, null)
         binding = DataBindingUtil.bind<LayoutCommonWebviewBinding>(view)!!
         addView(view)
         initDefaultConfig()
@@ -69,9 +69,9 @@ class CommonWebView : FrameLayout {
      * @param activity BaseActivity<*>
      * @return CommonWebView
      */
-    fun bindActivity(activity: BaseActivity<*>): CommonWebView {
+    fun bindActivity(activity: BaseActivity<*, *>): CommonWebView {
         activity.addBackpressInterceptor(object : IBackpressInterceptor {
-            override fun OnInterceptor(activity: BaseActivity<*>): Boolean {
+            override fun OnInterceptor(activity: BaseActivity<*, *>): Boolean {
                 if (webview.canGoBack()) {
                     webview.goBack()
                     return true
@@ -113,9 +113,9 @@ class CommonWebView : FrameLayout {
         }
         webview.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(
-                p0: WebView?,
-                sslErrorHandler: SslErrorHandler?,
-                p2: SslError?
+                    p0: WebView?,
+                    sslErrorHandler: SslErrorHandler?,
+                    p2: SslError?
             ) {
                 //忽略SSL证书错误
                 sslErrorHandler?.proceed()

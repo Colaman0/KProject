@@ -39,10 +39,10 @@ import java.util.*
 
 
 class FeaturesRecyclerViewAdapter(
-    context: Context?,
-    datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
+        context: Context?,
+        datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
 ) :
-    BaseRecyclerViewAdapter(context, datas) {
+        BaseRecyclerViewAdapter(context, datas) {
     val oldDatas = mutableListOf<RecyclerItemViewModel<out ViewDataBinding, out Any>?>()
 
     // diffutil的callback
@@ -55,6 +55,7 @@ class FeaturesRecyclerViewAdapter(
 
     // 头部view，不随adapter的remove/add改动
     val headers = mutableListOf<RecyclerItemViewModel<*, *>?>()
+
     // 底部view，不随adapter的remove/add改动
     val footers = mutableListOf<RecyclerItemViewModel<*, *>?>()
 
@@ -68,10 +69,10 @@ class FeaturesRecyclerViewAdapter(
     /**
      * loadmore的item
      */
-    protected var loadMoreItemViewModel: BaseLoadmoreViewModel<*, *>? = null
+    protected var loadMoreItemViewModel: BaseLoadmoreViewModel<ViewDataBinding, Any>? = null
         get() {
             if (field == null) {
-                field = initLoadMoreItemViewModel()
+                field = initLoadMoreItemViewModel() as BaseLoadmoreViewModel<ViewDataBinding, Any>
             }
             return field
         }
@@ -111,7 +112,8 @@ class FeaturesRecyclerViewAdapter(
         return super.getItemViewType(position)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
+        super.onBindViewHolder(holder, position)
         if (position != RecyclerView.NO_POSITION) {
             if (disableLoadmore && getAdapterSize() > 0 && position == itemCount - 1) {
                 holder.bindViewModel(loadMoreItemViewModel!!, position)
@@ -120,7 +122,6 @@ class FeaturesRecyclerViewAdapter(
             }
         }
     }
-
 
     /**
      * diffutils 刷新adapter，itemviewmodel需要实现对应的接口
@@ -140,30 +141,30 @@ class FeaturesRecyclerViewAdapter(
          */
         if (getDatas().size > 500) {
             Observable.just("")
-                .subscribeOn(Schedulers.computation())
-                .map { DiffUtil.calculateDiff(diffCallback, false) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { diffResult ->
-                    diffResult.dispatchUpdatesTo(this)
-                }
-                .doOnComplete {
-                    oldDatas.clear()
-                    oldDatas.addAll(viewmodels)
-                }
-                .binLife(lifecycleOwner!!)
-                .fullSubscribe()
+                    .subscribeOn(Schedulers.computation())
+                    .map { DiffUtil.calculateDiff(diffCallback, false) }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext { diffResult ->
+                        diffResult.dispatchUpdatesTo(this)
+                    }
+                    .doOnComplete {
+                        oldDatas.clear()
+                        oldDatas.addAll(viewmodels)
+                    }
+                    .binLife(lifecycleOwner!!)
+                    .fullSubscribe()
         } else {
             val result = DiffUtil.calculateDiff(diffCallback, false)
             Observable.just(result)
-                .doOnNext {
-                    result.dispatchUpdatesTo(this)
-                }
-                .doOnComplete {
-                    oldDatas.clear()
-                    oldDatas.addAll(viewmodels)
-                }
-                .binLife(lifecycleOwner!!)
-                .fullSubscribe()
+                    .doOnNext {
+                        result.dispatchUpdatesTo(this)
+                    }
+                    .doOnComplete {
+                        oldDatas.clear()
+                        oldDatas.addAll(viewmodels)
+                    }
+                    .binLife(lifecycleOwner!!)
+                    .fullSubscribe()
         }
     }
 
@@ -195,8 +196,8 @@ class FeaturesRecyclerViewAdapter(
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     if ((disableLoadmore && position == itemCount - 1) ||
-                        (position < headers.size) ||
-                        (position >= headers.size + getAdapterSize())
+                            (position < headers.size) ||
+                            (position >= headers.size + getAdapterSize())
                     ) {
                         return layoutManager.spanCount
                     }
@@ -211,9 +212,9 @@ class FeaturesRecyclerViewAdapter(
      *
      * @param item BaseLoadmoreViewModel<*, *>?
      */
-    fun setLoadMoreItem(item: BaseLoadmoreViewModel<*, *>?) {
+    fun setLoadMoreItem(item: BaseLoadmoreViewModel<ViewDataBinding, Any>?) {
         loadMoreItemViewModel = item
-        if (item === null) {
+        if (item == null) {
             switchLoadMore(false)
         } else {
 //            if (disableLoadmore) {
@@ -300,8 +301,8 @@ class FeaturesRecyclerViewAdapter(
     }
 
     override fun addAll(
-        list: Collection<RecyclerItemViewModel<out ViewDataBinding, out Any>>,
-        index: Int
+            list: Collection<RecyclerItemViewModel<out ViewDataBinding, out Any>>,
+            index: Int
     ) {
         super.addAll(list, getDatas().size - footers.size)
     }
