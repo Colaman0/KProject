@@ -3,24 +3,23 @@ package com.colaman.kyle.common.rx
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.LogUtils
-import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.base.recyclerview.PageHelper
 import com.colaman.kyle.common.expand.getTag
 import com.colaman.kyle.common.expand.putTag
 import com.colaman.kyle.common.network.KErrorExceptionFactory
+import com.colaman.kyle.common.param.Error
 import com.colaman.kyle.common.param.KError
-import com.colaman.kyle.entity.HttpModel
 import com.colaman.kyle.entity.PageDTO
 import com.colaman.kyle.entity.RxjavaExpandConfig
+import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.impl.IKResponse
 import com.colaman.kyle.impl.IRxConsumer
 import com.colaman.kyle.impl.IStatus
 import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import okhttp3.Request
+import java.util.concurrent.TimeUnit
 
 /**
  * <pre>
@@ -48,14 +47,23 @@ fun <T> Observable<T>.getExpandConfig(): RxjavaExpandConfig {
  * @return
  */
 fun <T, C : IKResponse<T>> Observable<C>.analysisResponse(): Observable<T> =
-    flatMap {
-        //  reponse如果是成功的话，就直接返回data
-        if (it.isSuccess() && it.getData() != null) {
-            Observable.just(it.getData())
-        } else {
-            Observable.error(Throwable("后台数据返回null"))
+        flatMap {
+
+            //  reponse如果是成功的话，就直接返回data
+            if (it.isSuccess()) {
+                Observable.just(it.getData())
+            } else {
+                if (it.authFail()) {
+                    Observable.error(KError(
+                            kThrowable = Throwable(message = it.getMessage()),
+                            kMessage = it.getMessage(),
+                            errorType = Error.LOGIN, kTips = "请重新登录"))
+                } else {
+                    Observable.error(Throwable(it.getMessage()))
+                }
+            }
+
         }
-    }
 
 /**
  * 处理网络请求response
@@ -64,14 +72,14 @@ fun <T, C : IKResponse<T>> Observable<C>.analysisResponse(): Observable<T> =
  * @return
  */
 fun <T, C : IKResponse<T>> Observable<C>.nullDataFilter(): Observable<C> =
-    flatMap {
-        //  reponse如果是成功的话，就直接返回data
-        if (it.isSuccess() && it.getData() != null) {
-            Observable.just(it)
-        } else {
-            Observable.error(Throwable("后台数据返回null"))
+        flatMap {
+            //  reponse如果是成功的话，就直接返回data
+            if (it.isSuccess() && it.getData() != null) {
+                Observable.just(it)
+            } else {
+                Observable.error(Throwable("后台数据返回null"))
+            }
         }
-    }
 
 
 /**
@@ -152,30 +160,30 @@ fun <T> Observable<T>.doOnKError(callback: (error: KError) -> Unit): Observable<
  * @receiver Observable<T>
  */
 fun <T> Observable<T>.fullSubscribe() =
-    doFinally {
-        getExpandConfig().rxConsumers.forEach {
-            it.onFinally()
-        }
-    }.subscribe({ data ->
-        getExpandConfig().rxConsumers.forEach {
-            it.onNext(data!!)
-        }
-    }, { throwable ->
-        // 分析过滤错误发射出去
-        val kThrowable = analysisExcetpion(throwable)
-        getExpandConfig().rxConsumers.forEach {
-            it.onError(kThrowable)
-        }
-        LogUtils.e(kThrowable)
-    }, {
-        getExpandConfig().rxConsumers.forEach {
-            it.onComplete()
-        }
-    }, {
-        getExpandConfig().rxConsumers.forEach {
-            it.onSuscrible()
-        }
-    })
+        doFinally {
+            getExpandConfig().rxConsumers.forEach {
+                it.onFinally()
+            }
+        }.subscribe({ data ->
+            getExpandConfig().rxConsumers.forEach {
+                it.onNext(data!!)
+            }
+        }, { throwable ->
+            // 分析过滤错误发射出去
+            val kThrowable = analysisExcetpion(throwable)
+            getExpandConfig().rxConsumers.forEach {
+                it.onError(kThrowable)
+            }
+            LogUtils.e(kThrowable.kThrowable)
+        }, {
+            getExpandConfig().rxConsumers.forEach {
+                it.onComplete()
+            }
+        }, {
+            getExpandConfig().rxConsumers.forEach {
+                it.onSuscrible()
+            }
+        })
 
 
 /**
@@ -212,8 +220,8 @@ fun <T> Observable<T>.switchApiThread(): Observable<T> {
  * @property life  传入一个Lifecycle，在activity以及viewmodel中都能get到
  */
 fun <T> Observable<T>.binLife(
-    lifecycleOwner: LifecycleOwner,
-    event: Lifecycle.Event = Lifecycle.Event.ON_DESTROY
+        lifecycleOwner: LifecycleOwner,
+        event: Lifecycle.Event = Lifecycle.Event.ON_DESTROY
 ): Observable<T> {
     return bindToLifecycle(lifecycleOwner)
 }
@@ -226,8 +234,8 @@ fun <T> Observable<T>.binLife(
  * @property life  传入一个Lifecycle，在activity以及viewmodel中都能get到
  */
 fun <T> Observable<T>.bindUntil(
-    lifecycleOwner: LifecycleOwner,
-    event: Lifecycle.Event = Lifecycle.Event.ON_DESTROY
+        lifecycleOwner: LifecycleOwner,
+        event: Lifecycle.Event = Lifecycle.Event.ON_DESTROY
 ): Observable<T> {
     return bindUntil(lifecycleOwner, event)
 }
@@ -263,12 +271,12 @@ fun <T> Observable<PageDTO<T>>.handlePage(pageHelper: PageHelper): Observable<T>
  * @return Observable<List<R>>
  */
 fun <T, R> Observable<out Iterable<T>>.transformItem(function: (T) -> R): Observable<List<R>> =
-    flatMap {
-        Observable.fromIterable(it)
-            .map { function.invoke(it) }
-            .toList()
-            .toObservable()
-    }
+        flatMap {
+            Observable.fromIterable(it)
+                    .map { function.invoke(it) }
+                    .toList()
+                    .toObservable()
+        }
 
 
 /**
@@ -284,3 +292,6 @@ class KErrorLamdaRunnable(var lamdaRunnable: ((error: KError) -> Unit)? = null) 
         lamdaRunnable?.invoke(error)
     }
 }
+
+
+fun <T> Observable<T>.delay(period: Long, unit: TimeUnit): Observable<Long> = Observable.interval(0, period, unit).take(1)

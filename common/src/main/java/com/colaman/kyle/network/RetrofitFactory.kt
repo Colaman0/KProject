@@ -1,7 +1,10 @@
 package com.colaman.kyle.common.network
 
 import com.colaman.kyle.network.OkhttpFactory
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -18,14 +21,14 @@ object RetrofitFactory {
     /**
      * 默认的baseurl
      */
-    const val baseurl: String = "https://www.v2ex.com/"
+    const val baseurl: String = "https://www.wanandroid.com/"
 
     private val mGsonCallAdapter by lazy {
         GsonConverterFactory.create()
     }
 
     private val mRxjavaAdapter by lazy {
-        com.colaman.kyle.network.rxjava2.RxJava2CallAdapterFactory.create()
+        RxJava2CallAdapterFactory.create()
     }
 
     /**
@@ -35,15 +38,17 @@ object RetrofitFactory {
         getRetrofitClient()
     }
 
+    val interceptories = mutableListOf<Interceptor>(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+
     fun getRetrofitClientBuilder(
-        baseUrl: String = baseurl,
-        okhttpClient: OkHttpClient = OkhttpFactory.getHttpClient(),
-        callAdapters: Array<CallAdapter.Factory> = arrayOf(mRxjavaAdapter),
-        converterAdapters: Array<Converter.Factory> = arrayOf(mGsonCallAdapter)
+            baseUrl: String = baseurl,
+            okhttpClient: OkHttpClient = OkhttpFactory.getHttpClient(interceptor = interceptories),
+            callAdapters: Array<CallAdapter.Factory> = arrayOf(mRxjavaAdapter),
+            converterAdapters: Array<Converter.Factory> = arrayOf(mGsonCallAdapter)
     ): Retrofit.Builder {
         val builder = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(okhttpClient)
+                .baseUrl(baseUrl)
+                .client(okhttpClient)
         callAdapters.forEach {
             builder.addCallAdapterFactory(it)
         }
@@ -55,10 +60,10 @@ object RetrofitFactory {
 
 
     fun getRetrofitClient(
-        baseUrl: String = baseurl,
-        okhttpClient: OkHttpClient = OkhttpFactory.getHttpClient(),
-        callAdapters: Array<CallAdapter.Factory> = arrayOf(mRxjavaAdapter),
-        converterAdapters: Array<Converter.Factory> = arrayOf(mGsonCallAdapter)
+            baseUrl: String = baseurl,
+            okhttpClient: OkHttpClient = OkhttpFactory.getHttpClient(interceptor = interceptories),
+            callAdapters: Array<CallAdapter.Factory> = arrayOf(mRxjavaAdapter),
+            converterAdapters: Array<Converter.Factory> = arrayOf(mGsonCallAdapter)
     ): Retrofit {
         return getRetrofitClientBuilder(baseUrl, okhttpClient, callAdapters, converterAdapters).build()
     }
@@ -80,5 +85,9 @@ object RetrofitFactory {
         } else {
             getRetrofitClient(baseUrl = url).create(clazz)
         }
+    }
+
+    fun addInterceptor(values: MutableList<Interceptor>) {
+        interceptories.addAll(values)
     }
 }

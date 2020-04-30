@@ -9,9 +9,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.databinding.Observable
+import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
-import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
 import com.colaman.kyle.common.manager.ImageManager
+import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
 
 /**
  *
@@ -30,8 +32,8 @@ fun View.bindSize(size: Int = ViewGroup.LayoutParams.WRAP_CONTENT) {
 
 @BindingAdapter("bindWidth", "bindHeight", requireAll = true)
 fun View.bindWidthHeight(
-    width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-    height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
+        width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
 ) {
     layoutParams.width = dp2px(context, width)
     layoutParams.height = dp2px(context, height)
@@ -105,4 +107,14 @@ fun ImageView.loadCircleUrl(url: String) {
 @BindingAdapter("bindRecyclerViewAdapter")
 fun RecyclerView.bindAdapter(adapter: FeaturesRecyclerViewAdapter) {
     bindLinearAdapter(context, adapter)
+}
+
+
+@BindingAdapter("bindSelect")
+fun View.bindSelect(select: ObservableField<Boolean>) {
+    select.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            isSelected = select.get()!!
+        }
+    })
 }

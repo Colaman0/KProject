@@ -15,11 +15,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
+import com.colaman.kyle.BR
 import com.colaman.kyle.R
+import com.colaman.kyle.base.viewmodel.BaseViewModel
 import com.colaman.kyle.common.helper.DoubleClickExitInterceptor
 import com.colaman.kyle.impl.IBackpressInterceptor
 import com.colaman.kyle.impl.IStatus
-import com.colaman.kyle.viewmodel.LifeViewModel
 import com.colaman.statuslayout.StatusLayout
 import com.gyf.barlibrary.ImmersionBar
 
@@ -36,7 +37,7 @@ import com.gyf.barlibrary.ImmersionBar
  */
 typealias activityResult = (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
 
-abstract class BaseActivity<B : ViewDataBinding, VM : LifeViewModel> : AppCompatActivity(), IStatus {
+abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(), IStatus {
     // 状态栏颜色
     private val mDefaultStatusBarColorRes = R.color.white
     var mImmersionBar: ImmersionBar? = null
@@ -73,16 +74,19 @@ abstract class BaseActivity<B : ViewDataBinding, VM : LifeViewModel> : AppCompat
     }
 
 
-    /**
+    /**-+
      * 初始化databinding
      * @param rootView View activity的根view
      */
-    private fun initBinding(rootView: View) {
+    open fun initBinding(rootView: View) {
         binding = (if (rootView is StatusLayout) {
             DataBindingUtil.bind(rootView.getDefaultContentView())
         } else {
             DataBindingUtil.bind(rootView)
         })!!
+        if (viewModel != null) {
+            binding.setVariable(BR.viewmodel, viewModel)
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)

@@ -5,7 +5,7 @@
 
         <variable
             name="viewmodel"
-            type="com.colaman.kproject.viewmodel.ItemTextViewmodel" />
+            type="com.colaman.wanandroid.viewmodel.ItemTextViewmodel" />
 
     </data>
 

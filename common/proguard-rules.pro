@@ -127,7 +127,7 @@ public static ** valueOf(java.lang.String);
 }
 
 # 保留实体类和成员不被混淆
--keep public class com.colaman.kproject.entity.**
+-keep public class com.colaman.wanandroid.entity.**
 -keep public class com.colaman.common.entity.**
 
 

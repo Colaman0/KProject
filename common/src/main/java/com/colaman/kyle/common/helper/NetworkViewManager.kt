@@ -8,7 +8,6 @@ import com.blankj.utilcode.util.StringUtils
 import com.colaman.kyle.R
 import com.colaman.kyle.base.BaseApplication
 import com.colaman.kyle.network.NetworkStatusListener
-import me.jessyan.autosize.AutoSize
 import me.jessyan.autosize.utils.AutoSizeUtils
 
 /**
@@ -25,7 +24,7 @@ object NetworkViewManager : NetworkStatusListener {
         if (!available && ActivityUtils.getTopActivity() != null) {
             SnackbarUtils.with(ActivityUtils.getTopActivity().window.decorView)
                 .setMessage("无法连接网络，请检查网络")
-                .setDuration(SnackbarUtils.LENGTH_INDEFINITE)
+                .setDuration(SnackbarUtils.LENGTH_SHORT)
                 .setAction(StringUtils.getString(R.string.setting)) {
                     ActivityUtils.startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
