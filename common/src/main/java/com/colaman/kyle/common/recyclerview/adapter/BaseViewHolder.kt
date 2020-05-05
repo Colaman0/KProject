@@ -31,12 +31,12 @@ open class BaseViewHolder<B : ViewDataBinding> : RecyclerView.ViewHolder {
     var currentPosition = -1
 
     constructor(
-            context: Context?,
-            view: View,
-            binding: B,
-            lifecycleOwner: LifecycleOwner?,
-            itemType: Int,
-            viewGroup: ViewGroup
+        context: Context?,
+        view: View,
+        binding: B,
+        lifecycleOwner: LifecycleOwner?,
+        itemType: Int,
+        viewGroup: ViewGroup
     ) : this(view) {
 
         this@BaseViewHolder.context = context
@@ -73,6 +73,7 @@ open class BaseViewHolder<B : ViewDataBinding> : RecyclerView.ViewHolder {
      */
     fun bindViewModel(viewModel: RecyclerItemViewModel<B, Any>, position: Int) {
         this@BaseViewHolder.viewModel = viewModel
+        viewModel.context = context
         // 设置tag，以便adapter通过view来获取当前显示的view上绑定的viewmodel
         itemView.tag = viewModel
         currentPosition = position

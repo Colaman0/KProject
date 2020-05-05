@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/guangchang"
+        android:icon="@mipmap/ic_guangchang"
+        android:title="广场"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/daohang"
+        android:icon="@mipmap/ic_daohang"
+        android:title="导航"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/tixi"
+        android:icon="@mipmap/ic_tixi"
+        android:title="体系"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/xiangmu"
+        android:icon="@mipmap/ic_xiangmu"
+        android:title="项目"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/wenda"
+        android:icon="@mipmap/ic_wenda"
+        android:title="问答"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/gongzhonghao"
+        android:icon="@mipmap/ic_gongzhonghao"
+        android:title="公众号"
+        app:showAsAction="ifRoom" />
+</menu>

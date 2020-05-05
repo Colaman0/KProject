@@ -5,21 +5,50 @@
 
     <data>
 
+        <variable
+            name="activity"
+            type="com.colaman.wanandroid.MainActivity" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.colaman.wanandroid.MainActivity">
+        android:layout_height="match_parent">
 
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:layout_height="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/bottom_bar"
+                style="@style/Widget.MaterialComponents.BottomAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:fabAlignmentMode="end"
+                app:hideOnScroll="true"
+                app:menu="@menu/main_menu"
+                app:navigationIcon="@mipmap/ic_menu" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/float_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#3d84a8"
+                android:backgroundTint="#3d84a8"
+                android:src="@mipmap/ic_up"
+                app:tint="@color/white"
+                app:fabSize="mini"
+                app:layout_anchor="@id/bottom_bar" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="164dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|left"
+            app:menu="@menu/action_menu" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

@@ -104,7 +104,9 @@ ext {
             "walle"                 : "com.meituan.android.walle:library:$version_walle",
 //            "x5"                    : 'com.tencent.tbs.tbssdk:sdk:43697',
 
-            "leanback"              : 'com.android.support:leanback-v17:28.0.0-alpha1'
+            "leanback"              : 'com.android.support:leanback-v17:28.0.0-alpha1',
+
+            "material"              : 'com.google.android.material:material:1.2.0-alpha06'
     ]
 
     otherDependencies = [
