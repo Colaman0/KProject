@@ -2,6 +2,7 @@ package com.colaman.wanandroid.util
 
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
+import com.colaman.wanandroid.entity.UserInfoEntity
 import com.google.gson.reflect.TypeToken
 import okhttp3.Cookie
 
@@ -12,6 +13,7 @@ import okhttp3.Cookie
  */
 object UserUtil {
     private val _cookies = mutableListOf<Cookie>()
+    private var userInfo: UserInfoEntity? = null
 
     /**
      * 初始化配置
@@ -49,4 +51,8 @@ object UserUtil {
         SPUtils.getInstance().put("user", "")
     }
 
+
+    fun isLogin() = _cookies.isNotEmpty() && userInfo != null
+
+    fun getUserInfo() = userInfo
 }

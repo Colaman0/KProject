@@ -3,14 +3,16 @@ package com.colaman.wanandroid
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.View
+import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuItemCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.blankj.utilcode.util.ToastUtils
 import com.colaman.kyle.base.BaseActivity
 import com.colaman.wanandroid.databinding.ActivityMainBinding
 import com.colaman.wanandroid.entity.*
+import com.colaman.wanandroid.util.UserUtil
 import com.colaman.wanandroid.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
@@ -19,6 +21,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun initLayoutRes() = R.layout.activity_main
 
     override fun initView() {
+        initToolbar()
+
         binding.bottomBar.setOnMenuItemClickListener { item ->
             true
         }
@@ -55,6 +59,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
             }
         }
+        navigation_view.post {
+            navigation_view.setCheckedItem(R.id.guangchang)
+            navigation_view.menu.performIdentifierAction(R.id.guangchang, 0);
+        }
+
+        UserUtil.isLogin()
     }
 
     override fun onBackPressed() {
@@ -63,14 +73,50 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         } else {
             super.onBackPressed()
         }
+    }
 
-
+    fun initUser() {
+        setAccountUIShow(UserUtil.isLogin())
+        if (UserUtil.isLogin() ) {
+            navigation_view.getHeaderView(0).findViewById<TextView>(R.id.user_name).text = UserUtil.getUserInfo()!!.nickname
+        }
     }
 
     /**
      * 切换内容，重新请求
      */
     fun switchContent(action: NaviAction) {
+        toolbar.title = action.text
         ToastUtils.showShort(action.text)
+    }
+
+    fun initToolbar() {
+        setSupportActionBar(toolbar)
+
+        val drawerToggle = object : ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.account, R.string.account) {
+
+        }
+        //通过下面这句实现toolbar和Drawer的联动：如果没有这行代码，箭头是不会随着侧滑菜单的开关而变换的（或者没有箭头），
+
+        drawerToggle.syncState()
+        //toolbar设置的图标控制drawerlayout的侧滑
+        toolbar.setNavigationOnClickListener(View.OnClickListener {
+            if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+                drawer_layout.closeDrawer(GravityCompat.START)
+            } else {
+                drawer_layout.openDrawer(GravityCompat.START)
+            }
+        })
+
+        drawer_layout.addDrawerListener(drawerToggle)
+    }
+
+    /**
+     * 设置导航栏中账户相关的UI 显示/隐藏
+     *
+     * @param show
+     */
+    fun setAccountUIShow(show: Boolean) {
+        navigation_view.menu.setGroupVisible(R.id.group_account, false)
     }
 }
