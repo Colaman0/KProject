@@ -15,9 +15,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.colaman.kyle.BR
 import com.colaman.kyle.R
-import com.colaman.kyle.base.viewmodel.BaseViewModel
 import com.colaman.kyle.common.helper.DoubleClickExitInterceptor
 import com.colaman.kyle.impl.IBackpressInterceptor
 import com.colaman.kyle.impl.IStatus
@@ -37,7 +38,7 @@ import com.gyf.barlibrary.ImmersionBar
  */
 typealias activityResult = (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
 
-abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(), IStatus {
+abstract class BaseActivity<B : ViewDataBinding, VM : ViewModel> : AppCompatActivity(), IStatus {
     // 状态栏颜色
     private val mDefaultStatusBarColorRes = R.color.white
     var mImmersionBar: ImmersionBar? = null
@@ -57,7 +58,6 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel> : AppCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         // 初始化，绑定生命周期
         viewModel = createViewModel()
-        viewModel?.bindLife(this)
         super.onCreate(savedInstanceState)
         val rootView: View?
         if (needStatusLayout()) {
@@ -105,7 +105,11 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel> : AppCompat
 
     protected abstract fun initView()
 
-    abstract fun createViewModel(): VM?
+    private fun createViewModel(): VM {
+        return ViewModelProviders.of(this).get(returnVMType())
+    }
+
+    abstract fun returnVMType(): Class<VM>
 
     /**
      * 设置状态栏颜色
