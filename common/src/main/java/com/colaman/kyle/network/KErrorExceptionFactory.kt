@@ -1,7 +1,7 @@
 package com.colaman.kyle.common.network
 
-import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.common.param.KError
+import com.colaman.kyle.impl.IExceptionAdapter
 import com.colaman.kyle.impl.IExceptionFactory
 import com.colaman.kyle.network.GsonExceptionAdapter
 import com.colaman.kyle.network.NetworkExceptionAdapter
@@ -15,13 +15,15 @@ import com.colaman.kyle.network.NetworkExceptionAdapter
  */
 class KErrorExceptionFactory : IExceptionFactory<KError> {
 
-    /**
-     * 默认添加Gson & 网络错误处理类
-     */
-    private val exceptionFactories = mutableListOf(
-            GsonExceptionAdapter(),
-            NetworkExceptionAdapter()
-    )
+    companion object {
+        /**
+         * 默认添加Gson & 网络错误处理类
+         */
+        val exceptionFactories = mutableListOf(
+                GsonExceptionAdapter(),
+                NetworkExceptionAdapter()
+        )
+    }
 
     override fun addExceptionCreator(creator: IExceptionAdapter<KError>) {
         exceptionFactories.add(0, creator)

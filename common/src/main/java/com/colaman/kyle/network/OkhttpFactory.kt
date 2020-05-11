@@ -1,5 +1,6 @@
 package com.colaman.kyle.network
 
+import okhttp3.CookieJar
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,10 +19,11 @@ object OkhttpFactory {
     private const val mDefaultWriteTimeOut = 10L
     private const val mDefaultRetryOnConnectionFailure = true
     private val mDefaultInterceptors = mutableListOf<Interceptor>(
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-
+            HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
     )
     private val mDefaultNetworkInterceptors = mutableListOf<Interceptor>()
+
+    private var cookieJar: CookieJar? = null
 
     /**
      * 获取一个okhttpclient
@@ -35,19 +37,23 @@ object OkhttpFactory {
      * @return
      */
     fun getHttpClient(
-        connectTimeOut: Long = mDefaultConnectTimeOut,
-        writeTimeOut: Long = mDefaultWriteTimeOut,
-        readTimeOut: Long = mDefaultReadTimeOut,
-        retryOnConnectionFailure: Boolean = mDefaultRetryOnConnectionFailure,
-        interceptor: MutableList<Interceptor> = mDefaultInterceptors,
-        networkInterceptor: MutableList<Interceptor> = mDefaultNetworkInterceptors
+            connectTimeOut: Long = mDefaultConnectTimeOut,
+            writeTimeOut: Long = mDefaultWriteTimeOut,
+            readTimeOut: Long = mDefaultReadTimeOut,
+            retryOnConnectionFailure: Boolean = mDefaultRetryOnConnectionFailure,
+            interceptor: MutableList<Interceptor> = mDefaultInterceptors,
+            networkInterceptor: MutableList<Interceptor> = mDefaultNetworkInterceptors
     ): OkHttpClient {
         val builder = getHttpClientBuilder(
-            connectTimeOut,
-            writeTimeOut,
-            readTimeOut,
-            retryOnConnectionFailure
-        )
+                connectTimeOut,
+                writeTimeOut,
+                readTimeOut,
+                retryOnConnectionFailure
+        ).apply {
+            if (cookieJar != null) {
+                cookieJar(cookieJar!!)
+            }
+        }
         /**
          * 添加应用拦截器
          */
@@ -73,17 +79,17 @@ object OkhttpFactory {
      * @param retryOnConnectionFailure  是否进行错误重试
      */
     fun getHttpClientBuilder(
-        connectTimeOut: Long = mDefaultConnectTimeOut,
-        writeTimeOut: Long = mDefaultWriteTimeOut,
-        readTimeOut: Long = mDefaultReadTimeOut,
-        retryOnConnectionFailure: Boolean = mDefaultRetryOnConnectionFailure
+            connectTimeOut: Long = mDefaultConnectTimeOut,
+            writeTimeOut: Long = mDefaultWriteTimeOut,
+            readTimeOut: Long = mDefaultReadTimeOut,
+            retryOnConnectionFailure: Boolean = mDefaultRetryOnConnectionFailure
     ) =
-        OkHttpClient.Builder()
-            .connectTimeout(connectTimeOut, TimeUnit.SECONDS)
-            .readTimeout(readTimeOut, TimeUnit.SECONDS)
-            .writeTimeout(writeTimeOut, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(retryOnConnectionFailure)
-            .toUnsafe()
+            OkHttpClient.Builder()
+                    .connectTimeout(connectTimeOut, TimeUnit.SECONDS)
+                    .readTimeout(readTimeOut, TimeUnit.SECONDS)
+                    .writeTimeout(writeTimeOut, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(retryOnConnectionFailure)
+                    .toUnsafe()
 
 
     /**
@@ -110,4 +116,8 @@ object OkhttpFactory {
         return interceptors
     }
 
+
+    fun setCookieJar(jar: CookieJar) {
+        cookieJar = jar
+    }
 }

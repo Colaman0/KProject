@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#3d84a8</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="colorText">#4d4d4d</color>
+    <color name="color_login_tag_select">#4d4d4d</color>
+    <color name="color_login_tag_unselect">#f0f0f0</color>
+    <color name="color_4d4d4d">#4d4d4d</color>
+    <color name="color_d4d4d4">#d4d4d4</color>
+    <color name="ripple_color">#1F000000</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

@@ -8,14 +8,12 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.StringDef
 import androidx.databinding.BindingAdapter
+import androidx.databinding.Observable
+import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
-import com.colaman.kyle.R
 import com.colaman.kyle.common.manager.ImageManager
-import com.colaman.kyle.common.recyclerview.adapter.KAdapter
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
+import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
 
 /**
  *
@@ -107,26 +105,16 @@ fun ImageView.loadCircleUrl(url: String) {
 }
 
 @BindingAdapter("bindRecyclerViewAdapter")
-fun RecyclerView.bindAdapter(adapter: KAdapter) {
+fun RecyclerView.bindAdapter(adapter: FeaturesRecyclerViewAdapter) {
     bindLinearAdapter(context, adapter)
 }
 
 
-
-@StringDef("rect", "corner")
-@Retention(RetentionPolicy.SOURCE)
-annotation class shadowType
-
-/**
- * 设置阴影
- *
- * @param shadowType 阴影类型
- */
-@BindingAdapter("showShadow")
-fun View.setShadow(@shadowType shadowType: String) {
-    if (shadowType == "rect") {
-        setBackgroundResource(R.drawable.shadow_common)
-    } else {
-        setBackgroundResource(R.drawable.shadow_common_corner)
-    }
+@BindingAdapter("bindSelect")
+fun View.bindSelect(select: ObservableField<Boolean>) {
+    select.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            isSelected = select.get()!!
+        }
+    })
 }

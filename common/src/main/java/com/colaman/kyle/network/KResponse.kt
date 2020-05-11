@@ -1,6 +1,7 @@
-package com.colaman.kyle.common.network
+package com.colaman.kyle.network
 
 import com.colaman.kyle.impl.IKResponse
+import com.google.gson.annotations.SerializedName
 
 /**
  * <pre>
@@ -9,33 +10,36 @@ import com.colaman.kyle.impl.IKResponse
  *     desc   : 网络请求response的基类
  * </pre>
  */
-class KResponse<T>(var datas: T) : IKResponse<T> {
+data class KResponse<T>(@SerializedName("data") var responseData: T? = null,
+                        @SerializedName("errorCode") var errorCode: Int = 0,
+                        @SerializedName("errorMsg") var errorMsg: String = ""
+) : IKResponse<T> {
+
 
     override fun isSuccess(): Boolean {
-        return true
+        return errorCode == 0
     }
 
     override fun isFailed(): Boolean {
-        return true
+        return errorCode != 0
+    }
+
+    override fun getResponseCode(): Int {
+        return errorCode
 
     }
 
-    override fun getResponseCode(): String {
-        return ""
-
-    }
-
-    override fun getData(): T {
-        return datas
+    override fun getData(): T? {
+        return responseData
     }
 
     override fun getMessage(): String {
-        return ""
+        return errorMsg
 
     }
 
-    override fun isAuthorztionSuccess(): Boolean {
-        return true
+    override fun authFail(): Boolean {
+        return errorCode == -1001
     }
 
 }

@@ -10,8 +10,8 @@ package com.colaman.kyle.impl
 interface IKResponse<T> {
     fun isSuccess(): Boolean
     fun isFailed(): Boolean
-    fun getResponseCode(): String
-    fun getData(): T
+    fun getResponseCode(): Int
+    fun getData(): T?
     fun getMessage(): String
-    fun isAuthorztionSuccess(): Boolean
+    fun authFail(): Boolean
 }

@@ -11,4 +11,5 @@ enum class Error {
     UNKNOW,
     NETWORK,
     JSON,
+    LOGIN
 }
