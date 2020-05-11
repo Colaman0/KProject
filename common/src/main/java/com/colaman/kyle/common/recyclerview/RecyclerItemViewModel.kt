@@ -35,12 +35,8 @@ abstract class RecyclerItemViewModel<B : ViewDataBinding, VM : Any> : BindingVie
 
     override fun setViewDatabinding(binding: ViewDataBinding?) {
         super.setViewDatabinding(binding)
-        /**
-         * 设置根布局的可见性
-         */
         binding?.root?.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
-
     abstract fun initLayoutRes(): Int
 
     /**

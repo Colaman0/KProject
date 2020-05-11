@@ -5,7 +5,9 @@ import android.content.Context
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
 import com.colaman.kyle.base.recyclerview.adapter.BaseRecyclerViewAdapter
 import com.colaman.kyle.base.viewmodel.BaseLoadmoreViewModel
@@ -38,11 +40,11 @@ import java.util.*
  */
 
 
-class FeaturesRecyclerViewAdapter(
-        context: Context?,
-        datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
+class KAdapter(
+    context: Context?,
+    datas: MutableList<RecyclerItemViewModel<out ViewDataBinding, out Any>?> = mutableListOf()
 ) :
-        BaseRecyclerViewAdapter(context, datas) {
+    BaseRecyclerViewAdapter(context, datas) {
     val oldDatas = mutableListOf<RecyclerItemViewModel<out ViewDataBinding, out Any>?>()
 
     // diffutil的callback
@@ -50,8 +52,6 @@ class FeaturesRecyclerViewAdapter(
         CommonDiffCallBack(oldDatas, viewmodels)
     }
 
-    // loadmore成功后的delay时长
-    val loadmoreDelay = 500L
 
     // 头部view，不随adapter的remove/add改动
     val headers = mutableListOf<RecyclerItemViewModel<*, *>?>()
@@ -59,20 +59,35 @@ class FeaturesRecyclerViewAdapter(
     // 底部view，不随adapter的remove/add改动
     val footers = mutableListOf<RecyclerItemViewModel<*, *>?>()
 
-    // 是否开始loadmore的标记
+    // 是否允许loadmore的标记
     var disableLoadmore = false
 
     // loadmore的回调集合
     var loadMoreListeners = mutableListOf<OnLoadMoreListener>()
 
+    var loadmoreIng = false
+
+
+    val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                val layoutManager = recyclerView.layoutManager
+                if (layoutManager is LinearLayoutManager) {
+                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+
+                }
+            }
+        }
+    }
 
     /**
      * loadmore的item
      */
-    protected var loadMoreItemViewModel: BaseLoadmoreViewModel<ViewDataBinding, Any>? = null
+    protected var loadMoreItemViewModel: BaseLoadmoreViewModel<*, *>? = null
         get() {
             if (field == null) {
-                field = initLoadMoreItemViewModel() as BaseLoadmoreViewModel<ViewDataBinding, Any>
+                field = initLoadMoreItemViewModel()
             }
             return field
         }
@@ -102,38 +117,69 @@ class FeaturesRecyclerViewAdapter(
         if (getDatas().size == 0) {
             return 0
         }
-        return getDatas().size + if (disableLoadmore) 1 else 0
+        return getDatas().size + if (disableLoadmore && getAdapterSize() > 0) 1 else 0
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (disableLoadmore && getAdapterSize() > 0 && position == itemCount - 1) {
+        if (disableLoadmore && position == itemCount - 1) {
             return loadMoreItemViewModel!!.initLayoutRes()
         }
         return super.getItemViewType(position)
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
-        super.onBindViewHolder(holder, position)
         if (position != RecyclerView.NO_POSITION) {
-            if (disableLoadmore && getAdapterSize() > 0 && position == itemCount - 1) {
-                holder.bindViewModel(loadMoreItemViewModel!!, position)
+            if (disableLoadmore && holder.itemType == loadMoreItemViewModel!!.initLayoutRes()) {
+
+                holder.bindViewModel(
+                    loadMoreItemViewModel!! as RecyclerItemViewModel<ViewDataBinding, Any>,
+                    position
+                )
+                if (disableLoadmore && !loadmoreIng) {
+                    loadmore()
+                }
             } else {
                 super.onBindViewHolder(holder, position)
             }
         }
     }
 
+    fun loadmore() {
+        loadmoreIng = true
+        ToastUtils.showShort("加载更多")
+        loadMoreListeners.forEach {
+            it.onLoadMore()
+        }
+    }
+
+    fun finishLoadmore() {
+        loadmoreIng = false
+    }
+
+    fun disableLoadmore(disable: Boolean) {
+        finishLoadmore()
+        if (disableLoadmore != disable) {
+            disableLoadmore = disable
+            recyclerView?.post {
+                notifyItemChanged(itemCount)
+            }
+        }
+    }
+
+
     /**
      * diffutils 刷新adapter，itemviewmodel需要实现对应的接口
      */
     @SuppressLint("CheckResult")
-    fun diffNotifydatasetchanged() {
+    fun diffNotifydatasetchanged(disableLoadmore: Boolean = false) {
+        this.disableLoadmore = disableLoadmore
+
         /**
          * 清空数据的时候直接刷新列表，减少计算差异，并且避免loadmore item的存在导致数据不一致崩溃
          */
         if (getDatas().size == 0) {
+            loadmoreIng = false
             notifyDataSetChanged()
-
             return
         }
         /**
@@ -141,30 +187,81 @@ class FeaturesRecyclerViewAdapter(
          */
         if (getDatas().size > 500) {
             Observable.just("")
-                    .subscribeOn(Schedulers.computation())
-                    .map { DiffUtil.calculateDiff(diffCallback, false) }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext { diffResult ->
+                .subscribeOn(Schedulers.computation())
+                .map { DiffUtil.calculateDiff(diffCallback, false) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { diffResult ->
                         diffResult.dispatchUpdatesTo(this)
-                    }
-                    .doOnComplete {
-                        oldDatas.clear()
-                        oldDatas.addAll(viewmodels)
-                    }
-                    .binLife(lifecycleOwner!!)
-                    .fullSubscribe()
+                }
+                .doOnComplete {
+                    loadmoreIng = false
+                    oldDatas.clear()
+                    oldDatas.addAll(viewmodels)
+                }
+                .binLife(lifecycleOwner!!)
+                .fullSubscribe()
         } else {
             val result = DiffUtil.calculateDiff(diffCallback, false)
             Observable.just(result)
-                    .doOnNext {
+                .doOnNext {
                         result.dispatchUpdatesTo(this)
-                    }
-                    .doOnComplete {
-                        oldDatas.clear()
-                        oldDatas.addAll(viewmodels)
-                    }
-                    .binLife(lifecycleOwner!!)
-                    .fullSubscribe()
+                }
+                .doOnComplete {
+                    loadmoreIng = false
+                    oldDatas.clear()
+                    oldDatas.addAll(viewmodels)
+                }
+                .binLife(lifecycleOwner!!)
+                .fullSubscribe()
+        }
+    }
+
+
+    /**
+     * diffutils 刷新adapter，itemviewmodel需要实现对应的接口
+     */
+    @SuppressLint("CheckResult")
+    fun diffNotifydatasetchanged() {
+
+        /**
+         * 清空数据的时候直接刷新列表，减少计算差异，并且避免loadmore item的存在导致数据不一致崩溃
+         */
+        if (getDatas().size == 0) {
+            loadmoreIng = false
+            notifyDataSetChanged()
+            return
+        }
+        /**
+         * 数据量比较小的时候可以不用切换线程，线程的切换也是需要耗时
+         */
+        if (getDatas().size > 500) {
+            Observable.just("")
+                .subscribeOn(Schedulers.computation())
+                .map { DiffUtil.calculateDiff(diffCallback, false) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { diffResult ->
+                        diffResult.dispatchUpdatesTo(this)
+                }
+                .doOnComplete {
+                    loadmoreIng = false
+                    oldDatas.clear()
+                    oldDatas.addAll(viewmodels)
+                }
+                .binLife(lifecycleOwner!!)
+                .fullSubscribe()
+        } else {
+            val result = DiffUtil.calculateDiff(diffCallback, false)
+            Observable.just(result)
+                .doOnNext {
+                        result.dispatchUpdatesTo(this)
+                }
+                .doOnComplete {
+                    loadmoreIng = false
+                    oldDatas.clear()
+                    oldDatas.addAll(viewmodels)
+                }
+                .binLife(lifecycleOwner!!)
+                .fullSubscribe()
         }
     }
 
@@ -192,12 +289,13 @@ class FeaturesRecyclerViewAdapter(
     override fun bindRecyclerView(recyclerView: RecyclerView?) {
         super.bindRecyclerView(recyclerView)
         val layoutManager = recyclerView?.layoutManager
+        recyclerView?.addOnScrollListener(scrollListener)
         if (layoutManager is GridLayoutManager) {
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     if ((disableLoadmore && position == itemCount - 1) ||
-                            (position < headers.size) ||
-                            (position >= headers.size + getAdapterSize())
+                        (position < headers.size) ||
+                        (position >= headers.size + getAdapterSize())
                     ) {
                         return layoutManager.spanCount
                     }
@@ -214,30 +312,8 @@ class FeaturesRecyclerViewAdapter(
      */
     fun setLoadMoreItem(item: BaseLoadmoreViewModel<ViewDataBinding, Any>?) {
         loadMoreItemViewModel = item
-        if (item == null) {
-            switchLoadMore(false)
-        } else {
-//            if (disableLoadmore) {
-//                recyclerView?.post {
-//                    notifyItemChanged(itemCount - 1)
-//                    // 判断一下loadmore的内容需不需要显示，当adapter真正内容为空时暂时不显示
-//                    loadMoreItemViewModel?.isVisible = getAdapterSize() > 0
-//                }
-//            } else {
-//                switchLoadMore(true)
-//                // 判断一下loadmore的内容需不需要显示，当adapter真正内容为时空暂时不显示
-//                loadMoreItemViewModel?.isVisible = getAdapterSize() > 0
-//            }
-        }
     }
 
-    /**
-     * 设置loadmore的状态
-     * @param state LOADMORE_STATE
-     */
-    fun setLoadMoreState(state: LOADMORE_STATE) {
-        loadMoreItemViewModel?.state = state
-    }
 
     /**
      * 添加loadmore回调
@@ -301,8 +377,8 @@ class FeaturesRecyclerViewAdapter(
     }
 
     override fun addAll(
-            list: Collection<RecyclerItemViewModel<out ViewDataBinding, out Any>>,
-            index: Int
+        list: Collection<RecyclerItemViewModel<out ViewDataBinding, out Any>>,
+        index: Int
     ) {
         super.addAll(list, getDatas().size - footers.size)
     }

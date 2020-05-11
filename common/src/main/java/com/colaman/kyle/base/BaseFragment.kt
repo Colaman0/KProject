@@ -1,4 +1,4 @@
-package com.colaman.kyle.base.fragment
+package com.colaman.kyle.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.colaman.kyle.base.BaseActivity
 import com.colaman.statuslayout.StatusLayout
 import com.gyf.barlibrary.ImmersionBar
 import me.yokeyword.fragmentation.SupportFragment

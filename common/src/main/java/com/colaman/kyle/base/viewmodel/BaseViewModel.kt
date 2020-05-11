@@ -1,6 +1,7 @@
 package com.colaman.kyle.base.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.colaman.kyle.common.LamdaRunnable
 import java.util.*
@@ -13,7 +14,24 @@ import java.util.*
  *     用哪个viewmodel 还是看需不需要用到databinding，BindingViewModel带有databinding，直接操作view，不同于常规的viewmodel层
  * </pre>
  */
-open class BaseViewModel : LifeViewModel() {
+open class BaseViewModel : DefaultLifecycleObserver {
+    var lifecycleOwner: LifecycleOwner? = null
+
+    /**
+     * 监听生命周期
+     */
+    fun bindLife(lifecycleOwner: LifecycleOwner?) {
+        this@BaseViewModel.lifecycleOwner = lifecycleOwner
+        lifecycleOwner?.lifecycle?.addObserver(this)
+    }
+
+    /**
+     * 绑定一个viewmodel
+     */
+    fun bindParentViewModel(viewModel: BaseViewModel?) {
+        bindLife(viewModel?.lifecycleOwner)
+    }
+
     var context: Context? = null
 
     /**

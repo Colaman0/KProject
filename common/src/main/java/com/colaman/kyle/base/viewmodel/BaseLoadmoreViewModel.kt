@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.colaman.kyle.common.recyclerview.RecyclerItemViewModel
-import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.recyclerview.adapter.KAdapter
 import com.colaman.kyle.common.recyclerview.adapter.LOADMORE_STATE
 
 /**
@@ -16,7 +16,7 @@ import com.colaman.kyle.common.recyclerview.adapter.LOADMORE_STATE
  * </pre>
  */
 abstract class BaseLoadmoreViewModel<B : ViewDataBinding, VM : Any>() : RecyclerItemViewModel<B, VM>() {
-    protected var adapter: FeaturesRecyclerViewAdapter? = null
+    protected var adapter: KAdapter? = null
     private var recyclerView: RecyclerView? = null
 
     private var reverseLayout = false
@@ -46,7 +46,7 @@ abstract class BaseLoadmoreViewModel<B : ViewDataBinding, VM : Any>() : Recycler
      *
      * @param adapter
      */
-    fun bindAdapter(adapter: FeaturesRecyclerViewAdapter) {
+    fun bindAdapter(adapter: KAdapter) {
         this@BaseLoadmoreViewModel.adapter = adapter
         recyclerView = adapter.recyclerView
         var layoutManager = recyclerView?.layoutManager

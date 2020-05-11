@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
-import com.colaman.kyle.base.fragment.BaseFragment
 
 /**
  *     author : kyle

@@ -8,10 +8,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.StringDef
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.R
 import com.colaman.kyle.common.manager.ImageManager
+import com.colaman.kyle.common.recyclerview.adapter.KAdapter
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
 
 /**
  *
@@ -30,8 +34,8 @@ fun View.bindSize(size: Int = ViewGroup.LayoutParams.WRAP_CONTENT) {
 
 @BindingAdapter("bindWidth", "bindHeight", requireAll = true)
 fun View.bindWidthHeight(
-    width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-    height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
+        width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
 ) {
     layoutParams.width = dp2px(context, width)
     layoutParams.height = dp2px(context, height)
@@ -103,6 +107,26 @@ fun ImageView.loadCircleUrl(url: String) {
 }
 
 @BindingAdapter("bindRecyclerViewAdapter")
-fun RecyclerView.bindAdapter(adapter: FeaturesRecyclerViewAdapter) {
+fun RecyclerView.bindAdapter(adapter: KAdapter) {
     bindLinearAdapter(context, adapter)
+}
+
+
+
+@StringDef("rect", "corner")
+@Retention(RetentionPolicy.SOURCE)
+annotation class shadowType
+
+/**
+ * 设置阴影
+ *
+ * @param shadowType 阴影类型
+ */
+@BindingAdapter("showShadow")
+fun View.setShadow(@shadowType shadowType: String) {
+    if (shadowType == "rect") {
+        setBackgroundResource(R.drawable.shadow_common)
+    } else {
+        setBackgroundResource(R.drawable.shadow_common_corner)
+    }
 }

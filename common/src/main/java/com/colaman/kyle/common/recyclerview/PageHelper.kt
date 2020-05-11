@@ -1,6 +1,6 @@
 package com.colaman.kyle.base.recyclerview
 
-import com.colaman.kyle.common.recyclerview.adapter.FeaturesRecyclerViewAdapter
+import com.colaman.kyle.common.recyclerview.adapter.KAdapter
 
 /**
  * <pre>
@@ -16,10 +16,10 @@ class PageHelper {
     var currentPage = 0
     var totalPage = 0
 
-    var adapter: FeaturesRecyclerViewAdapter? = null
+    var adapter: KAdapter? = null
 
 
-    fun bindAdapter(adapter: FeaturesRecyclerViewAdapter) {
+    fun bindAdapter(adapter: KAdapter) {
         this@PageHelper.adapter = adapter
     }
 }

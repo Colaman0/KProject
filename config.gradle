@@ -31,6 +31,7 @@ ext {
     def version_rxlifecycle = "3.1.0"
     def version_webview = "1.1.2"
     def version_walle = "1.1.6"
+    def version_coroutines = "1.3.5"
 
 
     dependencies = [
@@ -104,7 +105,9 @@ ext {
             "walle"                 : "com.meituan.android.walle:library:$version_walle",
 //            "x5"                    : 'com.tencent.tbs.tbssdk:sdk:43697',
 
-            "leanback"              : 'com.android.support:leanback-v17:28.0.0-alpha1'
+            "leanback"              : 'com.android.support:leanback-v17:28.0.0-alpha1',
+
+            'coroutines'            : "org.jetbrains.kotlinx:kotlinx-coroutines-android: $version_coroutines"
     ]
 
     otherDependencies = [
