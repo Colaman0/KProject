@@ -70,6 +70,10 @@ android {
         }
     }
 
+    viewBinding {
+        enabled = true
+    }
+
 //    walle {
 //        // 指定渠道包的输出路径
 //        apkOutputFolder = new File("${project.buildDir}/outputs/channels");

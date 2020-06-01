@@ -36,19 +36,20 @@ open class KActivity<B : ViewDataBinding>(
     val context: Context
         get() = this
 
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         if (needStatusLayout) {
             statusLayout = StatusLayout.init(context, contentLayoutId)
             setContentView(statusLayout)
             binding = DataBindingUtil.findBinding<B>(statusLayout!!)!!
         } else {
-            binding = DataBindingUtil.setContentView(this, contentLayoutId)
+            setContentView(contentLayoutId)
+            DataBindingUtil.findBinding<B>(window.decorView.rootView)?.let {
+                binding = it
+            }
         }
         initStatusBar()
     }
-
 
     /**
      * 设置状态栏颜色
