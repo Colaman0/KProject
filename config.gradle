@@ -18,7 +18,7 @@ ext {
     def version_matisse = "0.5.2-beta3"
     def version_permission = "2.0.0-rc12"
     def version_utils = "1.25.1"
-    def version_retrofit = "2.4.0"
+    def version_retrofit = "2.6.0"
     def version_retrofit_gson = "2.1.0"
     def version_retrofit_rxjava = "1.0.0"
     def version_multidex = "1.0.3"

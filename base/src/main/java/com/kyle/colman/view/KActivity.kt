@@ -88,7 +88,7 @@ open class KActivity<B : ViewDataBinding>(
 
     override fun onDestroy() {
         super.onDestroy()
-        mImmersionBar?.barColor()
+        mImmersionBar?.barColor(statusbarColor)
         mImmersionBar?.destroy()
     }
 }

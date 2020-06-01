@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object RetrofitFactory {
 
-    val apiConfig: ApiConfig? = null
+    var apiConfig: ApiConfig? = null
 
     private val mGsonCallAdapter by lazy {
         GsonConverterFactory.create()
@@ -41,7 +41,7 @@ object RetrofitFactory {
         okhttpClient: OkHttpClient = OkhttpFactory.getHttpClient(
             apiConfig = apiConfig!!
         ),
-        callAdapters: Array<CallAdapter.Factory> = arrayOf(mRxjavaAdapter),
+        callAdapters: Array<CallAdapter.Factory> = arrayOf(),
         converterAdapters: Array<Converter.Factory> = arrayOf(mGsonCallAdapter)
     ): Retrofit.Builder {
         val builder = Retrofit.Builder()
@@ -60,7 +60,7 @@ object RetrofitFactory {
     fun getRetrofitClient(
         baseUrl: String = apiConfig?.url ?: "",
         okhttpClient: OkHttpClient = OkhttpFactory.getHttpClient(apiConfig = apiConfig!!),
-        callAdapters: Array<CallAdapter.Factory> = arrayOf(mRxjavaAdapter),
+        callAdapters: Array<CallAdapter.Factory> = arrayOf(),
         converterAdapters: Array<Converter.Factory> = arrayOf(mGsonCallAdapter)
     ): Retrofit {
         return getRetrofitClientBuilder(
