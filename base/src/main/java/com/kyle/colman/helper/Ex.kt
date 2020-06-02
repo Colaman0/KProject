@@ -4,7 +4,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.KError
 import com.kyle.colman.network.KReponse
-import com.kyle.colman.network.UnkownError
+import com.kyle.colman.network.UnknownError
 import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
@@ -32,7 +32,7 @@ fun CoroutineScope.catchLaunch(
     }
 }
 
-fun <T> KReponse<T>.reponse(): T? {
+fun <T> KReponse<T>.toData(): T? {
     if (success()) {
         responseData()?.let {
             return it
@@ -64,7 +64,7 @@ fun Throwable.toKError(): KError {
             return filter.createKError(this)
         }
     }
-    return KError(kThrowable = this, errorType = UnkownError())
+    return KError(kThrowable = this, errorType = UnknownError)
 }
 
 fun kHandler(block: (KError) -> Unit) = CoroutineExceptionHandler { _, exception ->

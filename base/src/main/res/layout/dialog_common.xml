@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="dialog"
+            type="com.kyle.colman.view.CommonDialog.CommonDialogBuilder" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_corner_50_black"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.kyle.colman.view.ColorProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            bindSize="@{dialog.progressSize}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:progress_color="@color/white" />
+
+        <TextView
+            bindTextSize="@{dialog.textSize}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{dialog.text}"
+            android:textColor="@{ContextCompat.getColor(context,dialog.textColor)}" />
+
+    </LinearLayout>
+</layout>

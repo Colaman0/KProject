@@ -49,7 +49,7 @@ class Catcher(val scope: CoroutineScope) {
                 return it.createKError(e)
             }
         }
-        return KError(kThrowable = e, errorType = UnkownError())
+        return KError(kThrowable = e, errorType = UnknownError)
     }
 }
 

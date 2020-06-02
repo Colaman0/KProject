@@ -1,4 +1,4 @@
-package com.colaman.kyle.network
+package com.kyle.colaman.network
 
 import com.kyle.colman.config.ApiConfig
 import okhttp3.CookieJar

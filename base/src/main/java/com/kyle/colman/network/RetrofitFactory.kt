@@ -1,4 +1,4 @@
-package com.colaman.kyle.network
+package com.kyle.colaman.network
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.kyle.colman.config.ApiConfig

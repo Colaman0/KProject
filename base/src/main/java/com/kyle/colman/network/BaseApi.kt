@@ -1,6 +1,6 @@
 package com.kyle.colman.network
 
-import com.colaman.kyle.network.RetrofitFactory
+import com.kyle.colaman.network.RetrofitFactory
 
 /**
  * <pre>

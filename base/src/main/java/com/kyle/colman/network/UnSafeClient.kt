@@ -1,4 +1,4 @@
-package com.colaman.kyle.network
+package com.kyle.colaman.network
 
 import java.security.cert.CertificateException
 import javax.net.ssl.*

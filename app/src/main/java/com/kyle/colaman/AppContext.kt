@@ -1,8 +1,11 @@
 package com.kyle.colaman
 
-import com.colaman.kyle.network.OkhttpFactory
-import com.colaman.kyle.network.RetrofitFactory
+import com.kyle.colaman.network.OkhttpFactory
+import com.kyle.colaman.network.RetrofitFactory
+import com.kyle.colaman.activity.LoginFilter
+import com.kyle.colaman.api.UserCookie
 import com.kyle.colman.config.ApiConfig
+import com.kyle.colman.network.KReponse
 import com.kyle.colman.view.KApplication
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -16,9 +19,11 @@ class AppContext : KApplication() {
         super.onCreate()
         RetrofitFactory.apiConfig = ApiConfig(
             url = "https://www.wanandroid.com/",
+            cookieJar = UserCookie,
             interceptors = mutableListOf(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
         )
+        KReponse.exceptionFilters.add(LoginFilter)
     }
 }

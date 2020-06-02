@@ -1,0 +1,19 @@
+<resources>
+    <string name="setting_dialog_msg">需要%1s这些权限才能正常运行APP</string>
+    <string name="setting_dialog_title">权限设置</string>
+    <string name="setting_dialog_negative">拒绝</string>
+    <string name="setting_dialog_positive">去设置</string>
+    <string name="rationale_dialog_msg">需要%1s这些权限才能正常运行APP</string>
+    <string name="rationale_dialog_title">权限询问</string>
+    <string name="rationale_dialog_negative">拒绝</string>
+    <string name="rationale_dialog_positive">允许</string>
+    <string name="loading">加载中...</string>
+
+    // 这一段是为了处理在知乎的图片选择器的bug
+    <plurals name="error_over_count">
+        <item quantity="one">You can only select one media file</item>
+        <item quantity="many">You can only select up to %1$d media files</item>
+    </plurals>
+
+    <string name="setting">设置</string>
+</resources>
