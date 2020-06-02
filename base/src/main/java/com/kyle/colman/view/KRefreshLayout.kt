@@ -3,6 +3,8 @@ package com.kyle.colaman.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.kyle.colman.view.RefreshCallback
+import com.kyle.colman.view.RefreshView
 
 /**
  * Author   : kyle

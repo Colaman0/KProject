@@ -13,4 +13,6 @@ open interface IPageDTO<T> {
     fun pageData(): List<T>
 
     fun isLastPage(): Boolean
+
+    fun isFirstPage(): Boolean
 }

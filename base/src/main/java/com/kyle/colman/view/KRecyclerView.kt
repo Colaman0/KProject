@@ -1,39 +1,47 @@
-package com.kyle.colaman.view
+package com.kyle.colman.view
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
+import com.kyle.colman.helper.kHandler
+import com.kyle.colman.impl.IPageDTO
+import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.view.recyclerview.adapter.KAdapter
 import com.kyle.colman.view.recyclerview.adapter.OnLoadMoreListener
+import kotlinx.coroutines.*
 
 /**
  * Author   : kyle
  * Date     : 2020/5/9
  * Function : 封装功能的recyclerview
  */
-class KRecyclerView : RecyclerView, RefreshCallback {
+class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
 
-    private var loadmoreActions = mutableListOf<OnLoadMoreListener>()
-    private var refreshActions = mutableListOf<RefreshCallback>(this)
     private var refreshView: RefreshView? = null
-
+    var dataCreator: IRVDataCreator<Any>? = null
     var isLoadmoreing = false
+    var pageDTO: IPageDTO<*>? = null
+    var lifecycleCoroutineScope: LifecycleCoroutineScope? = null
 
     val isRefreshing
         get() = refreshView?.isRefreshing() == true
 
-    private var firstInitCallback: (() -> Unit)? = null
+    var currentJob: CompletableJob? = null
+
 
     private var KAdapter: KAdapter? = null
 
 
     constructor(context: Context) : this(context, null)
+
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
-            context,
-            attributeSet,
-            defStyleAttr
+        context,
+        attributeSet,
+        defStyleAttr
     )
 
     /**
@@ -47,6 +55,7 @@ class KRecyclerView : RecyclerView, RefreshCallback {
         setAdapter(adapter)
         adapter.bindRecyclerView(this)
         this.layoutManager = layoutManager
+        adapter.addLoadmoreListener(this)
     }
 
     fun setRefreshView(view: RefreshView) {
@@ -54,17 +63,6 @@ class KRecyclerView : RecyclerView, RefreshCallback {
         this.refreshView?.addRefreshFun(this)
     }
 
-    fun startRefreshView() {
-        if (!isRefreshing && !isLoadmoreing) {
-            this.refreshView?.startRefresh()
-        }
-    }
-
-    fun stopRefreshView() {
-        if (isRefreshing) {
-            this.refreshView?.stopRefresh()
-        }
-    }
 
     fun addRefreshListener(listener: RefreshCallback) {
         refreshView?.addRefreshFun(listener)
@@ -89,29 +87,95 @@ class KRecyclerView : RecyclerView, RefreshCallback {
      *
      * @param layoutManager
      */
-    fun canScroll(layoutManager: LinearLayoutManager) = if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
-        layoutManager.canScrollVertically()
-    } else {
-        layoutManager.canScrollHorizontally()
-    }
+    fun canScroll(layoutManager: LinearLayoutManager) =
+        if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
+            layoutManager.canScrollVertically()
+        } else {
+            layoutManager.canScrollHorizontally()
+        }
 
-    fun disableLoadmore(disable: Boolean) {
-        if (adapter is KAdapter) {
-            (adapter as KAdapter).disableLoadmore(disable)
+    fun startLoadmore() {
+        if (!isLoadmoreing) {
+            currentJob?.cancel()
+            isLoadmoreing = true
+            currentJob = SupervisorJob()
+            loadDataByPage(pageDTO?.currentPage() ?: 0 + 1, currentJob!!)
+            (adapter as KAdapter).disableLoadmore(true)
         }
     }
 
-    fun finishLoadmore() {
+    fun endLoadmore() {
+        currentJob?.cancel()
+        KAdapter?.disableLoadmore(false)
         isLoadmoreing = false
-        refreshView?.disableRefresh(true)
+    }
+
+    fun startRefresh() {
+        if (isLoadmoreing) {
+            endLoadmore()
+        }
+        refreshView?.startRefresh()
+    }
+
+    fun endRefresh() {
+        currentJob?.cancel()
+        this.refreshView?.stopRefresh()
     }
 
     override fun refresh() {
+        currentJob?.cancel()
+        currentJob = SupervisorJob()
+        loadDataByPage(1, currentJob!!)
+    }
+
+    override fun onLoadMore() {
+        startLoadmore()
     }
 
     override fun stopRefresh() {
-
     }
+
+    private fun loadDataByPage(page: Int, job: CompletableJob) {
+        if (dataCreator != null) {
+            if (lifecycleCoroutineScope != null) {
+                lifecycleCoroutineScope!!.launch(Dispatchers.IO + job + kHandler {
+                    if (isRefreshing) endRefresh() else endLoadmore()
+                }) {
+                    val data = dataCreator?.loadDataByPage(page = page) ?: return@launch
+                    if (isActive) {
+                        updateAdapterData(data)
+                    } else {
+                        endRefresh()
+                        endLoadmore()
+                    }
+                }
+            } else {
+                CoroutineScope(Dispatchers.IO + job + kHandler {
+                    if (isRefreshing) endRefresh() else endLoadmore()
+                }).launch {
+                    val data = dataCreator?.loadDataByPage(page = page) ?: return@launch
+                    if (isActive) {
+                        updateAdapterData(data)
+                    } else {
+                        endRefresh()
+                        endLoadmore()
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun updateAdapterData(data: IPageDTO<Any>) {
+        endRefresh()
+        endLoadmore()
+        if (data.isFirstPage()) {
+            KAdapter?.clear()
+        }
+        pageDTO = data
+        KAdapter?.addAll(data.pageData().map { dataCreator!!.dataToItemView(it) })
+        KAdapter?.diffNotifydatasetchanged(data.isLastPage())
+    }
+
 }
 
 

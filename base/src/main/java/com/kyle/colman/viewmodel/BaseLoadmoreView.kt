@@ -2,7 +2,7 @@ package com.kyle.colaman.base.viewmodel
 
 import androidx.databinding.ViewDataBinding
 import com.kyle.colman.view.recyclerview.RecyclerItemView
-import com.kyle.colaman.view.LoadmoreCallback
+import com.kyle.colman.view.LoadmoreCallback
 
 /**
  * <pre>
