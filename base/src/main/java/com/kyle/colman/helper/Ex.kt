@@ -43,20 +43,6 @@ fun <T> KReponse<T>.toData(): T? {
     return null
 }
 
-suspend fun catchApiBlock(
-    errorBlock: (suspend CoroutineScope.() -> Unit)? = null,
-    finallyBlock: (suspend CoroutineScope.() -> Unit)? = null,
-    scope: CoroutineScope,
-    runBlock: suspend CoroutineScope.() -> Unit
-) {
-    try {
-        runBlock(scope)
-    } catch (e: Exception) {
-
-    } finally {
-        finallyBlock?.let { it(scope) }
-    }
-}
 
 fun Throwable.toKError(): KError {
     KReponse.exceptionFilters.forEach { filter ->

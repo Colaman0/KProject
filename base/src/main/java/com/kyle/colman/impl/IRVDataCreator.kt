@@ -1,5 +1,8 @@
 package com.kyle.colman.impl
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import com.blankj.utilcode.util.ApiUtils
 import com.kyle.colman.view.recyclerview.RecyclerItemView
 
 /**
@@ -8,6 +11,19 @@ import com.kyle.colman.view.recyclerview.RecyclerItemView
  * Function : recyclerview 列表数据创建接口
  */
 interface IRVDataCreator<T> {
-    suspend fun loadDataByPage(page: Int): IPageDTO<T>
-    suspend fun dataToItemView(data: T): RecyclerItemView<*, *>
+    fun loadDataByPage(page: Int): LiveData<IPageDTO<T>>
+    fun dataToItemView(data: T): RecyclerItemView<*, *>
+}
+
+class AC : IRVDataCreator<Int> {
+    override fun loadDataByPage(page: Int): LiveData<IPageDTO<Int>> {
+        return liveData {
+
+        }
+    }
+
+    override fun dataToItemView(data: Int): RecyclerItemView<*, *> {
+        TODO("Not yet implemented")
+    }
+
 }

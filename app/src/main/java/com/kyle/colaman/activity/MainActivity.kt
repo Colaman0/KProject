@@ -2,11 +2,13 @@ package com.kyle.colaman.activity
 
 import android.os.Looper
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.liveData
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.colaman.wanandroid.api.Api
 import com.kyle.colaman.R
+import com.kyle.colaman.entity.TixiEntity
 import com.kyle.colaman.entity.error.LoginError
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.helper.toData

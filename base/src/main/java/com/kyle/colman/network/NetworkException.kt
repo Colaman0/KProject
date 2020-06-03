@@ -7,6 +7,7 @@ import org.json.JSONException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.CancellationException
 
 /**
  * Author   : kyle
@@ -54,3 +55,14 @@ class NetworkFilter : IExceptionFilter {
         return KError(throwable, kTips = "网络异常", errorType = NetWorkError)
     }
 }
+
+class CancelFilter : IExceptionFilter {
+    override fun isCreate(throwable: Throwable): Boolean {
+        return throwable is CancellationException
+    }
+
+    override fun createKError(throwable: Throwable): KError {
+        return KError(throwable, kTips = "任务取消", errorType = Cancel)
+    }
+}
+

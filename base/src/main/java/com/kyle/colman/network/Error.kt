@@ -11,3 +11,4 @@ open class ERROR
 object JsonError : ERROR()
 object NetWorkError : ERROR()
 object UnknownError : ERROR()
+object Cancel : ERROR()

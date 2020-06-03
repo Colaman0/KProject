@@ -17,7 +17,7 @@ interface KReponse<T> {
     fun message(): String
 
     companion object {
-        val exceptionFilters = mutableListOf(JsonFilter(), NetworkFilter())
+        val exceptionFilters = mutableListOf(JsonFilter(), NetworkFilter(), CancelFilter())
     }
 
 }
