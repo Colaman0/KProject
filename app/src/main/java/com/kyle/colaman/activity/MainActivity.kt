@@ -27,21 +27,12 @@ import com.kyle.colman.view.recyclerview.RecyclerItemView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
-class MainActivity : KActivity<Nothing>(R.layout.activity_main) {
+class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
-    init {
-        val handler = CoroutineExceptionHandler { _, exception ->
-            println("CoroutineExceptionHandler got $exception")
-        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        btn.setOnClickListener {
-            click()
-        }
-
+        binding.activity = this
         refresh_recyclerview.setDataCreator(object : IRVDataCreator<ArticleEntity> {
             override fun loadDataByPage(page: Int): LiveData<IPageDTO<ArticleEntity>> {
                 return liveData<IPageDTO<ArticleEntity>>(Dispatchers.IO + kHandler {

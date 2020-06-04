@@ -2,17 +2,20 @@ package com.kyle.colman.view
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
-import com.kyle.colman.helper.kHandler
 import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.view.recyclerview.adapter.KAdapter
 import com.kyle.colman.view.recyclerview.adapter.OnLoadMoreListener
-import com.tencent.smtt.utils.i
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Author   : kyle

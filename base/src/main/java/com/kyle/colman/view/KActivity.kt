@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.annotation.ColorRes
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -22,8 +25,9 @@ import kotlin.system.exitProcess
  * Function : base activity
  */
 open class KActivity<B : ViewDataBinding>(
+    @LayoutRes
     val contentLayoutId: Int,
-    val needStatusLayout: Boolean = false,
+    val needStatusLayout: Boolean = true,
     @ColorRes val statusbarColor: Int = R.color.white
 ) : AppCompatActivity() {
     var mImmersionBar: ImmersionBar? = null
@@ -40,14 +44,12 @@ open class KActivity<B : ViewDataBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (needStatusLayout) {
-            statusLayout = StatusLayout.init(context, contentLayoutId)
+            val view = layoutInflater.inflate(contentLayoutId, window.decorView as ViewGroup, false)
+            statusLayout = StatusLayout.init(view)
+            binding = DataBindingUtil.bind<B>(view!!)!!
             setContentView(statusLayout)
-            binding = DataBindingUtil.findBinding<B>(statusLayout!!)!!
         } else {
-            setContentView(contentLayoutId)
-            DataBindingUtil.findBinding<B>(window.decorView.rootView)?.let {
-                binding = it
-            }
+            binding = DataBindingUtil.setContentView(this, contentLayoutId)
         }
         initStatusBar()
     }

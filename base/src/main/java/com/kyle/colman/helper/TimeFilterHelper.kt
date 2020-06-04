@@ -1,6 +1,7 @@
 package com.kyle.colman.helper
 
 import android.os.SystemClock
+import io.reactivex.internal.operators.flowable.FlowableDistinct
 import java.util.concurrent.TimeUnit
 
 /**
@@ -14,10 +15,13 @@ class TimeFilterHelper {
      */
     private var mLastClickTime: Long = 0
 
-    fun filter(time: Long): Boolean {
+    /**
+     * 判断要不要过滤掉这次事件，true为忽略，false为执行
+     */
+    fun filter(distinct: Long): Boolean {
         val time = SystemClock.elapsedRealtime()
         val timeInterval = Math.abs(time - mLastClickTime)
-        return if (timeInterval < time) {
+        return if (timeInterval < distinct) {
             true
         } else {
             mLastClickTime = time

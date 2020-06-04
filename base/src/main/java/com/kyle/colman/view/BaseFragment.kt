@@ -31,14 +31,15 @@ open class KFragment<B : ViewDataBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var rootView: View?
+        val rootView: View?
+        val view = layoutInflater.inflate(contentLayoutId, container, false)
         if (needStatusLayout) {
-            statusLayout = StatusLayout.init(context!!, contentLayoutId)
-            binding = DataBindingUtil.findBinding<B>(statusLayout!!)!!
+            statusLayout = StatusLayout.init(view)
+            binding = DataBindingUtil.bind(view)!!
             rootView = statusLayout
         } else {
-            rootView = inflater.inflate(contentLayoutId, container, false)
-            binding = DataBindingUtil.findBinding<B>(rootView)!!
+            rootView = view
+            binding = DataBindingUtil.bind(view)!!
         }
         return rootView
     }

@@ -23,7 +23,7 @@ class AopClickAspect {
      * 注意：这里com.freak.kotlinhttpmanager.aop.AopOnclick需要替换成
      * 你自己项目中AopOnclick这个类的全路径
      */
-    @Pointcut("execution(@ccom.kyle.colman.helper.FilterTime(..))")
+    @Pointcut("execution(@com.kyle.colman.helper.FilterTime * * (..))")
     fun methodAnnotated() {
     }
 
@@ -42,10 +42,8 @@ class AopClickAspect {
         val aopOnclick = method.getAnnotation(FilterTime::class.java)
         // 判断是否快速点击
         if (!filter.filter(aopOnclick.value)) {
-            LogUtils.d("执行")
             // 不是快速点击，执行原方法
             joinPoint.proceed()
         }
-        LogUtils.d("不执行")
     }
 }
