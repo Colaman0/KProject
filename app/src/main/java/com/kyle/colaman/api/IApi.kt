@@ -3,8 +3,7 @@ package com.kyle.colaman.api
 import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.entity.TixiEntity
 import com.kyle.colaman.entity.UserInfoEntity
-import com.kyle.colaman.api.BaseRes
-import com.kyle.colaman.api.PageDTO
+import com.kyle.colaman.entity.PageDTO
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -38,7 +37,7 @@ interface IApi {
      * 获取首页文章列表
      */
     @GET("article/list/{page}/json")
-    fun getHomeArticles(@Path("page") page: Int): Observable<BaseRes<PageDTO<ArticleEntity>>>
+    suspend fun getHomeArticles(@Path("page") page: Int): BaseRes<PageDTO<ArticleEntity>>
 
     /**
      * 获取首页置顶文章列表

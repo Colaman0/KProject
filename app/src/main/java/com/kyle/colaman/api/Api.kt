@@ -13,7 +13,7 @@ import com.kyle.colman.network.BaseApi
 object Api : BaseApi<IApi>() {
     override fun getApiClass() = IApi::class.java
 
-//
+    //
 //    fun login(account: String, password: String) = getApi().login(account, password).switchApiThread()
 //            .analysisResponse()
 //
@@ -27,10 +27,7 @@ object Api : BaseApi<IApi>() {
 //            }
 //
 //
-//    fun getHomeArticles(page: Int) =
-//            getApi().getHomeArticles(page = page)
-//                    .switchApiThread()
-//                    .analysisResponse()
+    suspend fun getHomeArticles(page: Int) = getApi().getHomeArticles(page = page)
 //
 //    fun getProjects(page: Int) =
 //            getApi().getProjects(page = page)
@@ -66,6 +63,5 @@ object Api : BaseApi<IApi>() {
 //
 //    fun unCollectArticle(id: Int) = getApi().unCollectArticle(id.toString()).switchApiThread().analysisResponse()
 
-    suspend fun getTixi() = getApi().getTixi()
 
 }

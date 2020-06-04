@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.kyle.colman.BR
 import java.util.*
 
 
@@ -27,6 +28,7 @@ open class BindingViewModel<B : ViewDataBinding> : DefaultLifecycleObserver {
             this.binding = binding as B?
             refreshBindingData(variableId)
         } catch (e: Exception) {
+
         }
 
     }
@@ -47,7 +49,7 @@ open class BindingViewModel<B : ViewDataBinding> : DefaultLifecycleObserver {
     /**
      * xml中如果不是用viewmodel作为name来绑定viewmodel，则需要重写这个方法，或者手动调用setVariable来设置数据
      */
-    fun getDefaultVariableId() = 0
+    fun getDefaultVariableId() = BR.viewmodel
 
     var lifecycleOwner: LifecycleOwner? = null
 
@@ -63,6 +65,6 @@ open class BindingViewModel<B : ViewDataBinding> : DefaultLifecycleObserver {
      * 绑定一个viewmodel
      */
     fun bindParentViewModel(viewModel: BindingViewModel<*>) {
-        bindLife(viewModel?.lifecycleOwner)
+        bindLife(viewModel.lifecycleOwner)
     }
 }

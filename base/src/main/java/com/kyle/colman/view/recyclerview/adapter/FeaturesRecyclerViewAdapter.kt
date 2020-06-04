@@ -13,8 +13,7 @@ import com.kyle.colaman.base.viewmodel.BaseLoadmoreView
 import com.kyle.colman.viewmodel.CommonLoadMoreV
 import com.kyle.colman.view.recyclerview.RecyclerItemView
 import com.kyle.colman.view.recyclerview.CommonDiffCallBack
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 
 /**
@@ -38,7 +37,6 @@ import java.util.*
 
 
 class KAdapter(
-    val lifecycleCoroutineScope: LifecycleCoroutineScope,
     context: Context?,
     data: MutableList<RecyclerItemView<out ViewDataBinding, out Any>?> = mutableListOf()
 ) :
@@ -167,7 +165,7 @@ class KAdapter(
      * diffutils 刷新adapter，itemviewmodel需要实现对应的接口
      */
     @SuppressLint("CheckResult")
-    fun diffNotifydatasetchanged(disableLoadmore: Boolean = false) {
+    suspend fun diffNotifydatasetchanged(disableLoadmore: Boolean = false) {
         this.disableLoadmore = disableLoadmore
 
         /**
@@ -175,14 +173,19 @@ class KAdapter(
          */
         if (getDatas().size == 0) {
             loadmoreIng = false
-            notifyDataSetChanged()
+            withContext(Dispatchers.Main) {
+                notifyDataSetChanged()
+            }
             return
         }
-        lifecycleCoroutineScope.launch(Dispatchers.Default) {
-            DiffUtil.calculateDiff(diffCallback, false).dispatchUpdatesTo(this@KAdapter)
-            loadmoreIng = false
-            oldDatas.clear()
-            oldDatas.addAll(viewmodels)
+        withContext(Dispatchers.Default) {
+            val result = DiffUtil.calculateDiff(diffCallback, false)
+            withContext(Dispatchers.Main) {
+                result.dispatchUpdatesTo(this@KAdapter)
+                loadmoreIng = false
+                oldDatas.clear()
+                oldDatas.addAll(viewmodels)
+            }
         }
     }
 
@@ -304,7 +307,7 @@ class KAdapter(
         getDatas().addAll(footers)
     }
 
-    fun move(from: Int, to: Int) {
+    suspend fun move(from: Int, to: Int) {
         Collections.swap(getDatas(), from, to)
         diffNotifydatasetchanged()
     }

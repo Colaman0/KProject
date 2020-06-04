@@ -3,6 +3,7 @@ package com.kyle.colaman.entity
 
 import com.google.gson.annotations.SerializedName
 import com.kyle.colaman.entity.Tag
+import com.kyle.colaman.helper.CollectManager
 
 data class ArticleEntity(
     @SerializedName("apkLink")
@@ -69,7 +70,7 @@ data class ArticleEntity(
         var zan: Int? = 0,
     var topArticle: Boolean? = false
 ) {
-//    init {
-//        CollectManager.putNewArticle(this)
-//    }
+    init {
+        CollectManager.putNewArticle(this)
+    }
 }

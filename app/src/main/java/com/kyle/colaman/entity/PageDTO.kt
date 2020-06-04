@@ -25,7 +25,7 @@ data class PageDTO<T>(
     var total: Int = 0
 ) : IPageDTO<T> {
     override fun currentPage(): Int {
-        return curPage
+        return curPage - 1
     }
 
     override fun pageData(): List<T> {
@@ -34,5 +34,17 @@ data class PageDTO<T>(
 
     override fun isLastPage(): Boolean {
         return over
+    }
+
+    override fun isFirstPage(): Boolean {
+        return curPage - 1 == 0
+    }
+
+    override fun firstPageNum(): Int {
+        return 0
+    }
+
+    override fun nextApiPage(): Int {
+        return curPage
     }
 }

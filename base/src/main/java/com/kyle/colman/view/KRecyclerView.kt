@@ -2,9 +2,7 @@ package com.kyle.colman.view
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
@@ -13,6 +11,7 @@ import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.view.recyclerview.adapter.KAdapter
 import com.kyle.colman.view.recyclerview.adapter.OnLoadMoreListener
+import com.tencent.smtt.utils.i
 import kotlinx.coroutines.*
 
 /**
@@ -25,9 +24,9 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     private var refreshView: RefreshView? = null
     var dataCreator: IRVDataCreator<Any>? = null
     var isLoadmoreing = false
-    var pageDTO: IPageDTO<*>? = null
-    var lifecycleCoroutineScope: LifecycleCoroutineScope? = null
+    var pageDTO: IPageDTO<Any>? = null
     var dataCreatorLiveData: LiveData<IPageDTO<Any>>? = null
+    lateinit var lifecycleOwner: LifecycleOwner
 
     val isRefreshing
         get() = refreshView?.isRefreshing() == true
@@ -37,11 +36,10 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     private var KAdapter: KAdapter? = null
 
     private val dataObserver = Observer<IPageDTO<Any>> {
-        updateAdapterData(it)
+        lifecycleOwner.lifecycleScope.launch { updateAdapterData(it) }
     }
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
         context,
@@ -55,8 +53,13 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
      * @param adapter
      * @param layoutManager
      */
-    fun init(adapter: KAdapter, layoutManager: RecyclerView.LayoutManager) {
+    fun init(
+        adapter: KAdapter,
+        layoutManager: RecyclerView.LayoutManager,
+        lifecycleOwner: LifecycleOwner
+    ) {
         KAdapter = adapter
+        this.lifecycleOwner = lifecycleOwner
         setAdapter(adapter)
         adapter.bindRecyclerView(this)
         this.layoutManager = layoutManager
@@ -100,26 +103,30 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
         }
 
     fun startLoadmore() {
-        if (!isLoadmoreing) {
+        if (!isLoadmoreing && !isRefreshing) {
             isLoadmoreing = true
+            refreshView?.disableRefresh(false)
             if (isRefreshing) {
                 endRefresh()
             }
             (adapter as KAdapter).disableLoadmore(true)
-            dataCreator?.loadDataByPage((pageDTO?.currentPage() ?: 0) + 1)
+            loadDataByPage((pageDTO?.currentPage() ?: 0) + 1)
         }
     }
 
 
     fun startRefresh() {
-        refreshView?.startRefresh()
+        if (!isRefreshing && !isLoadmoreing) {
+            refreshView?.startRefresh()
+        }
     }
 
     override fun refresh() {
         if (isLoadmoreing) {
-            endLoadmore()
+            return
         }
-        dataCreator?.loadDataByPage(pageDTO?.firstPageNum() ?: 1)
+        KAdapter?.disableLoadmore(false)
+        loadDataByPage(pageDTO?.firstPageNum() ?: 1)
     }
 
 
@@ -131,7 +138,6 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     }
 
     fun endRefresh() {
-        currentJob?.cancel()
         this.refreshView?.stopRefresh()
     }
 
@@ -143,47 +149,27 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     override fun stopRefresh() {
     }
 
-    private fun loadDataByPage(page: Int, job: CompletableJob) {
-//        if (dataCreator != null) {
-//            if (lifecycleCoroutineScope != null) {
-//                lifecycleCoroutineScope!!.launch(Dispatchers.IO + job + kHandler {
-//                    if (isRefreshing) endRefresh() else endLoadmore()
-//                }) {
-//                    val data = dataCreator?.loadDataByPage(page = page) ?: return@launch
-//                    data.ob
-//                    if (isActive) {
-//                        updateAdapterData(data)
-//                    }
-//                }
-//            } else {
-//                CoroutineScope(Dispatchers.IO + job + kHandler {
-//                    if (isRefreshing) endRefresh() else endLoadmore()
-//                }).launch {
-//                    val data = dataCreator?.loadDataByPage(page = page) ?: return@launch
-//                    if (isActive) {
-//                        updateAdapterData(data)
-//                    } else {
-//                        endRefresh()
-//                        endLoadmore()
-//                    }
-//                }
-//            }
-//        }
+    private fun loadDataByPage(page: Int) {
         if (dataCreator != null) {
             dataCreatorLiveData?.removeObserver(dataObserver)
-            dataCreatorLiveData = dataCreator!!.loadDataByPage(page)
+            dataCreatorLiveData = dataCreator!!.loadDataByPage(page).apply {
+                observe(lifecycleOwner, dataObserver)
+            }
         }
     }
 
-    private fun updateAdapterData(data: IPageDTO<Any>) {
+    private suspend fun updateAdapterData(data: IPageDTO<Any>) {
         endRefresh()
-        endLoadmore()
+        isLoadmoreing = false
+        refreshView?.disableRefresh(true)
         if (data.isFirstPage()) {
             KAdapter?.clear()
         }
         pageDTO = data
-        KAdapter?.addAll(data.pageData().map { dataCreator!!.dataToItemView(it) })
-        KAdapter?.diffNotifydatasetchanged(data.isLastPage())
+        withContext(Dispatchers.Default) {
+            KAdapter?.addAll(data.pageData().map { dataCreator!!.dataToItemView(it) })
+        }
+        KAdapter?.diffNotifydatasetchanged(!data.isLastPage())
     }
 
 }

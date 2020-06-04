@@ -2,11 +2,14 @@ package com.kyle.colman.view.recyclerview
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.kyle.colaman.base.viewmodel.BindingViewModel
 import com.kyle.colman.view.recyclerview.adapter.BaseViewHolder
 import com.kyle.colman.impl.IDiffComparator
 import com.kyle.colman.impl.OnItemClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 /**
  * Create by kyle on 2018/12/24
@@ -37,6 +40,8 @@ abstract class RecyclerItemView<B : ViewDataBinding, VM : Any>(val layoutRes: In
         }
 
     var isAttached = false
+    var itemScoupe = lifecycleOwner?.lifecycleScope ?: CoroutineScope(Dispatchers.Default)
+
     private var mHolder: BaseViewHolder<B>? = null
 
 
@@ -45,6 +50,7 @@ abstract class RecyclerItemView<B : ViewDataBinding, VM : Any>(val layoutRes: In
         /**
          * 设置根布局的可见性
          */
+        binding?.lifecycleOwner = lifecycleOwner
         binding?.root?.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 

@@ -14,16 +14,3 @@ interface IRVDataCreator<T> {
     fun loadDataByPage(page: Int): LiveData<IPageDTO<T>>
     fun dataToItemView(data: T): RecyclerItemView<*, *>
 }
-
-class AC : IRVDataCreator<Int> {
-    override fun loadDataByPage(page: Int): LiveData<IPageDTO<Int>> {
-        return liveData {
-
-        }
-    }
-
-    override fun dataToItemView(data: Int): RecyclerItemView<*, *> {
-        TODO("Not yet implemented")
-    }
-
-}
