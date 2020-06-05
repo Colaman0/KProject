@@ -7,6 +7,8 @@ package com.kyle.colman.config
  */
 object Constants {
     val DOUBLE_CLICK_TIME = 500
+    val DATA = "data"
+    val ARGUMENTS = "arguments"
 
     object PATH {
         // fileprovider完整名

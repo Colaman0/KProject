@@ -173,14 +173,14 @@ class KAdapter(
          */
         if (getDatas().size == 0) {
             loadmoreIng = false
-            withContext(Dispatchers.Main) {
+            recyclerView?.post {
                 notifyDataSetChanged()
             }
             return
         }
         withContext(Dispatchers.Default) {
             val result = DiffUtil.calculateDiff(diffCallback, false)
-            withContext(Dispatchers.Main) {
+            recyclerView?.post {
                 result.dispatchUpdatesTo(this@KAdapter)
                 loadmoreIng = false
                 oldDatas.clear()

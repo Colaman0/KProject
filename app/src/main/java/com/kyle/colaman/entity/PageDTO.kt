@@ -2,6 +2,8 @@ package com.kyle.colaman.entity
 
 import com.google.gson.annotations.SerializedName
 import com.kyle.colman.impl.IPageDTO
+import com.kyle.colman.impl.IResult
+import com.kyle.colman.impl.RESULT
 
 /**
  * Author   : kyle
@@ -24,6 +26,7 @@ data class PageDTO<T>(
     @SerializedName("total")
     var total: Int = 0
 ) : IPageDTO<T> {
+
     override fun currentPage(): Int {
         return curPage - 1
     }

@@ -24,7 +24,7 @@ import kotlin.system.exitProcess
  * Date     : 2020/5/29
  * Function : base activity
  */
-open class KActivity<B : ViewDataBinding>(
+abstract class KActivity<B : ViewDataBinding>(
     @LayoutRes
     val contentLayoutId: Int,
     val needStatusLayout: Boolean = true,
@@ -52,7 +52,10 @@ open class KActivity<B : ViewDataBinding>(
             binding = DataBindingUtil.setContentView(this, contentLayoutId)
         }
         initStatusBar()
+        initView()
     }
+
+    abstract fun initView()
 
     /**
      * 设置状态栏颜色

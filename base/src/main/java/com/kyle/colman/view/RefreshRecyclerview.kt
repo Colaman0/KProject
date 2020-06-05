@@ -45,4 +45,8 @@ class RefreshRecyclerview : ConstraintLayout {
     fun setDataCreator(datacreator: IRVDataCreator<*>) {
         recyclerview_k.dataCreator = (datacreator as IRVDataCreator<Any>)
     }
+
+    fun getRefreshView() = refresh_layout_k
+
+    fun getRecyclerview() = recyclerview_k
 }

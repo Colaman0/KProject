@@ -15,22 +15,22 @@ import retrofit2.http.*
 interface IApi {
     @POST("/user/login")
     @FormUrlEncoded
-    fun login(
+    suspend fun login(
         @Field("username") account: String,
         @Field("password") password: String
-    ): Observable<BaseRes<UserInfoEntity>>
+    ): BaseRes<UserInfoEntity>
 
     @POST("/user/register")
     @FormUrlEncoded
-    fun register(
+    suspend fun register(
         @Field("username") account: String,
         @Field("password") password: String,
         @Field("repassword") repassword: String
-    ): Observable<BaseRes<UserInfoEntity>>
+    ): BaseRes<UserInfoEntity>
 
 
     @GET("/user/logout/json")
-    fun logout(): Observable<Unit>
+    suspend fun logout(): Unit
 
 
     /**
@@ -43,18 +43,18 @@ interface IApi {
      * 获取首页置顶文章列表
      */
     @GET("article/top/json")
-    fun getHomeTopArticles(): Observable<BaseRes<MutableList<ArticleEntity>>>
+    suspend fun getHomeTopArticles(): BaseRes<MutableList<ArticleEntity>>
 
 
     @GET("article/listproject/{page}/json")
-    fun getProjects(@Path("page") page: Int): Observable<BaseRes<PageDTO<ArticleEntity>>>
+    suspend fun getProjects(@Path("page") page: Int): BaseRes<PageDTO<ArticleEntity>>
 
 
     @GET("user_article/list/{page}/json")
-    fun getGuangchangArticles(@Path("page") page: Int): Observable<BaseRes<PageDTO<ArticleEntity>>>
+    suspend fun getGuangchangArticles(@Path("page") page: Int): BaseRes<PageDTO<ArticleEntity>>
 
     @GET("wenda/list/{page}/json")
-    fun getWenda(@Path("page") page: Int): Observable<BaseRes<PageDTO<ArticleEntity>>>
+    suspend fun getWenda(@Path("page") page: Int): BaseRes<PageDTO<ArticleEntity>>
 
     @GET("tree/json")
     suspend fun getTixi(): BaseRes<List<TixiEntity>>
@@ -66,10 +66,10 @@ interface IApi {
     ): BaseRes<PageDTO<ArticleEntity>>
 
     @POST("lg/collect/{id}/json")
-    fun collectArticle(@Path("id") id: String): Observable<BaseRes<Nothing>>
+    suspend fun collectArticle(@Path("id") id: String): BaseRes<Nothing>
 
 
     @POST("lg/uncollect_originId/{id}/json")
-    fun unCollectArticle(@Path("id") id: String): Observable<BaseRes<Nothing>>
+    suspend fun unCollectArticle(@Path("id") id: String): BaseRes<Nothing>
 
 }
