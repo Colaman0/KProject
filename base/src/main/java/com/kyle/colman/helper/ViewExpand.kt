@@ -1,7 +1,6 @@
 package com.kyle.colman.helper
 
 import android.content.Context
-import android.provider.SyncStateContract
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -9,11 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SnackbarUtils
-import com.kyle.colman.helper.AnimationHelper
-import com.kyle.colman.helper.TimeHelper
 import com.google.android.material.snackbar.Snackbar
-import com.kyle.colaman.common.recyclerview.layoutmanager.WrapLinearlayoutManager
+import com.kyle.colman.view.recyclerview.layoutmanager.WrapLinearlayoutManager
 import com.kyle.colman.view.recyclerview.adapter.BaseRecyclerViewAdapter
 import java.util.concurrent.TimeUnit
 

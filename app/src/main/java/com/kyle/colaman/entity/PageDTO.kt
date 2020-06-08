@@ -40,7 +40,7 @@ data class PageDTO<T>(
     }
 
     override fun isFirstPage(): Boolean {
-        return curPage - 1 == 0
+        return currentPage() == 0
     }
 
     override fun firstPageNum(): Int {

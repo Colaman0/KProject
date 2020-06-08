@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.base.viewmodel.BaseLoadmoreView
+import com.kyle.colman.helper.copy
+import com.kyle.colman.helper.isNotNullOrEmpty
 import com.kyle.colman.viewmodel.CommonLoadMoreV
 import com.kyle.colman.view.recyclerview.RecyclerItemView
 import com.kyle.colman.view.recyclerview.CommonDiffCallBack
@@ -41,13 +44,6 @@ class KAdapter(
     data: MutableList<RecyclerItemView<out ViewDataBinding, out Any>?> = mutableListOf()
 ) :
     BaseRecyclerViewAdapter(context, data) {
-    val oldDatas = mutableListOf<RecyclerItemView<out ViewDataBinding, out Any>?>()
-
-    // diffutil的callback
-    protected val diffCallback by lazy {
-        CommonDiffCallBack(oldDatas, viewmodels)
-    }
-
 
     // 头部view，不随adapter的remove/add改动
     val headers = mutableListOf<RecyclerItemView<*, *>?>()
@@ -63,20 +59,6 @@ class KAdapter(
 
     var loadmoreIng = false
 
-
-    val scrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                val layoutManager = recyclerView.layoutManager
-                if (layoutManager is LinearLayoutManager) {
-                    val lastPosition = layoutManager.findLastVisibleItemPosition()
-
-                }
-            }
-        }
-    }
-
     /**
      * loadmore的item
      */
@@ -89,8 +71,8 @@ class KAdapter(
         }
 
     init {
-        if (data.size > 0) {
-            oldDatas.addAll(data)
+        if (data.isNotNullOrEmpty()) {
+            getDatas().addAll(data)
         }
     }
 
@@ -104,20 +86,16 @@ class KAdapter(
 
 
     override fun getItemCount(): Int {
-
         /**
          * 避免第一次加载的时候如果开启loadmore，默认显示了loadingItem
          */
         if (getDatas().size == 0) {
             return 0
         }
-        Log.d("cola", "getItemCount = ${getDatas().size + if (disableLoadmore) 1 else 0}")
-
         return getDatas().size + if (disableLoadmore) 1 else 0
     }
 
     override fun getItemViewType(position: Int): Int {
-        Log.d("cola", "getItemViewType = $position")
         if (disableLoadmore && position == itemCount - 1) {
             return loadMoreItemViewModel!!.layoutRes
         }
@@ -125,7 +103,6 @@ class KAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
-        Log.d("cola", "onBindViewHolder = $position")
         if (position != RecyclerView.NO_POSITION) {
             if (disableLoadmore && holder.itemType == loadMoreItemViewModel!!.layoutRes) {
                 holder.bindViewModel(
@@ -155,8 +132,8 @@ class KAdapter(
     fun disableLoadmore(disable: Boolean) {
         finishLoadmore()
         if (disableLoadmore != disable) {
+            disableLoadmore = disable
             recyclerView?.post {
-                disableLoadmore = disable
                 notifyItemChanged(itemCount)
             }
         }
@@ -168,25 +145,25 @@ class KAdapter(
      */
     @SuppressLint("CheckResult")
     suspend fun diffNotifydatasetchanged(
+        disable: Boolean,
         newData: List<RecyclerItemView<out ViewDataBinding, out Any>?>
     ) {
         withContext(Dispatchers.Default) {
-            val result = DiffUtil.calculateDiff(CommonDiffCallBack(oldDatas, newData), true)
+            val result = DiffUtil.calculateDiff(CommonDiffCallBack(getDatas(), newData), true)
             recyclerView?.post {
                 result.dispatchUpdatesTo(this@KAdapter)
                 getDatas().clear()
                 getDatas().addAll(newData)
-                oldDatas.clear()
-                oldDatas.addAll(newData)
+                disableLoadmore(disable)
+                LogUtils.d("loadmore = $disableLoadmore")
+                finishLoadmore()
             }
         }
-        finishLoadmore()
     }
 
     override fun bindRecyclerView(recyclerView: RecyclerView?) {
         super.bindRecyclerView(recyclerView)
         val layoutManager = recyclerView?.layoutManager
-        recyclerView?.addOnScrollListener(scrollListener)
         if (layoutManager is GridLayoutManager) {
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -194,6 +171,7 @@ class KAdapter(
                         (position < headers.size) ||
                         (position >= headers.size + getAdapterSize())
                     ) {
+
                         return layoutManager.spanCount
                     }
                     return 1
@@ -302,8 +280,9 @@ class KAdapter(
     }
 
     suspend fun move(from: Int, to: Int) {
-        Collections.swap(getDatas(), from, to)
-//        diffNotifydatasetchanged(oldDatas, getDatas())
+        val datas = getDatas().copy()
+        Collections.swap(datas, from, to)
+        diffNotifydatasetchanged(disableLoadmore, datas)
     }
 
 }
@@ -312,16 +291,3 @@ interface OnLoadMoreListener {
     fun onLoadMore()
 }
 
-/**
- * loadmore item 的状态，可以在刷新数据之后根据状态来回调给loadmore item
- */
-enum class LOADMORE_STATE {
-    LOADING, SUCCESS, FAILED, NOTHING
-}
-
-/**
- * 刷新数据后的状态枚举
- */
-enum class NOTIFY_STATE {
-    SUCCESS, FAILED
-}

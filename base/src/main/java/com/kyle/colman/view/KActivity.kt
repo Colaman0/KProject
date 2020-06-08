@@ -1,22 +1,22 @@
 package com.kyle.colman.view
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.ComponentActivity
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.viewbinding.ViewBinding
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.colaman.statuslayout.StatusLayout
 import com.gyf.barlibrary.ImmersionBar
 import com.kyle.colman.R
+import com.kyle.colman.impl.ActivityResultCallback
 import kotlin.system.exitProcess
 
 /**
@@ -33,6 +33,12 @@ abstract class KActivity<B : ViewDataBinding>(
     var mImmersionBar: ImmersionBar? = null
     var statusLayout: StatusLayout? = null
     lateinit var binding: B
+
+    /**
+     * 用于调用[startActivityForResult]的自增requestcode
+     */
+    var startActivityRequestCode = 0
+    var activityResultCallback: ActivityResultCallback? = null
 
     val backpressInterceptors by lazy {
         mutableListOf(doubleClickExitBlock())
@@ -90,7 +96,7 @@ abstract class KActivity<B : ViewDataBinding>(
     }
 
     fun goToActivity(activity: Class<*>) {
-        startActivity(getDefaultIntent(this, activity))
+        startActivity(buildIntent(this, activity))
     }
 
     override fun onDestroy() {
@@ -98,9 +104,11 @@ abstract class KActivity<B : ViewDataBinding>(
         mImmersionBar?.barColor(statusbarColor)
         mImmersionBar?.destroy()
     }
+
+    // TODO: 2020/6/7 activity result的封装 关注ActivityResultContracts
 }
 
-fun getDefaultIntent(context: Context, activity: Class<*>): Intent {
+fun buildIntent(context: Context, activity: Class<*>): Intent {
     return Intent(context, activity)
 }
 

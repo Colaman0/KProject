@@ -3,11 +3,11 @@ package com.kyle.colman.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kyle.colaman.common.recyclerview.layoutmanager.WrapLinearlayoutManager
+import com.kyle.colman.view.recyclerview.layoutmanager.WrapLinearlayoutManager
 import com.kyle.colman.R
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.view.recyclerview.adapter.KAdapter
@@ -34,7 +34,12 @@ class RefreshRecyclerview : ConstraintLayout {
             kAdapter = KAdapter(context)
             init(
                 kAdapter,
-                WrapLinearlayoutManager(context, LinearLayoutManager.VERTICAL, false).apply {
+                GridLayoutManager(
+                    context,
+                    2,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                ).apply {
                     recycleChildrenOnDetach = true
                 }, context as LifecycleOwner
             )

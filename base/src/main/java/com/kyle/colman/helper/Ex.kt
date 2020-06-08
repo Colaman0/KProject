@@ -59,3 +59,7 @@ fun kHandler(block: (KError) -> Unit) = CoroutineExceptionHandler { _, exception
     block(error)
     LogUtils.e(error)
 }
+
+fun <T> List<T>.isNotNullOrEmpty() = !isNullOrEmpty()
+
+fun <T> List<T>.copy() = toCollection(mutableListOf())

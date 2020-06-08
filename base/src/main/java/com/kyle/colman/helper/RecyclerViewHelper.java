@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.kyle.colman.view.recyclerview.SimpleDecoration;
 
 
@@ -100,13 +101,23 @@ public class RecyclerViewHelper {
     @NonNull
     private static LinearSmoothScroller getLinearSmoothScroller(RecyclerView recyclerView, int position, int scrollType) {
         LinearSmoothScroller smoothScroller = new LinearSmoothScroller(recyclerView.getContext()) {
+            int dx = 0;
+
             @Override
             protected int getVerticalSnapPreference() {
                 return scrollType;
             }
 
             @Override
+            protected int calculateTimeForScrolling(int dx) {
+                this.dx = dx;
+                return 3;
+            }
+
+            @Override
             protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+
+                LogUtils.d("距离 = " + dx);
                 return 1f;
             }
         };

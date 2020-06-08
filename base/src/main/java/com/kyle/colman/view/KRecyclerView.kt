@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
+import com.kyle.colman.helper.copy
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
@@ -33,7 +34,7 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     val isRefreshing
         get() = refreshView?.isRefreshing() == true
 
-    private var KAdapter: KAdapter? = null
+    lateinit var adapter: KAdapter
 
     private val dataObserver = Observer<IPageDTO<Any>> {
         lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) { updateAdapterData(it) }
@@ -58,11 +59,11 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
         layoutManager: RecyclerView.LayoutManager,
         lifecycleOwner: LifecycleOwner
     ) {
-        KAdapter = adapter
+        this.adapter = adapter
         this.lifecycleOwner = lifecycleOwner
+        this.layoutManager = layoutManager
         setAdapter(adapter)
         adapter.bindRecyclerView(this)
-        this.layoutManager = layoutManager
         adapter.addLoadmoreListener(this)
         dataCreatorLiveData.observe(lifecycleOwner, dataObserver)
     }
@@ -78,7 +79,7 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     }
 
     fun addLoadmoreListener(loadmoreCallback: OnLoadMoreListener): KRecyclerView {
-        KAdapter?.addLoadmoreListener(loadmoreCallback)
+        adapter?.addLoadmoreListener(loadmoreCallback)
         return this
     }
 
@@ -88,7 +89,7 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
      * @param loadmoreCallback [LoadmoreCallback]
      */
     fun removeLoadmoreListener(loadmoreCallback: OnLoadMoreListener) {
-        KAdapter?.removeLoadmoreListener(loadmoreCallback)
+        adapter?.removeLoadmoreListener(loadmoreCallback)
     }
 
     /**
@@ -110,7 +111,7 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
             if (isRefreshing) {
                 endRefresh()
             }
-            (adapter as KAdapter).disableLoadmore(true)
+            adapter.disableLoadmore(true)
             loadDataByPage((pageDTO?.currentPage() ?: 0) + 1)
         }
     }
@@ -126,14 +127,14 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
         if (isLoadmoreing) {
             return
         }
-        KAdapter?.disableLoadmore(false)
+        adapter.disableLoadmore(false)
         loadDataByPage(pageDTO?.firstPageNum() ?: 0)
     }
 
 
     fun endLoadmore() {
         if (isLoadmoreing) {
-            KAdapter?.disableLoadmore(false)
+            adapter.disableLoadmore(false)
             isLoadmoreing = false
         }
     }
@@ -171,12 +172,13 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
         endRefresh()
         isLoadmoreing = false
         refreshView?.disableRefresh(true)
+        val newItems = adapter.getDatas().copy()
         if (data.isFirstPage()) {
-            KAdapter?.clear()
+            newItems.clear()
         }
         pageDTO = data
-        KAdapter?.disableLoadmore = !data.isLastPage()
-//        KAdapter.diffNotifydatasetchanged()
+        newItems.addAll(data.pageData().map { dataCreator!!.dataToItemView(it) })
+        adapter.diffNotifydatasetchanged(!data.isLastPage(), newItems)
     }
 }
 

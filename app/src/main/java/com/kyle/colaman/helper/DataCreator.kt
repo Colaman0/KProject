@@ -1,11 +1,7 @@
 package com.kyle.colaman.helper
 
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.colaman.wanandroid.api.Api
 import com.kyle.colaman.entity.ArticleEntity
-import com.kyle.colaman.entity.PageDTO
 import com.kyle.colaman.viewmodel.ItemArticleViewModel
 import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
@@ -22,7 +18,6 @@ import java.io.Serializable
 class MainDataCreator(val viewmodelScope: CoroutineScope) :
     IRVDataCreator<ArticleEntity>, Serializable {
     override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
-
         return withContext(Dispatchers.IO) {
             var data: IPageDTO<ArticleEntity>? = null
             if (page == 0) {

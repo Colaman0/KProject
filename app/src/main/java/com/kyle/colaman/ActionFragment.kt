@@ -3,14 +3,12 @@ package com.kyle.colaman
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.activity.MainActivity
 import com.kyle.colaman.base.viewmodel.BaseViewModel
+import com.kyle.colman.view.recyclerview.layoutmanager.WrapLinearlayoutManager
 import com.kyle.colaman.entity.NaviAction
-import com.kyle.colman.config.Constants
 import com.kyle.colman.impl.IRVDataCreator
 import kotlinx.android.synthetic.main.fragment_action.*
 
@@ -32,10 +30,17 @@ class ActionFragment<T>() :
 
     init {
         lifecycleScope.launchWhenResumed {
+            LogUtils.d("life resume $action")
+
             refresh_recyclerview.setDataCreator(creator)
             refresh_recyclerview.getRecyclerview().setRecycledViewPool(MainActivity.pool)
             refresh_recyclerview.getRefreshView().startRefresh()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LogUtils.d("resume $action")
     }
 
     companion object {
@@ -59,7 +64,7 @@ class ActionFragment<T>() :
 
 
     override fun scrollTop() {
-        refresh_recyclerview.getRecyclerview().smoothScrollToPosition(0)
+        (refresh_recyclerview.getRecyclerview()).smoothScrollToPosition(0)
     }
 }
 
