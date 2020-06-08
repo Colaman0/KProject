@@ -7,6 +7,8 @@ package com.kyle.colman.impl
  */
 interface IDiffComparator<T : Any> {
 
-    fun isSame(data: T): Boolean
+    fun isUISame(data: T): Boolean
+
+    fun isItemSame(data: T): Boolean
 
 }

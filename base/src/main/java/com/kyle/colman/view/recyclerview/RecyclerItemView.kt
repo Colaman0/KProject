@@ -82,7 +82,4 @@ abstract class RecyclerItemView<B : ViewDataBinding, VM : Any>(val layoutRes: In
     override fun onItemClick(position: Int, itemView: View?) {
     }
 
-    override fun isSame(data: VM): Boolean = false
-
-
 }

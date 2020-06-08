@@ -111,10 +111,13 @@ class KAdapter(
         if (getDatas().size == 0) {
             return 0
         }
-        return getDatas().size + if (disableLoadmore && getAdapterSize() > 0) 1 else 0
+        Log.d("cola", "getItemCount = ${getDatas().size + if (disableLoadmore) 1 else 0}")
+
+        return getDatas().size + if (disableLoadmore) 1 else 0
     }
 
     override fun getItemViewType(position: Int): Int {
+        Log.d("cola", "getItemViewType = $position")
         if (disableLoadmore && position == itemCount - 1) {
             return loadMoreItemViewModel!!.layoutRes
         }
@@ -122,10 +125,9 @@ class KAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
-        Log.d("cola", "onBindViewHolder")
+        Log.d("cola", "onBindViewHolder = $position")
         if (position != RecyclerView.NO_POSITION) {
             if (disableLoadmore && holder.itemType == loadMoreItemViewModel!!.layoutRes) {
-
                 holder.bindViewModel(
                     loadMoreItemViewModel!! as RecyclerItemView<ViewDataBinding, Any>,
                     position
@@ -165,28 +167,20 @@ class KAdapter(
      * diffutils 刷新adapter，itemviewmodel需要实现对应的接口
      */
     @SuppressLint("CheckResult")
-    suspend fun diffNotifydatasetchanged(disableLoadmore: Boolean = false) {
-        this.disableLoadmore = disableLoadmore
-
-        /**
-         * 清空数据的时候直接刷新列表，减少计算差异，并且避免loadmore item的存在导致数据不一致崩溃
-         */
-        if (getDatas().size == 0) {
-            loadmoreIng = false
-            recyclerView?.post {
-                notifyDataSetChanged()
-            }
-            return
-        }
+    suspend fun diffNotifydatasetchanged(
+        newData: List<RecyclerItemView<out ViewDataBinding, out Any>?>
+    ) {
         withContext(Dispatchers.Default) {
-            val result = DiffUtil.calculateDiff(diffCallback, false)
+            val result = DiffUtil.calculateDiff(CommonDiffCallBack(oldDatas, newData), true)
             recyclerView?.post {
                 result.dispatchUpdatesTo(this@KAdapter)
-                loadmoreIng = false
+                getDatas().clear()
+                getDatas().addAll(newData)
                 oldDatas.clear()
-                oldDatas.addAll(viewmodels)
+                oldDatas.addAll(newData)
             }
         }
+        finishLoadmore()
     }
 
     override fun bindRecyclerView(recyclerView: RecyclerView?) {
@@ -309,7 +303,7 @@ class KAdapter(
 
     suspend fun move(from: Int, to: Int) {
         Collections.swap(getDatas(), from, to)
-        diffNotifydatasetchanged()
+//        diffNotifydatasetchanged(oldDatas, getDatas())
     }
 
 }

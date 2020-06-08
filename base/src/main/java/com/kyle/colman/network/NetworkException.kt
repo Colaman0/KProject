@@ -29,6 +29,8 @@ interface IExceptionFilter {
     fun isCreate(throwable: Throwable): Boolean
 
     fun createKError(throwable: Throwable): KError
+
+    fun onCatch()
 }
 
 class JsonFilter : IExceptionFilter {
@@ -42,6 +44,10 @@ class JsonFilter : IExceptionFilter {
     override fun createKError(throwable: Throwable): KError {
         return KError(throwable, kTips = "Json解析错误", errorType = JsonError)
     }
+
+    override fun onCatch() {
+
+    }
 }
 
 class NetworkFilter : IExceptionFilter {
@@ -54,6 +60,10 @@ class NetworkFilter : IExceptionFilter {
     override fun createKError(throwable: Throwable): KError {
         return KError(throwable, kTips = "网络异常", errorType = NetWorkError)
     }
+
+    override fun onCatch() {
+
+    }
 }
 
 class CancelFilter : IExceptionFilter {
@@ -63,6 +73,9 @@ class CancelFilter : IExceptionFilter {
 
     override fun createKError(throwable: Throwable): KError {
         return KError(throwable, kTips = "任务取消", errorType = Cancel)
+    }
+
+    override fun onCatch() {
     }
 }
 

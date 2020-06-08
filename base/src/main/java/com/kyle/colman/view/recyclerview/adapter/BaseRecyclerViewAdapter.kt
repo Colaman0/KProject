@@ -57,7 +57,6 @@ open class BaseRecyclerViewAdapter(
         parent: ViewGroup,
         viewType: Int
     ): BaseViewHolder<ViewDataBinding> {
-        Log.d("cola","onCreateViewHolder")
         val binding =
             DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
         val holder = BaseViewHolder(

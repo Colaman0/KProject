@@ -108,12 +108,16 @@ class ItemArticleViewModel(val entity: ArticleEntity?) :
         }
     }
 
-    override fun isSame(data: ItemArticleViewModel): Boolean {
+    fun actionCheck() {
+
+    }
+
+    override fun isUISame(data: ItemArticleViewModel): Boolean {
         return entity?.id == data.entity?.id
     }
 
-    fun actionCheck() {
-
+    override fun isItemSame(data: ItemArticleViewModel): Boolean {
+        return entity?.id == data.entity?.id
     }
 
 }

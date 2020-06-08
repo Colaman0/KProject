@@ -88,11 +88,7 @@ abstract class ListAdapter<VH : BaseViewHolder<ViewDataBinding>> : RecyclerView.
     }
 
     open fun clear() {
-        if (canHandleData()) {
-            viewmodels.clear()
-        } else {
-            recyclerView?.post { viewmodels.clear() }
-        }
+        viewmodels.clear()
         onDataChange(size())
     }
 

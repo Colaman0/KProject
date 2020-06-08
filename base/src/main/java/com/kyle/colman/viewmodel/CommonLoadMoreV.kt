@@ -14,10 +14,7 @@ import com.kyle.colman.view.recyclerview.adapter.BaseViewHolder
  * </pre>
  */
 open class CommonLoadMoreV(var text: String = "") :
-        BaseLoadmoreView<ItemLoadmoreBindingImpl, Any>( R.layout.item_loadmore) {
-
-    override fun isSame(data: Any) = false
-
+    BaseLoadmoreView<ItemLoadmoreBindingImpl, CommonLoadMoreV>(R.layout.item_loadmore) {
 
     override fun onBindView(holder: BaseViewHolder<ItemLoadmoreBindingImpl>) {
 
@@ -33,6 +30,14 @@ open class CommonLoadMoreV(var text: String = "") :
     override fun onViewAttached() {
         super.onViewAttached()
         LogUtils.d("加载更多item显示")
+    }
+
+    override fun isUISame(data: CommonLoadMoreV): Boolean {
+        return true
+    }
+
+    override fun isItemSame(data: CommonLoadMoreV): Boolean {
+        return true
     }
 
 }

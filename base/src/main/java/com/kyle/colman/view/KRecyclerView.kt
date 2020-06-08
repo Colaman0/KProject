@@ -152,7 +152,7 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
 
     private fun loadDataByPage(page: Int) {
         if (dataCreator != null) {
-            lifecycleOwner.lifecycleScope.launch(Dispatchers.IO + kHandler {
+            lifecycleOwner.lifecycleScope.launch(kHandler {
                 if (isRefreshing) {
                     endRefresh()
                 }
@@ -168,7 +168,6 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     }
 
     private suspend fun updateAdapterData(data: IPageDTO<Any>) {
-        LogUtils.d("更新UI")
         endRefresh()
         isLoadmoreing = false
         refreshView?.disableRefresh(true)
@@ -176,18 +175,10 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
             KAdapter?.clear()
         }
         pageDTO = data
-        withContext(Dispatchers.Default) {
-            KAdapter?.addAll(data.pageData().map { dataCreator!!.dataToItemView(it) })
-        }
-        if (data.isFirstPage()) {
-            KAdapter?.notifyDataSetChanged()
-        } else {
-            KAdapter?.diffNotifydatasetchanged(!data.isLastPage())
-        }
+        KAdapter?.disableLoadmore = !data.isLastPage()
+//        KAdapter.diffNotifydatasetchanged()
     }
-
 }
-
 
 interface LoadmoreCallback {
 

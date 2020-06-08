@@ -10,9 +10,7 @@ import com.kyle.colaman.viewmodel.ItemArticleViewModel
 import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.view.recyclerview.RecyclerItemView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import java.io.Serializable
 
 /**
@@ -24,20 +22,36 @@ import java.io.Serializable
 class MainDataCreator(val viewmodelScope: CoroutineScope) :
     IRVDataCreator<ArticleEntity>, Serializable {
     override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
-        delay(3000)
-        if (page == 0) {
-            val topArticles = viewmodelScope.async {
-                Api.getHomeTopArticles().apply {
-                    forEach { it.topArticle = true }
+
+        return withContext(Dispatchers.IO) {
+            var data: IPageDTO<ArticleEntity>? = null
+            if (page == 0) {
+                val topArticles = viewmodelScope.async {
+                    Api.getHomeTopArticles().apply {
+                        forEach { it.topArticle = true }
+                    }
                 }
+                val articles = viewmodelScope.async { Api.getHomeArticles(page) }
+                val totals = articles.await()
+                totals?.datas?.addAll(0, topArticles.await())
+                data = totals
+            } else {
+                data = Api.getHomeArticles(page)!!
             }
-            val articles = viewmodelScope.async { Api.getHomeArticles(page) }
-            val totals = articles.await()
-            totals?.datas?.addAll(0, topArticles.await())
-            return totals!!
-        } else {
-            return Api.getHomeArticles(page)!!
+            data!!
         }
+    }
+
+    override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {
+        return ItemArticleViewModel(data)
+    }
+}
+
+
+class GuangchangCreator(val viewmodelScope: CoroutineScope) :
+    IRVDataCreator<ArticleEntity>, Serializable {
+    override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
+        return Api.getGuangchangArticles(page)!!
     }
 
     override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {

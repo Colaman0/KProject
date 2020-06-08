@@ -22,4 +22,12 @@ class ItemSecondTixiVModel(val datas: List<SecondTixi>) : RecyclerItemView<ItemS
             })
         }
     }
+
+    override fun isUISame(data: ItemSecondTixiVModel): Boolean {
+        return false
+    }
+
+    override fun isItemSame(data: ItemSecondTixiVModel): Boolean {
+        return false
+    }
 }

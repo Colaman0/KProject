@@ -17,4 +17,12 @@ class ItemTextViewmodel(val text: String) :
     override fun onBindView(holder: BaseViewHolder<ItemTextBinding>) {
     }
 
+    override fun isUISame(data: ItemTextViewmodel): Boolean {
+        return false
+    }
+
+    override fun isItemSame(data: ItemTextViewmodel): Boolean {
+        return false
+    }
+
 }

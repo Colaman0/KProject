@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.colaman.wanandroid.viewmodel.ItemFirstTixiVModel" />
+            type="com.kyle.colaman.viewmodel.ItemFirstTixiVModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

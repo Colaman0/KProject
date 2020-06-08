@@ -1,4 +1,4 @@
-package com.colaman.wanandroid.viewmodel
+package com.kyle.colaman.viewmodel
 
 import android.view.View
 import com.kyle.colaman.R
@@ -14,7 +14,11 @@ import com.kyle.colman.view.recyclerview.adapter.BaseViewHolder
  * Date     : 2020/5/15
  * Function : 一级体系item
  */
-class ItemFirstTixiVModel(var isCheck: Boolean = false, val entity: TixiEntity, val callBack: (List<SecondTixi>) -> Unit) :
+class ItemFirstTixiVModel(
+    var isCheck: Boolean = false,
+    val entity: TixiEntity,
+    val callBack: (List<SecondTixi>) -> Unit
+) :
     RecyclerItemView<ItemFirstTixiBinding, ItemFirstTixiVModel>(R.layout.item_first_tixi),
     ISelect {
 
@@ -32,6 +36,16 @@ class ItemFirstTixiVModel(var isCheck: Boolean = false, val entity: TixiEntity, 
         isCheck = select
         binding?.textview?.isSelected = select
         binding?.textview?.setTextColor(context!!.resources.getColor(if (select) R.color.white else R.color.black))
+    }
+
+    override fun isUISame(data: ItemFirstTixiVModel): Boolean {
+        return return entity?.id == data.entity?.id
+
+    }
+
+    override fun isItemSame(data: ItemFirstTixiVModel): Boolean {
+        return return entity?.id == data.entity?.id
+
     }
 
 }
