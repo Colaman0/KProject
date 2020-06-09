@@ -197,12 +197,13 @@ object LoginFilter : IExceptionFilter {
         val topActivity = ActivityUtils.getTopActivity()
         CoroutineScope(Dispatchers.Main + SupervisorJob() + kHandler { }).launch {
             MaterialDialog(topActivity).show {
-                title(text = "登录过期")
-                message(text = "需要重新登录")
-                positiveButton(text = "确定") {
+                cancelable(false)
+                title(text = context.getString(R.string.need_login_title))
+                message(text = context.getString(R.string.need_login_tips))
+                positiveButton(text = context.getString(R.string.confirm)) {
                     // 结束其他activity 并且跳转到登录页面
                     val intent = Intent(topActivity, LoginRegisterActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     ActivityUtils.getTopActivity().startActivity(intent)
                 }
                 negativeButton(text = "取消") {
