@@ -15,7 +15,7 @@ import java.util.concurrent.CancellationException
  * Function : 网络错误异常
  */
 
-class ApiException(val code: Int, message: String) : Throwable()
+class ApiException(val code: Int, message: String) : Throwable(message = message)
 
 
 data class KError(

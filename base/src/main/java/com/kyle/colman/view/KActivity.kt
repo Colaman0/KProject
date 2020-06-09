@@ -126,7 +126,9 @@ fun doubleClickExitBlock(): ((KActivity<*>) -> Boolean) {
                 lastClick = currentTimestamp
                 true
             }
+            true
+        } else {
+            false
         }
-        false
     }
 }

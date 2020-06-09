@@ -14,7 +14,7 @@ class Catcher(val scope: CoroutineScope) {
     var finallyBlock: (suspend CoroutineScope.() -> Unit)? = null
     var runBlock: (suspend CoroutineScope.() -> Unit)? = null
 
-    val exceptionFilters = mutableListOf<IExceptionFilter>(JsonFilter(), NetworkFilter())
+    val exceptionFilters = mutableListOf(JsonFilter(), NetworkFilter())
 
     fun error(block: suspend CoroutineScope.(KError) -> Unit): Catcher {
         errorBlock = block

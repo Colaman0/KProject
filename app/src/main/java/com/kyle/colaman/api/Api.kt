@@ -64,6 +64,4 @@ object Api : BaseApi<IApi>() {
 
     suspend fun unCollectArticle(id: Int) =
         getApi().unCollectArticle(id.toString()).toData()
-
-
 }

@@ -8,70 +8,68 @@ import java.io.Serializable
 
 data class ArticleEntity(
     @SerializedName("apkLink")
-    var apkLink: String? = "",
+    var apkLink: String  = "",
     @SerializedName("audit")
-    var audit: Int? = 0,
+    var audit: Int  = 0,
     @SerializedName("author")
-    var author: String? = "",
+    var author: String  = "",
     @SerializedName("canEdit")
-    var canEdit: Boolean? = false,
+    var canEdit: Boolean  = false,
     @SerializedName("chapterId")
-    var chapterId: Int? = 0,
+    var chapterId: Int  = 0,
     @SerializedName("chapterName")
-    var chapterName: String? = "",
+    var chapterName: String  = "",
     @SerializedName("collect")
-    var collect: Boolean? = false,
+    var collect: Boolean  = false,
     @SerializedName("courseId")
-    var courseId: Int? = 0,
+    var courseId: Int  = 0,
     @SerializedName("desc")
-    var desc: String? = "",
+    var desc: String  = "",
     @SerializedName("descMd")
-    var descMd: String? = "",
+    var descMd: String  = "",
     @SerializedName("envelopePic")
-    var envelopePic: String? = "",
+    var envelopePic: String  = "",
     @SerializedName("fresh")
-    var fresh: Boolean? = false,
+    var fresh: Boolean  = false,
     @SerializedName("id")
-    var id: Int? = 0,
+    var id: Int  = 0,
     @SerializedName("link")
-    var link: String? = "",
+    var link: String  = "",
     @SerializedName("niceDate")
-    var niceDate: String? = "",
+    var niceDate: String  = "",
     @SerializedName("niceShareDate")
-    var niceShareDate: String? = "",
+    var niceShareDate: String  = "",
     @SerializedName("origin")
-    var origin: String? = "",
+    var origin: String  = "",
     @SerializedName("prefix")
-    var prefix: String? = "",
+    var prefix: String  = "",
     @SerializedName("projectLink")
-    var projectLink: String? = "",
+    var projectLink: String  = "",
     @SerializedName("publishTime")
-    var publishTime: Long? = 0,
+    var publishTime: Long  = 0,
     @SerializedName("selfVisible")
-    var selfVisible: Int? = 0,
+    var selfVisible: Int  = 0,
     @SerializedName("shareDate")
-    var shareDate: Long? = 0,
+    var shareDate: Long  = 0,
     @SerializedName("shareUser")
-    var shareUser: String? = "",
+    var shareUser: String  = "",
     @SerializedName("superChapterId")
-    var superChapterId: Int? = 0,
+    var superChapterId: Int  = 0,
     @SerializedName("superChapterName")
-    var superChapterName: String? = "",
+    var superChapterName: String  = "",
     @SerializedName("tags")
-    var tags: List<Tag>? = listOf(),
+    var tags: List<Tag>  = listOf(),
     @SerializedName("title")
-    var title: String? = "",
+    var title: String  = "",
     @SerializedName("type")
-    var type: Int? = 0,
+    var type: Int  = 0,
     @SerializedName("userId")
-    var userId: Int? = 0,
+    var userId: Int  = 0,
     @SerializedName("visible")
-    var visible: Int? = 0,
+    var visible: Int  = 0,
     @SerializedName("zan")
-    var zan: Int? = 0,
-    var topArticle: Boolean? = false
+    var zan: Int  = 0,
+    var topArticle: Boolean  = false
 ) : Serializable {
-    init {
-        CollectManager.putNewArticle(this)
-    }
+
 }

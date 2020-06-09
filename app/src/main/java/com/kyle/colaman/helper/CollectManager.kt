@@ -2,6 +2,7 @@ package com.kyle.colaman.helper
 
 import android.util.SparseArray
 import com.blankj.utilcode.util.LogUtils
+import com.colaman.wanandroid.api.Api
 import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colman.helper.EmptyCallLiveData
 
@@ -18,7 +19,7 @@ object CollectManager {
     }
 
     fun putNewArticle(entity: ArticleEntity) {
-        entity.id?.let { id ->
+        entity.id.let { id ->
             val livedata = articleCollectMap[id]
             if (livedata != null) {
                 if (livedata.value != entity.collect) {
@@ -26,16 +27,21 @@ object CollectManager {
                 }
             } else {
                 articleCollectMap.put(id, EmptyCallLiveData(entity.collect ?: false) {
-                    LogUtils.d("移除  $id")
                     articleCollectMap.remove(id)
                 })
             }
         }
     }
-//
-//    fun collect(id: Int) = Api.collectArticle(id).switchApiThread()
-//
-//
-//    fun unCollect(id: Int) = Api.unCollectArticle(id).switchApiThread()
+
+    suspend fun collect(id: Int) {
+        Api.collectArticle(id)
+        getCollectLiveDataById(id).postValue(true)
+    }
+
+
+    suspend fun unCollect(id: Int) {
+        Api.unCollectArticle(id)
+        getCollectLiveDataById(id).postValue(true)
+    }
 
 }

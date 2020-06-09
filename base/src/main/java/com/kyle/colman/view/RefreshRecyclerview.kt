@@ -34,11 +34,10 @@ class RefreshRecyclerview : ConstraintLayout {
             kAdapter = KAdapter(context)
             init(
                 kAdapter,
-                GridLayoutManager(
+                WrapLinearlayoutManager(
                     context,
-                    2,
                     LinearLayoutManager.VERTICAL,
-                    false
+                    false, 500
                 ).apply {
                     recycleChildrenOnDetach = true
                 }, context as LifecycleOwner

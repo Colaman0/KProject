@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.kyle.colaman.viewmodel.LoginRegisterViewmodel" />
+
+        <variable
+            name="activity"
+            type="com.kyle.colaman.activity.LoginRegisterActivity" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:fitsSystemWindows="false"
+        tools:context="com.colaman.wanandroid.LoginRegisterActivity">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="250dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="@{viewmodel.isLogin?@string/en_login:@string/en_signin}"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@+id/layout_register"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/layout_register" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="32dp"
+            android:onClick="@{()->viewmodel.switchType()}"
+            android:text="@{viewmodel.isLogin?@string/signin:@string/login}"
+            android:textColor="#eb4559"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@id/layout_login"
+            app:layout_constraintTop_toBottomOf="@id/layout_login" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_login"
+            android:layout_width="300dp"
+            android:layout_height="280dp"
+            android:background="@color/white"
+            android:elevation="5dp"
+            android:padding="8dp"
+            android:paddingVertical="24dp"
+            android:visibility="@{viewmodel.isLogin?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_login_account"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/account"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_login_account"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/edt_login_account"
+                app:layout_constraintTop_toTopOf="@+id/edt_login_account" />
+
+            <EditText
+                android:id="@+id/edt_login_account"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:hint="输入账号"
+                android:maxLines="1"
+                android:text="@={viewmodel.account}"
+                app:layout_constraintBottom_toTopOf="@id/edt_login_password"
+                app:layout_constraintLeft_toRightOf="@id/iv_login_account"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_d4d4d4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_login_account" />
+
+
+            <ImageView
+                android:id="@+id/iv_login_password"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/password"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_login_password"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/edt_login_password"
+                app:layout_constraintTop_toTopOf="@+id/edt_login_password" />
+
+            <EditText
+                android:id="@+id/edt_login_password"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:hint="输入密码"
+                android:maxLines="1"
+                android:text="@={viewmodel.password}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/iv_login_password"
+                app:layout_constraintRight_toLeftOf="@id/ic_login_password_psw_action"
+                app:layout_constraintTop_toBottomOf="@+id/edt_login_account"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <ImageView
+                android:id="@+id/ic_login_password_psw_action"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@id/edt_login_password"
+                app:layout_constraintLeft_toRightOf="@id/edt_login_password"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edt_login_password" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_d4d4d4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_login_password" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_register"
+            android:layout_width="300dp"
+            android:layout_height="280dp"
+            android:background="@color/white"
+            android:elevation="5dp"
+            android:padding="8dp"
+            android:visibility="@{viewmodel.isLogin?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/iv_register_account"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/account"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_register_account"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/edt_register_account"
+                app:layout_constraintTop_toTopOf="@+id/edt_register_account" />
+
+            <EditText
+                android:id="@+id/edt_register_account"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:hint="输入账号"
+                android:maxLines="1"
+                android:text="@={viewmodel.signAccount}"
+                app:layout_constraintBottom_toTopOf="@id/edt_register_password"
+                app:layout_constraintLeft_toRightOf="@id/iv_register_account"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+
+            <View
+                android:id="@+id/view_line_register"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_d4d4d4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_register_account" />
+
+
+            <ImageView
+                android:id="@+id/iv_register_password"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/password"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_register_password"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/edt_register_password"
+                app:layout_constraintTop_toTopOf="@+id/edt_register_password" />
+
+            <EditText
+                android:id="@+id/edt_register_password"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="32dp"
+                android:background="@null"
+                android:hint="输入密码"
+                android:maxLines="1"
+                android:text="@={viewmodel.signPassword}"
+                app:layout_constraintBottom_toTopOf="@id/edt_register_repassword"
+                app:layout_constraintLeft_toRightOf="@id/iv_register_password"
+                app:layout_constraintRight_toLeftOf="@id/ic_sign_password_action"
+                app:layout_constraintTop_toBottomOf="@+id/edt_register_account"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <ImageView
+                android:id="@+id/ic_sign_password_action"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@id/edt_register_password"
+                app:layout_constraintLeft_toRightOf="@id/edt_register_password"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edt_register_password" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_d4d4d4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_register_password" />
+
+
+            <ImageView
+                android:id="@+id/iv_register_repassword"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/password"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_register_repassword"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/edt_register_repassword"
+                app:layout_constraintTop_toTopOf="@+id/edt_register_repassword" />
+
+            <EditText
+                android:id="@+id/edt_register_repassword"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="32dp"
+                android:background="@null"
+                android:hint="重复密码"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:text="@={viewmodel.rePassword}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/iv_register_password"
+                app:layout_constraintRight_toLeftOf="@id/ic_sign_repassword_action"
+                app:layout_constraintTop_toBottomOf="@+id/edt_register_password"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <ImageView
+                android:id="@+id/ic_sign_repassword_action"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@id/edt_register_repassword"
+                app:layout_constraintLeft_toRightOf="@id/edt_register_repassword"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edt_register_repassword" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_d4d4d4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_register_repassword" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:backgroundTint="@color/colorAccent"
+            android:gravity="center"
+            android:onClick="@{()->activity.submit()}"
+            android:padding="12dp"
+            android:text="@{viewmodel.isLogin?@string/login:@string/signin}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:textColor="@color/white"
+            app:cornerRadius="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

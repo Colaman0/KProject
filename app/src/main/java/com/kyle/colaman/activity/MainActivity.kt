@@ -26,11 +26,16 @@ import com.kyle.colaman.helper.GuangchangCreator
 import com.kyle.colaman.helper.MainDataCreator
 import com.kyle.colaman.helper.UserUtil
 import com.kyle.colaman.viewmodel.MainViewModel
+import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
 import com.kyle.colman.view.KActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -181,7 +186,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
 object LoginFilter : IExceptionFilter {
     override fun isCreate(throwable: Throwable): Boolean {
-        return throwable is ApiException && throwable.code == 1001
+        return throwable is ApiException && throwable.code == -1001
     }
 
     override fun createKError(throwable: Throwable): KError {
@@ -190,17 +195,19 @@ object LoginFilter : IExceptionFilter {
 
     override fun onCatch() {
         val topActivity = ActivityUtils.getTopActivity()
-        MaterialDialog(topActivity).show {
-            title(text = "登录过期")
-            message(text = "需要重新登录")
-            positiveButton(text = "确定") {
-                // 结束其他activity 并且跳转到登录页面
-                val intent = Intent(topActivity, MainActivity::class.java)
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                ActivityUtils.getTopActivity().startActivity(intent)
-            }
-            negativeButton(text = "取消") {
-                dismiss()
+        CoroutineScope(Dispatchers.Main + SupervisorJob() + kHandler { }).launch {
+            MaterialDialog(topActivity).show {
+                title(text = "登录过期")
+                message(text = "需要重新登录")
+                positiveButton(text = "确定") {
+                    // 结束其他activity 并且跳转到登录页面
+                    val intent = Intent(topActivity, LoginRegisterActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    ActivityUtils.getTopActivity().startActivity(intent)
+                }
+                negativeButton(text = "取消") {
+                    dismiss()
+                }
             }
         }
     }

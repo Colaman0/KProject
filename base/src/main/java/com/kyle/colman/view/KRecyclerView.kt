@@ -162,7 +162,6 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
                 }
             }) {
                 val datas = dataCreator!!.loadDataByPage(page)
-                LogUtils.d("网络请求成功")
                 dataCreatorLiveData.postValue(datas)
             }
         }

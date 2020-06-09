@@ -1,11 +1,16 @@
 package com.kyle.colman.helper
 
+import android.text.InputType
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 import com.blankj.utilcode.util.LogUtils
-import com.kyle.colman.network.ApiException
-import com.kyle.colman.network.KError
-import com.kyle.colman.network.KReponse
-import com.kyle.colman.network.UnknownError
+import com.kyle.colman.R
+import com.kyle.colman.network.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -45,12 +50,18 @@ fun <T> KReponse<T>.toData(): T? {
 
 
 fun Throwable.toKError(): KError {
+    var error: KError? = null
     KReponse.exceptionFilters.forEach { filter ->
         if (filter.isCreate(this)) {
-            return filter.createKError(this)
+            error = filter.createKError(this)
+            filter.onCatch()
+            return@forEach
         }
     }
-    return KError(kThrowable = this, errorType = UnknownError)
+    return error ?: KError(
+        kThrowable = this,
+        errorType = if (this is ApiException) ApiError else UnknownError
+    )
 }
 
 fun kHandler(block: (KError) -> Unit) = CoroutineExceptionHandler { _, exception ->
@@ -63,3 +74,12 @@ fun kHandler(block: (KError) -> Unit) = CoroutineExceptionHandler { _, exception
 fun <T> List<T>.isNotNullOrEmpty() = !isNullOrEmpty()
 
 fun <T> List<T>.copy() = toCollection(mutableListOf())
+
+fun View.clicks(): Flow<Unit> = callbackFlow {
+    setOnClickListener {
+        offer(Unit)
+    }
+    awaitClose { setOnClickListener(null) }
+}
+
+

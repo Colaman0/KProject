@@ -4,6 +4,7 @@ import com.kyle.colaman.network.OkhttpFactory
 import com.kyle.colaman.network.RetrofitFactory
 import com.kyle.colaman.activity.LoginFilter
 import com.kyle.colaman.api.UserCookie
+import com.kyle.colaman.helper.UserUtil
 import com.kyle.colman.config.ApiConfig
 import com.kyle.colman.network.KReponse
 import com.kyle.colman.view.KApplication
@@ -17,6 +18,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 class AppContext : KApplication() {
     override fun onCreate() {
         super.onCreate()
+        UserUtil.init()
         RetrofitFactory.apiConfig = ApiConfig(
             url = "https://www.wanandroid.com/",
             cookieJar = UserCookie,
