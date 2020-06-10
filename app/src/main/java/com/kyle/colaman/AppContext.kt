@@ -1,12 +1,11 @@
 package com.kyle.colaman
 
-import com.kyle.colaman.network.OkhttpFactory
 import com.kyle.colaman.network.RetrofitFactory
 import com.kyle.colaman.activity.LoginFilter
 import com.kyle.colaman.api.UserCookie
 import com.kyle.colaman.helper.UserUtil
 import com.kyle.colman.config.ApiConfig
-import com.kyle.colman.network.KReponse
+import com.kyle.colman.network.KResponse
 import com.kyle.colman.view.KApplication
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -26,6 +25,6 @@ class AppContext : KApplication() {
                 level = HttpLoggingInterceptor.Level.BODY
             })
         )
-        KReponse.exceptionFilters.add(LoginFilter)
+        KResponse.exceptionFilters.add(LoginFilter)
     }
 }

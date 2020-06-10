@@ -124,7 +124,6 @@ fun doubleClickExitBlock(): ((KActivity<*>) -> Boolean) {
             } else {
                 ToastUtils.showShort("再按一次退出应用")
                 lastClick = currentTimestamp
-                true
             }
             true
         } else {

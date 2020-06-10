@@ -15,18 +15,18 @@ import java.io.Serializable
  * Function : datacreator
  */
 
-class MainDataCreator(val viewmodelScope: CoroutineScope) :
+class MainDataCreator() :
     IRVDataCreator<ArticleEntity>, Serializable {
     override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
         return withContext(Dispatchers.IO) {
             var data: IPageDTO<ArticleEntity>? = null
             if (page == 0) {
-                val topArticles = viewmodelScope.async {
+                val topArticles = async {
                     Api.getHomeTopArticles().apply {
                         forEach { it.topArticle = true }
                     }
                 }
-                val articles = viewmodelScope.async { Api.getHomeArticles(page) }
+                val articles = async { Api.getHomeArticles(page) }
                 val totals = articles.await()
                 totals?.datas?.addAll(0, topArticles.await())
                 data = totals
@@ -43,10 +43,32 @@ class MainDataCreator(val viewmodelScope: CoroutineScope) :
 }
 
 
-class GuangchangCreator(val viewmodelScope: CoroutineScope) :
+class GuangchangCreator() :
     IRVDataCreator<ArticleEntity>, Serializable {
     override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
         return Api.getGuangchangArticles(page)!!
+    }
+
+    override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {
+        return ItemArticleViewModel(data)
+    }
+}
+
+class XiangmuCreator() :
+    IRVDataCreator<ArticleEntity>, Serializable {
+    override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
+        return Api.getProjects(page)!!
+    }
+
+    override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {
+        return ItemArticleViewModel(data)
+    }
+}
+
+class WendaCreator() :
+    IRVDataCreator<ArticleEntity>, Serializable {
+    override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
+        return Api.getProjects(page)!!
     }
 
     override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {

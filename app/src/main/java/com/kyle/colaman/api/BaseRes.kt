@@ -1,7 +1,7 @@
 package com.kyle.colaman.api
 
 import com.google.gson.annotations.SerializedName
-import com.kyle.colman.network.KReponse
+import com.kyle.colman.network.KResponse
 
 /**
  * Author   : kyle
@@ -12,7 +12,7 @@ class BaseRes<T>(
     @SerializedName("data") var responseData: T? = null,
     @SerializedName("errorCode") var errorCode: Int = 0,
     @SerializedName("errorMsg") var errorMsg: String = ""
-) : KReponse<T> {
+) : KResponse<T> {
     override fun success(): Boolean {
         return responseCode() == 0
     }

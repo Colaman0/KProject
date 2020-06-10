@@ -1,16 +1,11 @@
 package com.kyle.colman.helper
 
-import android.text.InputType
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
 import com.blankj.utilcode.util.LogUtils
-import com.kyle.colman.R
 import com.kyle.colman.network.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -37,7 +32,14 @@ fun CoroutineScope.catchLaunch(
     }
 }
 
-fun <T> KReponse<T>.toData(): T? {
+/**
+ * 处理api请求的基类
+ *
+ * @param T
+ * @param dataNullable
+ * @return
+ */
+fun <T> KResponse<T>.toData(dataNullable: Boolean = true): T? {
     if (success()) {
         responseData()?.let {
             return it
@@ -45,13 +47,21 @@ fun <T> KReponse<T>.toData(): T? {
     } else {
         throw ApiException(code = responseCode(), message = message())
     }
-    return null
+    if (!dataNullable) {
+        return null
+    }
+    throw DataNullException()
 }
 
 
+/**
+ * 把throwable转换成[KError]，封装了错误类型和一些错误的固定提示语
+ * 可以通过[KResponse.exceptionFilters]去添加一些过滤器
+ * @return
+ */
 fun Throwable.toKError(): KError {
     var error: KError? = null
-    KReponse.exceptionFilters.forEach { filter ->
+    KResponse.exceptionFilters.forEach { filter ->
         if (filter.isCreate(this)) {
             error = filter.createKError(this)
             filter.onCatch()
@@ -64,6 +74,11 @@ fun Throwable.toKError(): KError {
     )
 }
 
+/**
+ * 协程的通用异常捕获handler
+ *
+ * @param block
+ */
 fun kHandler(block: (KError) -> Unit) = CoroutineExceptionHandler { _, exception ->
     exception.printStackTrace()
     val error = exception.toKError()
@@ -75,6 +90,12 @@ fun <T> List<T>.isNotNullOrEmpty() = !isNullOrEmpty()
 
 fun <T> List<T>.copy() = toCollection(mutableListOf())
 
+/**
+ * 把view的点击事件转换为flow，可以接着做debounce处理
+ *
+ * @return
+ */
+@ExperimentalCoroutinesApi
 fun View.clicks(): Flow<Unit> = callbackFlow {
     setOnClickListener {
         offer(Unit)
@@ -83,3 +104,17 @@ fun View.clicks(): Flow<Unit> = callbackFlow {
 }
 
 
+fun logd(text: String) {
+    LogUtils.d(text)
+}
+
+fun loge(text: String) {
+    LogUtils.e(text)
+}
+
+/**
+ * 把flow流订阅在IO线程
+ *
+ * @param T
+ */
+fun <T> Flow<T>.io() = flowOn(Dispatchers.IO)

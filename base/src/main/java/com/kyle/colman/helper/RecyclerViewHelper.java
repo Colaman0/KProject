@@ -116,8 +116,6 @@ public class RecyclerViewHelper {
 
             @Override
             protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-
-                LogUtils.d("距离 = " + dx);
                 return 1f;
             }
         };

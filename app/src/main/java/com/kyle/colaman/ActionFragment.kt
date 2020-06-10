@@ -30,8 +30,6 @@ class ActionFragment<T>() :
 
     init {
         lifecycleScope.launchWhenResumed {
-            LogUtils.d("life resume $action")
-
             refresh_recyclerview.setDataCreator(creator)
             refresh_recyclerview.getRecyclerview().setRecycledViewPool(MainActivity.pool)
             refresh_recyclerview.getRefreshView().startRefresh()
@@ -40,7 +38,6 @@ class ActionFragment<T>() :
 
     override fun onResume() {
         super.onResume()
-        LogUtils.d("resume $action")
     }
 
     companion object {

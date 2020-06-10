@@ -41,7 +41,7 @@ object CollectManager {
 
     suspend fun unCollect(id: Int) {
         Api.unCollectArticle(id)
-        getCollectLiveDataById(id).postValue(true)
+        getCollectLiveDataById(id).postValue(false)
     }
 
 }

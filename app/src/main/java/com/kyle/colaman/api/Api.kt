@@ -2,10 +2,12 @@ package com.colaman.wanandroid.api
 
 import com.kyle.colaman.api.IApi
 import com.kyle.colaman.entity.ArticleEntity
+import com.kyle.colaman.entity.PageDTO
 import com.kyle.colaman.helper.UserUtil
+import com.kyle.colman.helper.io
 import com.kyle.colman.helper.toData
 import com.kyle.colman.network.BaseApi
-import java.lang.Exception
+import kotlinx.coroutines.flow.flow
 
 /**
  *
@@ -36,7 +38,9 @@ object Api : BaseApi<IApi>() {
     }
 
 
-    suspend fun getHomeArticles(page: Int) = getApi().getHomeArticles(page = page).toData()
+    suspend fun getHomeArticles(page: Int): PageDTO<ArticleEntity> {
+        return getApi().getHomeArticles(page = page).toData()!!
+    }
 
     suspend fun getProjects(page: Int) =
         getApi().getProjects(page = page).toData()
@@ -49,10 +53,12 @@ object Api : BaseApi<IApi>() {
     suspend fun getGuangchangArticles(page: Int) =
         getApi().getGuangchangArticles(page = page).toData()
 
+    suspend fun test() = flow {
+        emit(getApi().collectArticle("1--").toData()!!)
+    }.io()
 
     suspend fun getWenda(page: Int) =
         getApi().getWenda(page = page).toData()
-
 
     suspend fun getTixi() = getApi().getTixi().toData()
 

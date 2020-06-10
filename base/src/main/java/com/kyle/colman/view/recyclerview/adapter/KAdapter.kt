@@ -25,8 +25,9 @@ import java.util.*
  *     time   : 2019/7/30
  *     desc   : 带有一些额外功能的adapter
  *
- * 1.diffutils刷新，只要把viewmodel添加到adpater中，然后调用[diffNotifydatasetchanged]进行刷新就OK了
- *  adapter中的itemviewmodel需要对应重写[RecyclerItemView.isSame]方法去判断两个viewmodel内容是否一致
+ * 1.diffutils刷新，[diffNotifydatasetchanged]传入新数据进行刷新就OK了
+ * 可以使用[copy]把旧的items复制一遍再操作，这样是为了避免先操作了数据但是又滑动了recyclerview导致异常发生。
+ *  adapter中的itemView需要对应重写[RecyclerItemView.isSame]方法去判断两个viewmodel内容是否一致
  *  一般可以根据viewmodel内实体类或者直接判断两个viewmodel是否相同
  *
  * 2.LoadMore 样式设置，开启LoadMore需要调用[switchLoadMore] 或者直接[disableLoadmore]赋值，默认是不开启的，开启之后会有一个默认的样式，如果要自定义样式
@@ -155,7 +156,6 @@ class KAdapter(
                 getDatas().clear()
                 getDatas().addAll(newData)
                 disableLoadmore(disable)
-                LogUtils.d("loadmore = $disableLoadmore")
                 finishLoadmore()
             }
         }

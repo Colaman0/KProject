@@ -17,7 +17,7 @@ import com.kyle.colman.R
  * Date     : 2020/5/29
  * Function : base fragment
  */
-open class KFragment<B : ViewDataBinding>(
+abstract class KFragment<B : ViewDataBinding>(
     val contentLayoutId: Int,
     val needStatusLayout: Boolean = false,
     @ColorRes
@@ -44,6 +44,11 @@ open class KFragment<B : ViewDataBinding>(
         return rootView
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
     override fun onResume() {
         super.onResume()
         getKActivity()?.mImmersionBar?.barColor(statusbarColor)
@@ -55,4 +60,7 @@ open class KFragment<B : ViewDataBinding>(
         }
         return null
     }
+
+    abstract fun initView()
+
 }

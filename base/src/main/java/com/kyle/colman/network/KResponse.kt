@@ -1,14 +1,23 @@
 package com.kyle.colman.network
 
+import kotlinx.serialization.json.Json
+
 /**
  * Author   : kyle
- * Date     : 2020/5/30
- * Function : 网络请求响应体实现接口
+ * Date     : 2020/6/1
+ * Function : repsonse接口
  */
-
 interface KResponse<T> {
     fun success(): Boolean
+
     fun responseCode(): Int
+
     fun responseData(): T?
-    fun onChange(data: T?)
+
+    fun message(): String
+
+    companion object {
+        val exceptionFilters = mutableListOf(JsonFilter(), NetworkFilter(), CancelFilter())
+    }
+
 }
