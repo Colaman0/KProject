@@ -36,7 +36,7 @@ class LoginRegisterActivity :
         })
         viewmodel.userStream.observe(this, Observer {
             val intent = Intent(this, MainActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         })
         viewmodel.loadingStream.observe(this, Observer {

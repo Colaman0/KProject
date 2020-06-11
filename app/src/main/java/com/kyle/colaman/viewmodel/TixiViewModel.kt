@@ -4,45 +4,39 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.colaman.wanandroid.api.Api
 import com.kyle.colaman.entity.TixiEntity
-import com.kyle.colman.others.StateLiveData
-import com.kyle.colman.others.StateObserver
-import com.kyle.colman.others.stateLivedata
+import com.kyle.colman.others.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 /**
  * Author   : kyle
  * Date     : 2020/5/15
  * Function : 体系viewmodel
  */
+@ExperimentalCoroutinesApi
 class TixiViewModel : ViewModel() {
+    val tixis = mutableListOf<TixiEntity>()
+    var lastIdValue = 0
     val tixiItems = StateLiveData<List<TixiEntity>>()
     var firstItem = ObservableField<String>("")
     var secondItem = ObservableField<String>("")
     var lastId: MutableLiveData<Int> = MutableLiveData<Int>()
 
+
     @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
-    suspend fun getTixi() {
-//        liveData<> {  }
-//        Api.getTixi()
-//            .bindRxLivedata(tixiItems)
-//            .fullSubscribe()
-        val flow = flow {
-            emit(Api.getTixi()!!)
+    suspend fun initTixiHeader() {
+        Api.getTixi().onEach {
+            tixis.clear()
+            tixis.addAll(it)
 
-        }.catch { }.flowOn(Dispatchers.IO)
-
-        flow
-            .onEach { }
-            .catch { }
-            .asLiveData()
-
+        }.bindLivedata(tixiItems)
     }
 
     fun getArticle(id: Int) {
+        lastIdValue = id
         lastId.postValue(id)
     }
 }

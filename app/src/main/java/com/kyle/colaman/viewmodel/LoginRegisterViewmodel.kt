@@ -33,7 +33,6 @@ class LoginRegisterViewmodel : BaseViewModel() {
         isLogin.set(!isLogin.get()!!)
     }
 
-
     fun submitLogin() {
         apiLogin(account = account.get()!!, psw = password.get()!!)
     }
@@ -78,7 +77,6 @@ class LoginRegisterViewmodel : BaseViewModel() {
                         this@LoginRegisterViewmodel.password.set(psw)
                         switchType()
                         tipsStream.postValue("注册成功")
-
                     }
                 }
             } else {

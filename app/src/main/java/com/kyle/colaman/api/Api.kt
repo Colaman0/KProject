@@ -57,10 +57,9 @@ object Api : BaseApi<IApi>() {
         emit(getApi().collectArticle("1--").toData()!!)
     }.io()
 
-    suspend fun getWenda(page: Int) =
-        getApi().getWenda(page = page).toData()
+    suspend fun getWenda(page: Int) = getApi().getWenda(page = page).toData()
 
-    suspend fun getTixi() = getApi().getTixi().toData()
+    suspend fun getTixi() = flow { emit(getApi().getTixi().toData()!!) }.io()
 
     suspend fun getTixiArticle(page: Int, id: String) =
         getApi().getTixiArticles(page, id).toData()

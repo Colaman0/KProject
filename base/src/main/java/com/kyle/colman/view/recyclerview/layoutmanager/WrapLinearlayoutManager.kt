@@ -37,6 +37,9 @@ class WrapLinearlayoutManager(
         recyclerView: RecyclerView, state: RecyclerView.State,
         position: Int
     ) {
+        if (itemCount == 0) {
+            return
+        }
         val firstVisibleChild = recyclerView.getChildAt(0)
         val itemHeight = firstVisibleChild.height
         val currentPosition = recyclerView.getChildLayoutPosition(firstVisibleChild)

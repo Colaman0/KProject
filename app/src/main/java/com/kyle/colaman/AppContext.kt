@@ -1,5 +1,7 @@
 package com.kyle.colaman
 
+import com.colaman.statuslayout.StatusConfig
+import com.colaman.statuslayout.StatusLayout
 import com.kyle.colaman.network.RetrofitFactory
 import com.kyle.colaman.activity.LoginFilter
 import com.kyle.colaman.api.UserCookie
@@ -26,5 +28,11 @@ class AppContext : KApplication() {
             })
         )
         KResponse.exceptionFilters.add(LoginFilter)
+        StatusLayout.setGlobalData(
+            StatusConfig(
+                StatusLayout.STATUS_LOADING,
+                R.layout.layout_loading
+            )
+        )
     }
 }

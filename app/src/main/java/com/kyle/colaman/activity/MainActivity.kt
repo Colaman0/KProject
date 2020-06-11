@@ -4,18 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kyle.colaman.ActionFragment
 import com.kyle.colaman.FragmentAdapter
@@ -24,14 +18,13 @@ import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
 import com.kyle.colaman.entity.*
 import com.kyle.colaman.entity.error.LoginError
+import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
 import com.kyle.colaman.viewmodel.MainViewModel
 import com.kyle.colman.helper.kHandler
-import com.kyle.colman.helper.logd
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
-import com.kyle.colman.others.StateObserver
 import com.kyle.colman.view.KActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -51,26 +44,9 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         val pool = RecyclerView.RecycledViewPool()
     }
 
-    init {
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.activity = this
-        viewModel.livedata.observe(this, StateObserver(
-            loading = {
-                LogUtils.d("loading")
-            },
-            completed = {
-                LogUtils.d("completed")
-            },
-            fail = {
-                LogUtils.d(it)
-            }, success = {
-                LogUtils.d("成功")
-            })
-        )
     }
 
     override fun initView() {
@@ -113,7 +89,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
             ActionFragment.newInstance(ActionWenda, WendaCreator())
         )
         viewpagerAdapter.addFragment(
-            ActionFragment.newInstance(ActionTixi, MainDataCreator())
+            TixiFragment.newInstance()
         )
 
         viewpager.isUserInputEnabled = false
@@ -163,9 +139,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
         }
         toolbar.title = action.text
-        lifecycleScope.launch {
-            viewModel.reload()
-        }
     }
 
     fun initToolbar() {

@@ -1,21 +1,22 @@
 package com.kyle.colaman.fragment
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
-import androidx.leanback.app.BaseFragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.colaman.statuslayout.StatusLayout
-import com.kyle.colaman.ActionFragment
 import com.kyle.colaman.IActionFragment
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.FragmentTixiBinding
 import com.kyle.colaman.entity.ActionTixi
 import com.kyle.colaman.entity.NaviAction
-import com.kyle.colaman.entity.TixiEntity
+import com.kyle.colaman.helper.TixiCreator
 import com.kyle.colaman.viewmodel.TixiViewModel
-import com.kyle.colman.view.KFragment
+import com.kyle.colman.others.StateObserver
+import com.kyle.colman.view.LazyFragment
 import kotlinx.android.synthetic.main.fragment_tixi.*
 
 /**
@@ -23,41 +24,53 @@ import kotlinx.android.synthetic.main.fragment_tixi.*
  * Date     : 2020/5/15
  * Function : 体系
  */
-class TixiFragment : KFragment<FragmentTixiBinding>(R.layout.fragment_tixi), IActionFragment {
-    //    val dataCreator = ArticleDataCreator(0)
+class TixiFragment : LazyFragment<FragmentTixiBinding>(R.layout.fragment_tixi), IActionFragment {
+    val dataCreator = TixiCreator(0)
     val viewModel: TixiViewModel by viewModels()
-
-    override fun initView() {
-
-//
-//        viewModel.getTixi()
-//        binding.fragment = this
-//        binding.statusLayout.switchLayout(StatusLayout.STATUS_LOADING)
-//        viewModel.lastId.observe(this, Observer {
-//            dataCreator.id = it
-//            fragment.refresh()
-//        })
-//        viewModel.tixiItems.observe(this, object : RxDataObserver<List<TixiEntity>> {
-//            override fun onSuccess(data: List<TixiEntity>) {
-//                viewModel.firstItem.set(data[0].name)
-//                viewModel.secondItem.set(data[0].children!![0].name)
-//                viewModel.getArticle(data[0].children!![0].id!!)
-//                dataCreator.id = data[0].children!![0].id!!
-//                fragment.refresh()
-//                binding.statusLayout.showDefaultContent()
-//            }
-//
-//            override fun onError(throwable: Throwable) {
-//                super.onError(throwable)
-//                statusLayout?.switchLayout(StatusLayout.STATUS_ERROR)
-//            }
-//        })
+    val bottomFragment by lazy {
+        TixiSelectorFragment()
     }
 
 
+    companion object {
+        fun newInstance(): TixiFragment {
+            val args = Bundle()
+            val fragment = TixiFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    init {
+        lifecycleScope.launchWhenResumed {
+            viewModel.initTixiHeader()
+        }
+    }
+
+    override fun initView() {
+        binding.fragment = this
+        binding.viewmodel = viewModel
+        binding.statusLayout.switchLayout(StatusLayout.STATUS_LOADING)
+        binding.refreshRecyclerview.setDataCreator(datacreator = dataCreator)
+        viewModel.lastId.observe(this, Observer {
+            dataCreator.id = it
+            binding.refreshRecyclerview.getRefreshView().startRefresh()
+        })
+        viewModel.tixiItems.observe(this, StateObserver(
+            loading = {
+                statusLayout?.switchLayout(StatusLayout.STATUS_LOADING)
+            }, fail = {
+                statusLayout?.switchLayout(StatusLayout.STATUS_ERROR)
+            }) { data ->
+            viewModel.firstItem.set(data[0].name)
+            viewModel.secondItem.set(data[0].children!![0].name)
+            viewModel.lastId.postValue(data[0].children!![0].id)
+            binding.statusLayout.showDefaultContent()
+        })
+    }
+
     fun showBottomSelector() {
-        val bottomFragment = TixiSelectorFragment(viewModel)
-        bottomFragment.show(parentFragmentManager, "tixi")
+        bottomFragment.show(childFragmentManager, "tixi")
     }
 
     override fun findAction(): NaviAction {
@@ -72,5 +85,9 @@ class TixiFragment : KFragment<FragmentTixiBinding>(R.layout.fragment_tixi), IAc
         (refresh_recyclerview.getRecyclerview().layoutManager as LinearLayoutManager).scrollToPosition(
             0
         )
+    }
+
+    override fun lazyLoad() {
+        LogUtils.d("lazy load")
     }
 }

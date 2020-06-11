@@ -7,13 +7,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Author   : kyle
  * Date     : 2020/6/10
  * Function : 在原有livedata基础上增加发射状态事件，在[observe]方法中使用[StateObserver]来代替默认的[Observer]
  */
-class StateLiveData<T> : LiveData<STATE<T?>>() {
+class StateLiveData<T> : LiveData<STATE<T>> {
+
+    constructor() : super()
+    constructor(data: STATE<T>) : super(data)
+
     /**
      * 这里都用[setValue]方式去发射是为了避免发射间隙太短导致前面的值被覆盖
      *
@@ -37,6 +42,7 @@ class StateLiveData<T> : LiveData<STATE<T?>>() {
     fun emit(state: STATE<T>) {
         value = state
     }
+
 }
 
 /**
@@ -62,6 +68,21 @@ fun <T> stateLivedata(
         .asLiveData()
 }
 
+@JvmOverloads
+fun <T> Flow<T>.asStateLiveData(
+    context: CoroutineContext = EmptyCoroutineContext,
+    timeoutInMs: Long = 5000L
+): LiveData<STATE<T>> = liveData(context, timeoutInMs) {
+    this@asStateLiveData
+        .onStart { emit(LOADING) }
+        .catch { emit(FAIL(it.toKError())) }
+        .onCompletion { emit(COMPLETED) }
+        .flowOn(context)
+        .collect {
+            emit(SUCCESS(it))
+        }
+}
+
 /**
  * 在[flow]上绑定一个[StateLiveData]
  * 在[flow]对应的周期事件里会用[StateLiveData]发射事件
@@ -81,6 +102,25 @@ suspend fun <T> Flow<T>.bindLivedata(
 ): StateLiveData<T> {
     this.onStart {
         liveData.emitLoading()
+    }.catch {
+        liveData.emitError(it.toKError())
+    }.onCompletion {
+        liveData.emitCompleted()
+    }.onEach {
+        liveData.emitSuccess(it)
+    }.collect()
+    return liveData
+}
+
+
+@ExperimentalCoroutinesApi
+@JvmOverloads
+suspend fun <T> Flow<T>.bindLivedata(
+    liveData: LiveData<STATE<T>>
+): StateLiveData<T> {
+    val stateLiveData = liveData as StateLiveData<T>
+    this.onStart {
+        stateLiveData.emitLoading()
     }.catch {
         liveData.emitError(it.toKError())
     }.onCompletion {

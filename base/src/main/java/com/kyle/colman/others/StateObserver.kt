@@ -9,14 +9,14 @@ import com.kyle.colman.network.KError
  * Function : 配合StateLiveData使用，封装订阅处理，只做了分发处理
  */
 
-class StateObserver<T>(
+open class StateObserver<T>(
     val fail: ((error: KError) -> Unit)? = null,
     val loading: (() -> Unit)? = null,
     val completed: (() -> Unit)? = null,
     val success: (data: T) -> Unit
 
 ) : Observer<STATE<T>> {
-    override fun onChanged(state: STATE<T>?) {
+    override fun onChanged(state: STATE<T>) {
         when (state) {
             is SUCCESS -> success.invoke(state.data!!)
             is FAIL -> fail?.invoke(state.throwable)

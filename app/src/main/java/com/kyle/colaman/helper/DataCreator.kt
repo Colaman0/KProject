@@ -68,10 +68,25 @@ class XiangmuCreator() :
 class WendaCreator() :
     IRVDataCreator<ArticleEntity>, Serializable {
     override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
-        return Api.getProjects(page)!!
+        return Api.getWenda(page)!!
     }
 
     override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {
         return ItemArticleViewModel(data)
     }
 }
+
+
+class TixiCreator(var id: Int) :
+    IRVDataCreator<ArticleEntity>, Serializable {
+    override suspend fun loadDataByPage(page: Int): IPageDTO<ArticleEntity> {
+        return Api.getTixiArticle(page, id.toString())!!
+    }
+
+    override suspend fun dataToItemView(data: ArticleEntity): RecyclerItemView<*, *> {
+        return ItemArticleViewModel(data)
+    }
+}
+
+
+
