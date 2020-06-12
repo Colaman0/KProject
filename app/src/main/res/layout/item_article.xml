@@ -19,9 +19,7 @@
         android:clickable="true"
         android:clipChildren="false"
         android:clipToPadding="false"
-
         android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="@{()->viewmodel.actionCheck()}"
         android:padding="16dp">
 
         <TextView

@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityLoginRegisterBinding
+
 import com.kyle.colaman.viewmodel.LoginRegisterViewmodel
 import com.kyle.colman.view.CommonDialog
 import com.kyle.colman.view.KActivity
@@ -25,11 +26,15 @@ class LoginRegisterActivity :
 
     override fun initView() {
         mImmersionBar?.transparentBar()
-        binding.activity = this
-        binding.viewmodel = viewmodel
-        binding.edtLoginPassword.bindPasswordVisible(binding.icLoginPasswordPswAction)
-        binding.edtRegisterPassword.bindPasswordVisible(binding.icSignPasswordAction)
-        binding.edtRegisterRepassword.bindPasswordVisible(binding.icSignRepasswordAction)
+        binding?.activity = this
+        binding?.viewmodel = viewmodel
+        binding?.icLoginPasswordPswAction?.let { binding?.edtLoginPassword?.bindPasswordVisible(it) }
+        binding?.icSignPasswordAction?.let { binding?.edtRegisterPassword?.bindPasswordVisible(it) }
+        binding?.icSignRepasswordAction?.let {
+            binding?.edtRegisterRepassword?.bindPasswordVisible(
+                it
+            )
+        }
 
         viewmodel.tipsStream.observe(this, Observer {
             ToastUtils.showShort(it)

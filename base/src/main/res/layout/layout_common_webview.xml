@@ -20,7 +20,7 @@
             android:orientation="vertical">
 
             <com.tencent.smtt.sdk.WebView
-                android:id="@+id/web_view"
+                android:id="@+id/tecent_webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

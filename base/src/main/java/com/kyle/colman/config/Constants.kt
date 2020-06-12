@@ -9,6 +9,7 @@ object Constants {
     val DOUBLE_CLICK_TIME = 500
     val DATA = "data"
     val ARGUMENTS = "arguments"
+    val TITLE = "title"
 
     object PATH {
         // fileprovider完整名

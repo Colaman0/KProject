@@ -14,4 +14,20 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="ToolbarTheme" parent="AppTheme">
+        <!--更改溢出菜单文字颜色-->
+        <item name="android:textColor">@color/colorAccent</item>
+        <!--更改toolbar菜单文字大小，包括溢出菜单上的，和显示上的-->
+        <item name="android:textSize">1sp</item>
+        <!--更改toolbar上的菜单显示文字颜色-->
+        <item name="android:actionMenuTextColor">@color/lb_speech_orb_recording</item>
+        <!-- 设置Menu窗口不覆盖Toolbar视图 -->
+        <item name="overlapAnchor">false</item>
+
+        <!--设置title与navigationIcon的间隔-->
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
 </resources>

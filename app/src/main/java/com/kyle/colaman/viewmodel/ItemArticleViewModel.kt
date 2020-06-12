@@ -1,8 +1,10 @@
 package com.kyle.colaman.viewmodel
 
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.Html
+import android.view.View
 import android.widget.TextView
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
@@ -13,6 +15,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ItemArticleBinding
 import com.kyle.colaman.entity.ArticleEntity
+import com.kyle.colaman.gotoWeb
 import com.kyle.colaman.helper.CollectManager
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.view.CommonDialog
@@ -140,9 +143,9 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
         }
     }
 
-
-    fun actionCheck() {
-
+    override fun onItemClick(position: Int, itemView: View?) {
+        super.onItemClick(position, itemView)
+        gotoWeb(context as Activity, entity.link, entity.title)
     }
 
     override fun isUISame(data: ItemArticleViewModel): Boolean {

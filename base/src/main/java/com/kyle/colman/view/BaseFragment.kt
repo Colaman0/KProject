@@ -41,6 +41,7 @@ abstract class KFragment<B : ViewDataBinding>(
             rootView = view
             binding = DataBindingUtil.bind(view)!!
         }
+        binding.lifecycleOwner = this
         return rootView
     }
 

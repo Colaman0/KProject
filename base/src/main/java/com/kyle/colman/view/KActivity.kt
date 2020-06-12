@@ -27,12 +27,12 @@ import kotlin.system.exitProcess
 abstract class KActivity<B : ViewDataBinding>(
     @LayoutRes
     val contentLayoutId: Int,
-    val needStatusLayout: Boolean = true,
+    val needStatusLayout: Boolean = false,
     @ColorRes val statusbarColor: Int = R.color.white
 ) : AppCompatActivity() {
     var mImmersionBar: ImmersionBar? = null
     var statusLayout: StatusLayout? = null
-    lateinit var binding: B
+    var binding: B? = null
 
     /**
      * 用于调用[startActivityForResult]的自增requestcode
@@ -52,11 +52,12 @@ abstract class KActivity<B : ViewDataBinding>(
         if (needStatusLayout) {
             val view = layoutInflater.inflate(contentLayoutId, window.decorView as ViewGroup, false)
             statusLayout = StatusLayout.init(view)
-            binding = DataBindingUtil.bind<B>(view!!)!!
             setContentView(statusLayout)
+            binding = DataBindingUtil.findBinding(view)
         } else {
             binding = DataBindingUtil.setContentView(this, contentLayoutId)
         }
+        binding?.lifecycleOwner = this
         initStatusBar()
         initView()
     }

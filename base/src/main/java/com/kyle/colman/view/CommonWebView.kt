@@ -1,15 +1,16 @@
-package com.kyle.colaman.view
+package com.kyle.colman.view
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver.OnScrollChangedListener
 import android.webkit.WebSettings
 import android.widget.FrameLayout
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.LogUtils
 import com.kyle.colman.R
-import com.kyle.colman.view.KActivity
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler
 import com.tencent.smtt.sdk.WebChromeClient
 import com.tencent.smtt.sdk.WebView
@@ -27,6 +28,8 @@ import kotlinx.android.synthetic.main.layout_common_webview.view.*
 class CommonWebView : FrameLayout {
 
     var url = ""
+    var progressCallback: ((Int) -> Unit)? = null
+    var finishLoad = false
 
     constructor(context: Context) : this(context, null)
 
@@ -42,9 +45,19 @@ class CommonWebView : FrameLayout {
         addView(view)
         initDefaultConfig()
         refresh_layout.setOnRefreshListener {
-            web_view.loadUrl(url)
+            tecent_webview.loadUrl(url)
+            LogUtils.d("load url = $url")
         }
+
+        tecent_webview.getViewTreeObserver().addOnScrollChangedListener(OnScrollChangedListener {
+            if (tecent_webview.webScrollY == 0) {
+                refresh_layout.setEnabled(true)
+            } else {
+                refresh_layout.setEnabled(false)
+            }
+        })
     }
+
 
     /**
      * 加载网站
@@ -53,7 +66,8 @@ class CommonWebView : FrameLayout {
      */
     fun load(url: String): CommonWebView {
         this.url = url
-        web_view?.loadUrl(url)
+        refresh_layout.isRefreshing = true
+        tecent_webview.loadUrl(url)
         return this
     }
 
@@ -64,8 +78,8 @@ class CommonWebView : FrameLayout {
      */
     fun bindActivity(activity: KActivity<*>): CommonWebView {
         activity.addBackpressInterceptor({ activity ->
-            if (web_view.canGoBack()) {
-                web_view.goBack()
+            if (tecent_webview.canGoBack()) {
+                tecent_webview.goBack()
                 true
             }
             false
@@ -78,7 +92,7 @@ class CommonWebView : FrameLayout {
      * @param builder JSBuilder js参数builder
      */
     fun callJs(builder: JSBuilder) {
-        web_view.evaluateJavascript("javascript:${builder.method}(${builder.params})") { value ->
+        tecent_webview.evaluateJavascript("javascript:${builder.method}(${builder.params})") { value ->
             builder.callback?.invoke(value)
         }
     }
@@ -88,7 +102,7 @@ class CommonWebView : FrameLayout {
      */
     @SuppressLint("SetJavaScriptEnabled")
     private fun initDefaultConfig() {
-        web_view.settings?.run {
+        tecent_webview.settings?.run {
             javaScriptEnabled = true;                    //支持Javascript 与js交互
             javaScriptCanOpenWindowsAutomatically = true;//支持通过JS打开新窗口
             allowFileAccess = true;                      //设置可以访问文件
@@ -102,7 +116,7 @@ class CommonWebView : FrameLayout {
             this.setAppCacheMaxSize(Long.MAX_VALUE);
             cacheMode = WebSettings.LOAD_NO_CACHE;       //缓存模式
         }
-        web_view.webViewClient = object : WebViewClient() {
+        tecent_webview.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(
                 p0: WebView?,
                 sslErrorHandler: SslErrorHandler?,
@@ -113,17 +127,20 @@ class CommonWebView : FrameLayout {
             }
         }
 
-        web_view.webChromeClient = object : WebChromeClient() {
+        tecent_webview.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(p0: com.tencent.smtt.sdk.WebView?, progress: Int) {
                 super.onProgressChanged(p0, progress)
                 progress_bar.progress = progress
+                progressCallback?.invoke(progress)
                 progress_bar.visibility = if (progress != 100) View.VISIBLE else View.GONE
                 if (progress == 100) {
+                    finishLoad = true
                     progress_bar.visibility = View.GONE
                     if (refresh_layout.isRefreshing) {
                         refresh_layout.isRefreshing = false
                     }
                 } else {
+                    finishLoad = false
                     progress_bar.visibility = View.VISIBLE
                 }
             }

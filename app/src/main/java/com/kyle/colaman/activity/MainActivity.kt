@@ -16,6 +16,7 @@ import com.kyle.colaman.FragmentAdapter
 import com.kyle.colaman.IActionFragment
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
+
 import com.kyle.colaman.entity.*
 import com.kyle.colaman.entity.error.LoginError
 import com.kyle.colaman.fragment.TixiFragment
@@ -46,13 +47,13 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.activity = this
+        binding?.activity = this
     }
 
     override fun initView() {
         initToolbar()
         initViewPager()
-        binding.bottomBar.setOnNavigationItemSelectedListener { item ->
+        binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
             var action: NaviAction? = null
             when (item.itemId) {
                 R.id.guangchang -> action = ActionGuangchang
@@ -61,7 +62,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
                 R.id.xiangmu -> action = ActionXiangmu
                 R.id.shouye -> action = ActionMain
             }
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            binding?.drawerLayout?.closeDrawer(GravityCompat.START)
             action?.run {
                 switchContent(this)
             }
@@ -102,8 +103,8 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        if (binding?.drawerLayout?.isDrawerOpen(GravityCompat.START)!!) {
+            binding?.drawerLayout?.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
