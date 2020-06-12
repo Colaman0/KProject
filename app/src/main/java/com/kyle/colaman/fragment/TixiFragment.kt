@@ -18,6 +18,8 @@ import com.kyle.colaman.viewmodel.TixiViewModel
 import com.kyle.colman.others.StateObserver
 import com.kyle.colman.view.LazyFragment
 import kotlinx.android.synthetic.main.fragment_tixi.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 
 /**
  * Author   : kyle
@@ -28,7 +30,9 @@ class TixiFragment : LazyFragment<FragmentTixiBinding>(R.layout.fragment_tixi), 
     val dataCreator = TixiCreator(0)
     val viewModel: TixiViewModel by viewModels()
     val bottomFragment by lazy {
-        TixiSelectorFragment()
+        val fragment = TixiSelectorFragment()
+
+        fragment
     }
 
 
@@ -47,6 +51,7 @@ class TixiFragment : LazyFragment<FragmentTixiBinding>(R.layout.fragment_tixi), 
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun initView() {
         binding.fragment = this
         binding.viewmodel = viewModel
@@ -62,8 +67,7 @@ class TixiFragment : LazyFragment<FragmentTixiBinding>(R.layout.fragment_tixi), 
             }, fail = {
                 statusLayout?.switchLayout(StatusLayout.STATUS_ERROR)
             }) { data ->
-            viewModel.firstItem.set(data[0].name)
-            viewModel.secondItem.set(data[0].children!![0].name)
+            viewModel.updateNewItemInfo(data[0].name ?: "", data[0].children!![0].name ?: "")
             viewModel.lastId.postValue(data[0].children!![0].id)
             binding.statusLayout.showDefaultContent()
         })

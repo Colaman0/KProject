@@ -39,8 +39,7 @@ class ItemFirstTixiVModel(
     }
 
     override fun isUISame(data: ItemFirstTixiVModel): Boolean {
-        return return entity?.id == data.entity?.id
-
+        return return entity.id == data.entity.id
     }
 
     override fun isItemSame(data: ItemFirstTixiVModel): Boolean {

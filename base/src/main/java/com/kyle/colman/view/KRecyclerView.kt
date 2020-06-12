@@ -12,10 +12,7 @@ import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.view.recyclerview.adapter.KAdapter
 import com.kyle.colman.view.recyclerview.adapter.OnLoadMoreListener
-import kotlinx.coroutines.CompletableJob
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * Author   : kyle
@@ -26,6 +23,7 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
 
     private var refreshView: RefreshView? = null
     var dataCreator: IRVDataCreator<Any>? = null
+    var loadJob: Job? = null
     var isLoadmoreing = false
     var pageDTO: IPageDTO<Any>? = null
     val dataCreatorLiveData: MutableLiveData<IPageDTO<Any>> = MutableLiveData()
@@ -151,9 +149,16 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
     override fun stopRefresh() {
     }
 
+    /**
+     * 加载对应页数的数据
+     *
+     * @param page
+     */
     private fun loadDataByPage(page: Int) {
         if (dataCreator != null) {
-            lifecycleOwner.lifecycleScope.launch(kHandler {
+            // 把原本的page请求取消掉，避免多次refresh之后刷新了多次adapter
+            loadJob?.cancel()
+            loadJob = lifecycleOwner.lifecycleScope.launch(kHandler {
                 if (isRefreshing) {
                     endRefresh()
                 }
@@ -161,8 +166,10 @@ class KRecyclerView : RecyclerView, RefreshCallback, OnLoadMoreListener {
                     endLoadmore()
                 }
             }) {
-                val datas = dataCreator!!.loadDataByPage(page)
-                dataCreatorLiveData.postValue(datas)
+                if (isActive) {
+                    val datas = dataCreator!!.loadDataByPage(page)
+                    dataCreatorLiveData.postValue(datas)
+                }
             }
         }
     }

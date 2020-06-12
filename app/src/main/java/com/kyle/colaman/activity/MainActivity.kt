@@ -91,7 +91,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         viewpagerAdapter.addFragment(
             TixiFragment.newInstance()
         )
-
         viewpager.isUserInputEnabled = false
         viewpager.offscreenPageLimit = viewpagerAdapter.itemCount
         viewpager.adapter = viewpagerAdapter

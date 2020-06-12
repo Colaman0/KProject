@@ -13,7 +13,7 @@ import java.util.*
  * Function : 带有databinding的viewmodel， 处理一些databinding相关的逻辑
  */
 open class BindingViewModel<B : ViewDataBinding> : DefaultLifecycleObserver {
-    lateinit var binding: B
+    var binding: B? = null
     var context: Context? = null
 
     /**
@@ -40,8 +40,8 @@ open class BindingViewModel<B : ViewDataBinding> : DefaultLifecycleObserver {
      * @param data BR类id对应的数据
      */
     open fun refreshBindingData(id: Int = getDefaultVariableId(), data: Any = this) {
-        binding.setVariable(id, data)
-        binding.executePendingBindings()
+        binding?.setVariable(id, data)
+        binding?.executePendingBindings()
     }
 
 

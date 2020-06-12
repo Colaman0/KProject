@@ -48,7 +48,7 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
     }
     val collectStatusObserver = Observer<Boolean> {
         entity.collect = it
-        binding.starButton.isLiked = it
+        binding?.starButton?.isLiked = it
     }
 
     init {
@@ -62,38 +62,40 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
             CollectManager.getCollectLiveDataById(entity.id)
                 .observe(it, collectStatusObserver)
         }
-        binding.tabLayout.removeAllViews()
-        entity.title.apply {
-            binding.tvTitle.text = Html.fromHtml(this, Html.ImageGetter {
-                ColorDrawable(Color.TRANSPARENT)
-            }, null)
-        }
-        if (entity.fresh) {
-            binding.tabLayout.addView(createTagView("新"))
-        }
-        entity.tags.forEach {
-            binding.tabLayout.addView(createTagView(it.name))
-        }
-        entity.desc.apply {
-            binding.tvDesc.text = Html.fromHtml(this, Html.ImageGetter {
-                ColorDrawable(Color.TRANSPARENT)
-            }, null)
-        }
-        // 过滤多余的点赞按钮事件
-        callbackFlow<Boolean> {
-            binding.starButton.setOnLikeListener(object : OnLikeListener {
-                override fun liked(likeButton: LikeButton?) {
-                    offer(true)
-                }
+        binding?.let { binding ->
+            binding.tabLayout.removeAllViews()
+            entity.title.apply {
+                binding.tvTitle.text = Html.fromHtml(this, Html.ImageGetter {
+                    ColorDrawable(Color.TRANSPARENT)
+                }, null)
+            }
+            if (entity.fresh) {
+                binding.tabLayout.addView(createTagView("新"))
+            }
+            entity.tags.forEach {
+                binding.tabLayout.addView(createTagView(it.name))
+            }
+            entity.desc.apply {
+                binding.tvDesc.text = Html.fromHtml(this, Html.ImageGetter {
+                    ColorDrawable(Color.TRANSPARENT)
+                }, null)
+            }
+            // 过滤多余的点赞按钮事件
+            callbackFlow<Boolean> {
+                binding.starButton.setOnLikeListener(object : OnLikeListener {
+                    override fun liked(likeButton: LikeButton?) {
+                        offer(true)
+                    }
 
-                override fun unLiked(likeButton: LikeButton?) {
-                    offer(false)
-                }
-            })
-            awaitClose()
-        }.debounce(1000).onEach {
-            actionLike(it)
-        }.launchIn(lifecycleOwner!!.lifecycleScope)
+                    override fun unLiked(likeButton: LikeButton?) {
+                        offer(false)
+                    }
+                })
+                awaitClose()
+            }.debounce(1000).onEach {
+                actionLike(it)
+            }.launchIn(lifecycleOwner!!.lifecycleScope)
+        }
     }
 
     fun createTagView(text: String): TextView {
@@ -120,11 +122,11 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
         if (like == entity.collect) {
             return
         }
-        binding.starButton.isEnabled = false
+        binding?.starButton?.isEnabled = false
         lifecycleOwner!!.lifecycleScope.launch(Dispatchers.IO + kHandler {
             // 请求失败之后重置回原本的收藏状态
-            binding.starButton.isLiked = entity.collect
-            binding.starButton.isEnabled = true
+            binding?.starButton?.isLiked = entity.collect
+            binding?.starButton?.isEnabled = true
         }) {
             if (like) {
                 entity.id.let { CollectManager.collect(it) }
@@ -133,8 +135,8 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
             }
             // 重新设置entity里的收藏状态
             entity.collect = like
-            binding.starButton.isLiked = like
-            binding.starButton.isEnabled = true
+            binding?.starButton?.isLiked = like
+            binding?.starButton?.isEnabled = true
         }
     }
 

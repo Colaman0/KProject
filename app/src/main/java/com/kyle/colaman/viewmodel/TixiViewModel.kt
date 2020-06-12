@@ -31,12 +31,29 @@ class TixiViewModel : ViewModel() {
         Api.getTixi().onEach {
             tixis.clear()
             tixis.addAll(it)
-
+            refreshArticles(it[0].children?.get(0)?.id ?: 0)
         }.bindLivedata(tixiItems)
     }
 
-    fun getArticle(id: Int) {
+    /**
+     * 刷新对应体系分类下的文章
+     *
+     * @param id
+     */
+    fun refreshArticles(id: Int) {
         lastIdValue = id
         lastId.postValue(id)
+    }
+
+
+    /**
+     * 设置当前选中的体系
+     *
+     * @param firstItem
+     * @param secondItem
+     */
+    fun updateNewItemInfo(firstItem: String, secondItem: String) {
+        this.firstItem.set(firstItem)
+        this.secondItem.set(secondItem)
     }
 }
