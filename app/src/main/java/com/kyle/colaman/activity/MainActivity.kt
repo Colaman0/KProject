@@ -56,16 +56,9 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
             var action: NaviAction? = null
             when (item.itemId) {
-                R.id.guangchang -> action = ActionGuangchang
-                R.id.tixi -> action = ActionTixi
-                R.id.wenda -> action = ActionWenda
-                R.id.xiangmu -> action = ActionXiangmu
-                R.id.shouye -> action = ActionMain
+                // TODO: 2020/6/13 导航栏功能
             }
             binding?.drawerLayout?.closeDrawer(GravityCompat.START)
-            action?.run {
-                switchContent(this)
-            }
             true
         }
         UserUtil.isLogin()
@@ -143,7 +136,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun initToolbar() {
         setSupportActionBar(toolbar)
-
         val drawerToggle = object : ActionBarDrawerToggle(
             this,
             drawer_layout,
@@ -164,7 +156,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
                 drawer_layout.openDrawer(GravityCompat.START)
             }
         })
-
         drawer_layout.addDrawerListener(drawerToggle)
     }
 

@@ -15,13 +15,11 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="ToolbarTheme" parent="AppTheme">
+    <style name="ToolbarTheme" parent="AppTheme.AppBarOverlay">
         <!--更改溢出菜单文字颜色-->
         <item name="android:textColor">@color/colorAccent</item>
-        <!--更改toolbar菜单文字大小，包括溢出菜单上的，和显示上的-->
-        <item name="android:textSize">1sp</item>
+
         <!--更改toolbar上的菜单显示文字颜色-->
-        <item name="android:actionMenuTextColor">@color/lb_speech_orb_recording</item>
         <!-- 设置Menu窗口不覆盖Toolbar视图 -->
         <item name="overlapAnchor">false</item>
 
@@ -29,5 +27,20 @@
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetLeft">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:actionMenuTextColor">@color/lb_speech_orb_recording</item>
+    </style>
+
+
+    <style name="MaterialDialogSheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 </resources>

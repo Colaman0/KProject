@@ -63,7 +63,7 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
     override fun onBindView(holder: BaseViewHolder<ItemArticleBinding>) {
         lifecycleOwner?.let {
             CollectManager.getCollectLiveDataById(entity.id)
-                .observe(it, collectStatusObserver)
+                ?.observe(it, collectStatusObserver)
         }
         binding?.let { binding ->
             binding.tabLayout.removeAllViews()
@@ -145,7 +145,7 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
 
     override fun onItemClick(position: Int, itemView: View?) {
         super.onItemClick(position, itemView)
-        gotoWeb(context as Activity, entity.link, entity.title)
+        gotoWeb(context as Activity, entity.link, entity.title, entity.id)
     }
 
     override fun isUISame(data: ItemArticleViewModel): Boolean {

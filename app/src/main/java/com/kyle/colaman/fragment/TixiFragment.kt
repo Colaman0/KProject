@@ -30,9 +30,7 @@ class TixiFragment : LazyFragment<FragmentTixiBinding>(R.layout.fragment_tixi), 
     val dataCreator = TixiCreator(0)
     val viewModel: TixiViewModel by viewModels()
     val bottomFragment by lazy {
-        val fragment = TixiSelectorFragment()
-
-        fragment
+        TixiSelectorFragment()
     }
 
 

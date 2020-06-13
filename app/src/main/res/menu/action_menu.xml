@@ -7,16 +7,16 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/shouye"
+            android:id="@+id/collect"
             android:checked="true"
             android:enabled="true"
-            android:icon="@mipmap/ic_menu"
-            android:title="首页"
+            android:icon="@drawable/ic_uncollect"
+            android:title="收藏"
             app:showAsAction="always" />
         <item
-            android:id="@+id/guangchang"
+            android:id="@+id/pocket"
             android:icon="@mipmap/ic_guangchang"
-            android:title="广场"
+            android:title="稍后阅读"
             app:showAsAction="always" />
 
         <item
@@ -37,10 +37,10 @@
             app:showAsAction="always" />
 
         <!--        <item-->
-<!--            android:id="@+id/gongzhonghao"-->
-<!--            android:icon="@mipmap/ic_gongzhonghao"-->
-<!--            android:title="公众号"-->
-<!--            app:showAsAction="always" />-->
+        <!--            android:id="@+id/gongzhonghao"-->
+        <!--            android:icon="@mipmap/ic_gongzhonghao"-->
+        <!--            android:title="公众号"-->
+        <!--            app:showAsAction="always" />-->
     </group>
 
 

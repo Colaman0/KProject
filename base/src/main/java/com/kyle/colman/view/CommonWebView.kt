@@ -2,12 +2,15 @@ package com.kyle.colman.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver.OnScrollChangedListener
 import android.webkit.WebSettings
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat.startActivity
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.kyle.colman.R
@@ -124,6 +127,21 @@ class CommonWebView : FrameLayout {
             ) {
                 //忽略SSL证书错误
                 sslErrorHandler?.proceed()
+            }
+
+            override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
+                return try {
+                    if (url.startsWith("http:") || url.startsWith("https:")) {
+                     false
+                    } else {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(context, intent, null)
+                    }
+                    true
+                } catch (e: Exception) {
+                    false
+                }
+                return super.shouldOverrideUrlLoading(p0, p1)
             }
         }
 

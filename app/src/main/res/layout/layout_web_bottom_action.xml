@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="fragment"
+            type="com.kyle.colaman.fragment.WebActionFragment" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/layout_collect"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:onClick="@{fragment::actionClick}"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginVertical="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:padding="8dp"
+                android:src="@{fragment.collectLivedata? @drawable/ic_collect :  @drawable/ic_uncollect}"
+                tools:src="@drawable/ic_collect" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@{fragment.collectLivedata? @string/uncollect : @string/collect}"
+                tools:text="231" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginHorizontal="16dp"
+            android:background="@color/color_d4d4d4" />
+
+        <TextView
+            android:id="@+id/layout_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/ic_link"
+            android:drawablePadding="24dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:onClick="@{fragment::actionClick}"
+            android:padding="16dp"
+            android:text="复制链接" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginHorizontal="16dp"
+            android:background="@color/color_d4d4d4" />
+
+        <TextView
+            android:id="@+id/layout_broswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/ic_webloader"
+            android:drawablePadding="24dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:onClick="@{fragment::actionClick}"
+            android:padding="16dp"
+            android:text="浏览器打开" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginHorizontal="16dp"
+            android:background="@color/color_d4d4d4" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/ic_pocket"
+            android:id="@+id/layout_pocket"
+            android:drawablePadding="24dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:onClick="@{fragment::actionClick}"
+            android:padding="16dp"
+            android:text="稍后再读" />
+
+    </LinearLayout>
+</layout>

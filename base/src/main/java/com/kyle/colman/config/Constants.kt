@@ -10,6 +10,8 @@ object Constants {
     val DATA = "data"
     val ARGUMENTS = "arguments"
     val TITLE = "title"
+    val URL = "url"
+    val ID = "id"
 
     object PATH {
         // fileprovider完整名

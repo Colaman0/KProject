@@ -12,9 +12,9 @@ import com.kyle.colman.helper.EmptyCallLiveData
  * Function : 收藏管理类
  */
 object CollectManager {
-    val articleCollectMap = SparseArray<EmptyCallLiveData<Boolean>>()
+    val articleCollectMap = SparseArray<EmptyCallLiveData<Boolean>?>()
 
-    fun getCollectLiveDataById(id: Int): EmptyCallLiveData<Boolean> {
+    fun getCollectLiveDataById(id: Int): EmptyCallLiveData<Boolean>? {
         return articleCollectMap[id]
     }
 
@@ -35,13 +35,13 @@ object CollectManager {
 
     suspend fun collect(id: Int) {
         Api.collectArticle(id)
-        getCollectLiveDataById(id).postValue(true)
+        getCollectLiveDataById(id)?.postValue(true)
     }
 
 
     suspend fun unCollect(id: Int) {
         Api.unCollectArticle(id)
-        getCollectLiveDataById(id).postValue(false)
+        getCollectLiveDataById(id)?.postValue(false)
     }
 
 }

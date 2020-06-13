@@ -47,7 +47,7 @@ fun <T> KResponse<T>.toData(dataNullable: Boolean = true): T? {
     } else {
         throw ApiException(code = responseCode(), message = message())
     }
-    if (!dataNullable) {
+    if (dataNullable) {
         return null
     }
     throw DataNullException()

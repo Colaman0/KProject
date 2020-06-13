@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="@color/white"
-            app:title="" />
+            app:menu="@menu/search_menu"
+            app:title="首页" />
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
@@ -35,15 +36,6 @@
                 android:id="@+id/coordinator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <!--                <fragment-->
-                <!--                    android:id="@+id/fragment_host"-->
-                <!--                    android:name="androidx.navigation.fragment.NavHostFragment"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="match_parent"-->
-                <!--                    app:defaultNavHost="true"-->
-                <!--                    app:navGraph="@navigation/main_navi" />-->
-
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewpager"
@@ -58,19 +50,6 @@
                     android:layout_gravity="bottom"
                     android:background="@color/white"
                     app:menu="@menu/action_menu" />
-                <!--                <com.google.android.material.bottomappbar.BottomAppBar-->
-                <!--                    android:id="@+id/bottom_bar"-->
-                <!--                    style="@style/Widget.MaterialComponents.BottomAppBar"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="bottom"-->
-                <!--                    android:visibility="gone"-->
-                <!--                    app:fabAlignmentMode="end"-->
-                <!--                    app:fabCradleRoundedCornerRadius="0dp"-->
-                <!--                    app:fabCradleVerticalOffset="0dp"-->
-                <!--                    app:fabCradleMargin="0dp"-->
-                <!--                    app:hideOnScroll="true"-->
-                <!--                    app:menu="@menu/main_menu" />-->
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/float_button"
