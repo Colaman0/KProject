@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.paging.Pager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
@@ -103,6 +104,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
+
     fun initUser() {
         setAccountUIShow(UserUtil.isLogin())
         if (UserUtil.isLogin()) {
@@ -110,7 +112,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
                 UserUtil.getUserInfo()!!.nickname
         }
     }
-
     /**
      * 切换内容，重新请求
      */

@@ -31,7 +31,8 @@ ext {
     def version_webview = "1.1.2"
     def version_walle = "1.1.6"
     def nav_version = "2.3.0-alpha01"
-    def version_lottie = "3.4.0"
+    def paging_version = "3.0.0-alpha01"
+
 
     dependencies = [
             // 分包
@@ -124,6 +125,16 @@ ext {
 
             // dialog
             "dialog"                        : 'com.afollestad.material-dialogs:core:3.3.0',
+            "paging"                        : "androidx.paging:paging-runtime:$paging_version",
+
+            // alternatively - without Android dependencies for tests
+            "paging_common"                 : "androidx.paging:paging-common:$paging_version",
+
+            // optional - RxJava2 support
+            "paging_rxjava"                 : "androidx.paging:paging-rxjava2:$paging_version",
+
+            // optional - Guava ListenableFuture support
+            "paging_guava"                  : "androidx.paging:paging-guava:$paging_version"
     ]
 
     otherDependencies = [

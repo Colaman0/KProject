@@ -37,7 +37,6 @@ object Api : BaseApi<IApi>() {
         }
     }
 
-
     suspend fun getHomeArticles(page: Int): PageDTO<ArticleEntity> {
         return getApi().getHomeArticles(page = page).toData()!!
     }

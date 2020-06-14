@@ -44,7 +44,7 @@ data class KError(
     val kMessage: String = kThrowable.message.toString(),
     val errorType: ERROR = UnknownError,
     val kTips: String = ""
-)
+) : Throwable(kMessage, kThrowable)
 
 /**
  * 过滤错误的接口，实现这个接口并且添加到[KResponse.exceptionFilters]
