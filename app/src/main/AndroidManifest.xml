@@ -26,12 +26,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SearchActivity"></activity>
-        <activity android:name=".activity.WebActivity" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/AppTheme">
+        <activity android:name=".paging.PageActivity">
             <intent-filter>
                 <data
                     android:host="colaman"
@@ -41,6 +36,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".activity.WebActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme">
+
         </activity>
         <activity
             android:name=".activity.LoginRegisterActivity"

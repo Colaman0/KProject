@@ -41,7 +41,6 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
-            android:text="@{viewmodel.entity.title}"
             android:textColor="@color/black"
             android:textSize="17sp"
             app:layout_constraintBottom_toTopOf="@id/tv_desc"
