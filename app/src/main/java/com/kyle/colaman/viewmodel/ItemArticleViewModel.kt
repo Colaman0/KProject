@@ -6,20 +6,14 @@ import android.graphics.drawable.ColorDrawable
 import android.text.Html
 import android.view.View
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ItemArticleBinding
 import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.gotoWeb
 import com.kyle.colaman.helper.CollectManager
-import com.kyle.colaman.paging.PagingItemView
-import com.kyle.colaman.paging.PagingVHolder
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.view.CommonDialog
 import com.kyle.colman.view.recyclerview.RecyclerItemView
@@ -30,7 +24,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -162,23 +159,3 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
 }
 
 
-class ItemArticle(val entity: ArticleEntity) :
-    PagingItemView<ItemArticle>(R.layout.item_article) {
-
-    val binding by lazy {
-        DataBindingUtil.bind<ItemArticleBinding>(holder.itemView)
-    }
-
-    override fun areItemsTheSame(data: ItemArticle): Boolean {
-        return entity.id == data.entity.id
-    }
-
-    override fun areContentsTheSame(data: ItemArticle): Boolean {
-        return entity.id == data.entity.id
-    }
-
-    override fun onBindView(holder: PagingVHolder, position: Int) {
-        super.onBindView(holder, position)
-        binding?.tvTitle?.text = entity.title
-    }
-}
