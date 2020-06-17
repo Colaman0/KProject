@@ -7,14 +7,14 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.paging.Pager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.kyle.colaman.ActionFragment
+import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.FragmentAdapter
-import com.kyle.colaman.IActionFragment
+import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
 
@@ -57,9 +57,16 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
             var action: NaviAction? = null
             when (item.itemId) {
-                // TODO: 2020/6/13 导航栏功能
+                R.id.guangchang -> action = ActionGuangchang
+                R.id.tixi -> action = ActionTixi
+                R.id.wenda -> action = ActionWenda
+                R.id.xiangmu -> action = ActionXiangmu
+                R.id.shouye -> action = ActionMain
             }
-            binding?.drawerLayout?.closeDrawer(GravityCompat.START)
+            binding!!.drawerLayout.closeDrawer(GravityCompat.START)
+            action?.run {
+                switchContent(this)
+            }
             true
         }
         UserUtil.isLogin()
@@ -69,7 +76,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun initViewPager() {
         viewpagerAdapter.addFragment(
-            ActionFragment.newInstance(ActionMain, MainDataCreator())
+            ActionFragment.newInstance(ActionMain, MainSource(lifecycleScope))
         )
         viewpagerAdapter.addFragment(
             ActionFragment.newInstance(
@@ -112,6 +119,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
                 UserUtil.getUserInfo()!!.nickname
         }
     }
+
     /**
      * 切换内容，重新请求
      */

@@ -7,7 +7,7 @@
 
         <variable
             name="itemview"
-            type="com.kyle.colman.recyclerview.LoadmoreItemView" />
+            type="com.kyle.colman.recyclerview.LoadmoreView" />
 
         <import type="android.view.View" />
     </data>

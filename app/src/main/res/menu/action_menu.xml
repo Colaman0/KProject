@@ -7,16 +7,16 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/collect"
+            android:id="@+id/shouye"
             android:checked="true"
             android:enabled="true"
             android:icon="@drawable/ic_uncollect"
-            android:title="收藏"
+            android:title="首页"
             app:showAsAction="always" />
         <item
-            android:id="@+id/pocket"
+            android:id="@+id/guangchang"
             android:icon="@mipmap/ic_guangchang"
-            android:title="稍后阅读"
+            android:title="广场"
             app:showAsAction="always" />
 
         <item

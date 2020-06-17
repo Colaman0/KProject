@@ -1,4 +1,4 @@
-package com.kyle.colaman.view
+package com.kyle.colman.view
 
 import android.content.Context
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout

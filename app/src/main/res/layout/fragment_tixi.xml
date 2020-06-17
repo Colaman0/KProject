@@ -61,8 +61,9 @@
 
             </LinearLayout>
 
-            <com.kyle.colman.view.RefreshRecyclerview
+            <include
                 android:id="@+id/refresh_recyclerview"
+                layout="@layout/layout_paging_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

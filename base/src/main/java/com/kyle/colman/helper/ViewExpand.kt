@@ -4,13 +4,20 @@ import android.content.Context
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.colaman.statuslayout.StatusLayout
 import com.google.android.material.snackbar.Snackbar
+import com.kyle.colman.recyclerview.LoadMoreAdapter
+import com.kyle.colman.recyclerview.PagingAdapter
 import com.kyle.colman.view.recyclerview.layoutmanager.WrapLinearlayoutManager
 import com.kyle.colman.view.recyclerview.adapter.BaseRecyclerViewAdapter
+import kotlinx.coroutines.newFixedThreadPoolContext
 import java.util.concurrent.TimeUnit
 
 
@@ -212,6 +219,52 @@ fun View.visible() {
     startAnimation(animation)
 }
 
+@OptIn(ExperimentalPagingApi::class)
+fun SwipeRefreshLayout.bindPagingAdapter(adapter: PagingAdapter) {
+    setOnRefreshListener {
+        adapter.refresh()
+    }
+
+    adapter.apply {
+        addDataRefreshListener {
+            isRefreshing = false
+        }
+        addLoadStateListener { loadState ->
+            when (loadState.refresh) {
+                is LoadState.Error -> isRefreshing = false
+                is LoadState.NotLoading -> isRefreshing = false
+            }
+        }
+    }
+}
+
+
+@ExperimentalPagingApi
+fun StatusLayout.bindPaingState(adapter: PagingAdapter) {
+    adapter.addLoadStateListener { state ->
+        when (state.refresh) {
+            is LoadState.Error -> switchLayout(StatusLayout.STATUS_ERROR)
+        }
+    }
+    adapter.addDataRefreshListener {
+        showDefaultContent()
+    }
+}
+
+
+@ExperimentalPagingApi
+fun SwipeRefreshLayout.bindPagingState(adapter: PagingAdapter) {
+    var firstLoad = true
+    adapter.addLoadStateListener { state ->
+        when (state.refresh) {
+            is LoadState.Error -> isRefreshing = false
+            is LoadState.Loading -> isRefreshing = true
+        }
+    }
+    adapter.addDataRefreshListener {
+        isRefreshing = false
+    }
+}
 
 /**
  * 用于Edittext的内容改变[textChange]

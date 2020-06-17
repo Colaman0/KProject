@@ -13,22 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
  * Function : load more adapter 添加到paging的adapter中
  */
 class LoadMoreAdapter(private val retrycallback: () -> Unit) :
-    LoadStateAdapter<RecyclerView.ViewHolder>() {
-    val loadmoreItem by lazy {
-        LoadmoreItemView(retrycallback)
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, loadState: LoadState) {
-        loadmoreItem.bindState(loadState)
-    }
+    LoadStateAdapter<LoadmoreView>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         loadState: LoadState
-    ): RecyclerView.ViewHolder {
-        return PagingVHolder(
-            LayoutInflater.from(parent.context).inflate(loadmoreItem.layoutRes, parent, false)
-        )
+    ): LoadmoreView {
+        return LoadmoreView(parent, loadState, retrycallback)
+    }
+
+    override fun onBindViewHolder(holder: LoadmoreView, loadState: LoadState) {
+        holder.bindState(loadState)
     }
 
 }
