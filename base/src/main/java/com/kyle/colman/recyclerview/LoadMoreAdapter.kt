@@ -1,11 +1,8 @@
 package com.kyle.colman.recyclerview
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Author   : kyle

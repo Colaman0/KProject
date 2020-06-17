@@ -220,7 +220,7 @@ fun View.visible() {
 }
 
 @OptIn(ExperimentalPagingApi::class)
-fun SwipeRefreshLayout.bindPagingAdapter(adapter: PagingAdapter) {
+fun SwipeRefreshLayout.bindPaingState(adapter: PagingAdapter) {
     setOnRefreshListener {
         adapter.refresh()
     }
@@ -244,6 +244,7 @@ fun StatusLayout.bindPaingState(adapter: PagingAdapter) {
     adapter.addLoadStateListener { state ->
         when (state.refresh) {
             is LoadState.Error -> switchLayout(StatusLayout.STATUS_ERROR)
+            is LoadState.NotLoading -> showDefaultContent()
         }
     }
     adapter.addDataRefreshListener {
@@ -258,7 +259,7 @@ fun SwipeRefreshLayout.bindPagingState(adapter: PagingAdapter) {
     adapter.addLoadStateListener { state ->
         when (state.refresh) {
             is LoadState.Error -> isRefreshing = false
-            is LoadState.Loading -> isRefreshing = true
+            is LoadState.NotLoading -> isRefreshing = false
         }
     }
     adapter.addDataRefreshListener {

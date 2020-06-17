@@ -7,7 +7,6 @@ import androidx.databinding.ObservableBoolean
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.kyle.colman.R
-import com.kyle.colman.databinding.ItemLoadmoreBinding
 import com.kyle.colman.databinding.LayoutLoadmoreBinding
 
 /**

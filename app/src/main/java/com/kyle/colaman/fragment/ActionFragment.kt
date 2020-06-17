@@ -1,6 +1,8 @@
 package com.kyle.colaman.fragment
 
+import android.os.AsyncTask
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -8,17 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.LogUtils
+import com.colaman.statuslayout.StatusConfig
+import com.colaman.statuslayout.StatusLayout
 import com.kyle.colaman.R
 import com.kyle.colaman.activity.MainActivity
-import com.kyle.colaman.base.viewmodel.BaseViewModel
+import com.kyle.colaman.databinding.LayoutLoadErrorBinding
 import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.entity.NaviAction
 import com.kyle.colaman.viewmodel.ActionViewModel
 import com.kyle.colaman.viewmodel.ItemArticleViewModel
 import com.kyle.colman.databinding.LayoutPagingRecyclerviewBinding
-import com.kyle.colman.helper.bindPagingAdapter
-import com.kyle.colman.impl.IRVDataCreator
+import com.kyle.colman.helper.bindPaingState
 import com.kyle.colman.recyclerview.KPagingSource
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter
@@ -53,10 +55,16 @@ class ActionFragment<T>() :
             pagingSourceFactory = { source }
         ).flow.cachedIn(viewmodel.viewModelScope)
     }
+
     val loadmoreAdapter = LoadMoreAdapter {
         this@ActionFragment.adapter.retry()
     }
 
+    val layoutLoadErrorBinding by lazy {
+        LayoutLoadErrorBinding.inflate(LayoutInflater.from(context!!))
+    }
+
+    @ExperimentalPagingApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -72,7 +80,10 @@ class ActionFragment<T>() :
             }
         }
 
-        recyclerviewBinding.swipeRefreshlayout.bindPagingAdapter(adapter)
+        recyclerviewBinding.swipeRefreshlayout.bindPaingState(adapter)
+        status_layout.bindPaingState(adapter)
+        initStatusLayout()
+
         lifecycleScope.launch {
             pager.collect {
                 adapter.submitItem(it.map {
@@ -80,6 +91,24 @@ class ActionFragment<T>() :
                 })
             }
         }
+    }
+
+    fun initStatusLayout() {
+        status_layout.add(
+            StatusConfig(
+                StatusLayout.STATUS_ERROR,
+                view = layoutLoadErrorBinding.root,
+                clickRes = R.id.btn_reload
+            )
+        )
+        status_layout.setLayoutClickListener(object : StatusLayout.OnLayoutClickListener {
+            override fun OnLayoutClick(view: View, status: String?) {
+                if (status == StatusLayout.STATUS_ERROR) {
+//                    adapter.retry()
+                    status_layout.switchLayout(StatusLayout.STATUS_LOADING)
+                }
+            }
+        })
     }
 
     companion object {
