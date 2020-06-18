@@ -15,7 +15,7 @@
     </data>
 
     <com.colaman.statuslayout.StatusLayout
-        android:id="@+id/status_layout"
+        android:id="@+id/top_status_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -61,11 +61,21 @@
 
             </LinearLayout>
 
-            <include
-                android:id="@+id/refresh_recyclerview"
-                layout="@layout/layout_paging_recyclerview"
+            <com.colaman.statuslayout.StatusLayout
+                android:id="@+id/recyclerview_statuslayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refreshlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            </com.colaman.statuslayout.StatusLayout>
 
         </LinearLayout>
 

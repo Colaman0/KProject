@@ -1,12 +1,23 @@
 package com.kyle.colaman.activity
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import androidx.databinding.ObservableField
 import com.kyle.colaman.R
+import com.kyle.colaman.databinding.ActivitySearchBinding
+import com.kyle.colman.view.KActivity
 
-class SearchActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+class SearchActivity : KActivity<ActivitySearchBinding>(R.layout.activity_search) {
+    val queryText = ObservableField("").apply {
+    }
+
+    override fun initView() {
+        binding?.activity = this
+    }
+
+    /**
+     * 清除输入框内容
+     *
+     */
+    fun clearQuery() {
+
     }
 }

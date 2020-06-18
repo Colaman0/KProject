@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.paging.ExperimentalPagingApi
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.kyle.colaman.R
@@ -14,7 +15,6 @@ import com.kyle.colaman.databinding.ActivityLoginRegisterBinding
 import com.kyle.colaman.viewmodel.LoginRegisterViewmodel
 import com.kyle.colman.view.CommonDialog
 import com.kyle.colman.view.KActivity
-
 
 class LoginRegisterActivity :
     KActivity<ActivityLoginRegisterBinding>(R.layout.activity_login_register) {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.blankj.utilcode.util.LogUtils
 import com.colaman.statuslayout.StatusLayout
 import com.google.android.material.snackbar.Snackbar
 import com.kyle.colman.recyclerview.LoadMoreAdapter
@@ -240,10 +241,13 @@ fun SwipeRefreshLayout.bindPagingAdapter(adapter: PagingAdapter) {
 
 
 @ExperimentalPagingApi
-fun StatusLayout.bindPaingState(adapter: PagingAdapter) {
+fun StatusLayout.bindPaingState(adapter: PagingAdapter, erroBlock: (Throwable) -> Unit) {
     adapter.addLoadStateListener { state ->
         when (state.refresh) {
-            is LoadState.Error -> switchLayout(StatusLayout.STATUS_ERROR)
+            is LoadState.Error -> {
+                switchLayout(StatusLayout.STATUS_ERROR)
+                erroBlock.invoke((state.refresh as LoadState.Error).error)
+            }
         }
     }
     adapter.addDataRefreshListener {

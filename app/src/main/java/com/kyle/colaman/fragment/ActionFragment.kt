@@ -1,6 +1,8 @@
 package com.kyle.colaman.fragment
 
+import android.os.AsyncTask
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
+import com.colaman.statuslayout.StatusConfig
+import com.colaman.statuslayout.StatusLayout
 import com.kyle.colaman.R
 import com.kyle.colaman.activity.MainActivity
 import com.kyle.colaman.base.viewmodel.BaseViewModel
@@ -16,15 +20,21 @@ import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.entity.NaviAction
 import com.kyle.colaman.viewmodel.ActionViewModel
 import com.kyle.colaman.viewmodel.ItemArticleViewModel
+import com.kyle.colman.databinding.LayoutPagingErrorBinding
 import com.kyle.colman.databinding.LayoutPagingRecyclerviewBinding
 import com.kyle.colman.helper.bindPagingAdapter
+import com.kyle.colman.helper.bindPaingState
+import com.kyle.colman.helper.toKError
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.recyclerview.KPagingSource
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter
+import com.tencent.smtt.utils.s
+import kotlinx.android.synthetic.main.activity_login_register.*
 import kotlinx.android.synthetic.main.fragment_action.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 /**
  * Author   : kyle
@@ -49,7 +59,7 @@ class ActionFragment<T>() :
     }
     val pager by lazy {
         Pager(
-            config = PagingConfig(pageSize = 20, prefetchDistance = 3),
+            config = PagingConfig(pageSize = 20, prefetchDistance = 3, initialLoadSize = 0),
             pagingSourceFactory = { source }
         ).flow.cachedIn(viewmodel.viewModelScope)
     }
@@ -57,39 +67,73 @@ class ActionFragment<T>() :
         this@ActionFragment.adapter.retry()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
+    init {
+        lifecycleScope.launchWhenResumed {
+            initRecyclerview()
+
+            adapter.addLoadStateListener {
+                if (it.refresh is LoadState.Error) {
+                    loadmoreAdapter.loadState = LoadState.NotLoading(endOfPaginationReached = true)
+                }
+            }
+
+            initStatusLayout()
+
+            launch {
+                pager.collect {
+                    adapter.submitItem(it.map {
+                        ItemArticleViewModel(it, this@ActionFragment)
+                    })
+                }
+            }
+        }
+    }
+
+    private fun initRecyclerview() {
         recyclerviewBinding.recyclerview.apply {
             adapter = this@ActionFragment.adapter.withLoadStateFooter(footer = loadmoreAdapter)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
         recyclerviewBinding.recyclerview.setRecycledViewPool(MainActivity.pool)
-
-        adapter.addLoadStateListener {
-            if (it.refresh is LoadState.Error) {
-                loadmoreAdapter.loadState = LoadState.NotLoading(endOfPaginationReached = true)
-            }
-        }
-
         recyclerviewBinding.swipeRefreshlayout.bindPagingAdapter(adapter)
-        lifecycleScope.launch {
-            pager.collect {
-                adapter.submitItem(it.map {
-                    ItemArticleViewModel(it, this@ActionFragment)
-                })
-            }
+    }
+
+
+    @OptIn(ExperimentalPagingApi::class)
+    fun initStatusLayout() {
+        val errorBinding = LayoutPagingErrorBinding.inflate(LayoutInflater.from(context!!))
+        status_layout.bindPaingState(adapter) {
+            errorBinding.tvMessage.text = it.toKError().kTips
         }
+        status_layout.add(
+            StatusConfig(
+                status = StatusLayout.STATUS_ERROR,
+                view = errorBinding.root,
+                clickRes = R.id.btn_reload
+            )
+        )
+        status_layout.setLayoutClickListener(object : StatusLayout.OnLayoutClickListener {
+            override fun OnLayoutClick(view: View, status: String?) {
+                if (status == StatusLayout.STATUS_ERROR) {
+                    adapter.retry()
+                    status_layout.switchLayout(StatusLayout.STATUS_LOADING)
+                }
+            }
+        })
+        status_layout.switchLayout(StatusLayout.STATUS_LOADING)
     }
 
     companion object {
         fun <T : Any> newInstance(
             action: NaviAction,
-            creator: KPagingSource<Int, T>
+            creator: PagingSource<Int, T>
         ): ActionFragment<T> {
             val args = Bundle()
             args.putSerializable("action", action)
-            args.putSerializable("creator", creator)
+            if (creator is Serializable) {
+                args.putSerializable("creator", creator)
+            }
             val fragment = ActionFragment<T>()
             fragment.arguments = args
             return fragment

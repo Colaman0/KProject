@@ -26,9 +26,9 @@
 
             <ImageView
                 android:id="@+id/iv_back"
-                style="?attr/toolbarNavigationButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="?android:attr/actionBarItemBackground"
                 android:clickable="true"
                 android:onClick="@{()->activity.finish()}"
                 android:padding="8dp"

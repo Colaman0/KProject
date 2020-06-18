@@ -67,6 +67,7 @@ class ItemArticleViewModel(
                 ?.observe(it, collectStatusObserver)
         }
         binding?.let { binding ->
+            binding.viewmodel = this
             binding.tabLayout.removeAllViews()
             entity.title.apply {
                 binding.tvTitle.text = Html.fromHtml(this, Html.ImageGetter {

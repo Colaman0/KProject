@@ -30,12 +30,12 @@
         <activity android:name=".activity.WebActivity" />
         <activity
             android:name=".activity.MainActivity"
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <data
-                    android:host="colaman"
-                    android:scheme="kyle" />
+
 
                 <action android:name="android.intent.action.MAIN" />
 

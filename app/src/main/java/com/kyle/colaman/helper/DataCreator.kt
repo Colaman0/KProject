@@ -1,10 +1,12 @@
 package com.kyle.colaman.helper
 
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingSource
 import com.blankj.utilcode.util.LogUtils
 import com.colaman.wanandroid.api.Api
 import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.viewmodel.ItemArticleViewModel
+import com.kyle.colaman.viewmodel.MainViewModel
 import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.impl.IRVDataCreator
 import com.kyle.colman.recyclerview.KPagingSource
@@ -18,12 +20,13 @@ import java.io.Serializable
  * Function : datacreator
  */
 
-class MainSource(val coroutineScope: CoroutineScope) : KPagingSource<Int, ArticleEntity>() {
+class MainSource(val viewmodel: MainViewModel) : PagingSource<Int, ArticleEntity>(), Serializable {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleEntity> {
         // 如果key是null，那就加载第0页的数据
         val page = params.key ?: 0
         // 每一页的数据长度
         val pageSize = params.loadSize
+        val coroutineScope = viewmodel.viewModelScope
         return try {
             delay(2000)
             LogUtils.d("load page $page")
@@ -120,7 +123,8 @@ class TixiCreator(var id: Int) : KPagingSource<Int, ArticleEntity>() {
         // 每一页的数据长度
         val pageSize = params.loadSize
         return try {
-            val data = Api.getWenda(page)
+            val data = Api.getTixiArticle(page, id)
+            delay(2000)
             LoadResult.Page(
                 data = data!!.pageData(),
                 prevKey = if (page == 0) null else page - 1,

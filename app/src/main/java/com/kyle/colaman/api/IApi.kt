@@ -62,7 +62,7 @@ interface IApi {
     @GET("article/list/{page}/json")
     suspend fun getTixiArticles(
         @Path("page") page: Int,
-        @Query("cid") id: String
+        @Query("cid") id: Int
     ): BaseRes<PageDTO<ArticleEntity>>
 
     @POST("lg/collect/{id}/json")
