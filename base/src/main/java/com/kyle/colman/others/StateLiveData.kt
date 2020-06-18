@@ -6,6 +6,7 @@ import com.kyle.colman.network.KError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -100,15 +101,17 @@ fun <T> Flow<T>.asStateLiveData(
 suspend fun <T> Flow<T>.bindLivedata(
     liveData: StateLiveData<T>
 ): StateLiveData<T> {
-    this.onStart {
-        liveData.emitLoading()
-    }.catch {
-        liveData.emitError(it.toKError())
-    }.onCompletion {
-        liveData.emitCompleted()
-    }.onEach {
-        liveData.emitSuccess(it)
-    }.collect()
+    withContext(Dispatchers.Main) {
+        this@bindLivedata.onStart {
+            liveData.emitLoading()
+        }.catch {
+            liveData.emitError(it.toKError())
+        }.onCompletion {
+            liveData.emitCompleted()
+        }.onEach {
+            liveData.emitSuccess(it)
+        }.collect()
+    }
     return liveData
 }
 

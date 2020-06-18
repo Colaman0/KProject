@@ -2,12 +2,16 @@ package com.kyle.colaman.viewmodel
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
+import androidx.paging.*
 import com.colaman.wanandroid.api.Api
+import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.entity.TixiEntity
+import com.kyle.colaman.helper.TixiCreator
 import com.kyle.colman.others.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -25,14 +29,15 @@ class TixiViewModel : ViewModel() {
     var secondItem = ObservableField<String>("")
     var lastId: MutableLiveData<Int> = MutableLiveData<Int>()
 
-
     @ExperimentalCoroutinesApi
-    suspend fun initTixiHeader() {
-        Api.getTixi().onEach {
-            tixis.clear()
-            tixis.addAll(it)
-            refreshArticles(it[0].children?.get(0)?.id ?: 0)
-        }.bindLivedata(tixiItems)
+     fun initTixiHeader() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Api.getTixi().onEach {
+                tixis.clear()
+                tixis.addAll(it)
+                refreshArticles(it[0].children?.get(0)?.id ?: 0)
+            }.bindLivedata(tixiItems)
+        }
     }
 
     /**
@@ -44,6 +49,11 @@ class TixiViewModel : ViewModel() {
         lastIdValue = id
         lastId.postValue(id)
     }
+
+    fun getArticlePager(id: Int) = Pager(
+        config = PagingConfig(pageSize = 20, prefetchDistance = 3, initialLoadSize = 0),
+        pagingSourceFactory = { TixiCreator(id) }
+    ).flow.cachedIn(viewModelScope)
 
 
     /**

@@ -1,16 +1,21 @@
 package com.kyle.colaman.activity
 
+import android.app.SearchableInfo
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.FragmentAdapter
@@ -28,12 +33,12 @@ import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
 import com.kyle.colman.view.KActivity
+import com.kyle.colman.view.buildIntent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     var currenAction: NaviAction? = null
@@ -52,31 +57,39 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
-        initToolbar()
-        initViewPager()
-        binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
-            var action: NaviAction? = null
-            when (item.itemId) {
-                R.id.guangchang -> action = ActionGuangchang
-                R.id.tixi -> action = ActionTixi
-                R.id.wenda -> action = ActionWenda
-                R.id.xiangmu -> action = ActionXiangmu
-                R.id.shouye -> action = ActionMain
+
+    }
+
+    init {
+        lifecycleScope.launchWhenStarted {
+            LogUtils.d("initview")
+            initToolbar()
+            initViewPager()
+            binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
+                var action: NaviAction? = null
+                when (item.itemId) {
+                    R.id.guangchang -> action = ActionGuangchang
+                    R.id.tixi -> action = ActionTixi
+                    R.id.wenda -> action = ActionWenda
+                    R.id.xiangmu -> action = ActionXiangmu
+                    R.id.shouye -> action = ActionMain
+                }
+                binding!!.drawerLayout.closeDrawer(GravityCompat.START)
+                action?.run {
+                    switchContent(this)
+                }
+                true
             }
-            binding!!.drawerLayout.closeDrawer(GravityCompat.START)
-            action?.run {
-                switchContent(this)
-            }
-            true
+            UserUtil.isLogin()
+            switchContent(ActionMain)
         }
-        UserUtil.isLogin()
-        switchContent(ActionMain)
+
     }
 
 
     fun initViewPager() {
         viewpagerAdapter.addFragment(
-            ActionFragment.newInstance(ActionMain, MainSource(lifecycleScope))
+            ActionFragment.newInstance(ActionMain, MainSource(viewModel))
         )
         viewpagerAdapter.addFragment(
             ActionFragment.newInstance(
@@ -177,6 +190,27 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         navigation_view.menu.setGroupVisible(R.id.group_account, false)
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.search -> gotoSearch()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * 跳转到搜索页面
+     *
+     */
+    fun gotoSearch() {
+        startActivity(buildIntent(this, SearchActivity::class.java))
+    }
 }
 
 object LoginFilter : IExceptionFilter {

@@ -1,11 +1,9 @@
 package com.kyle.colman.view
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.activity.ComponentActivity
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +47,16 @@ abstract class KActivity<B : ViewDataBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!this.isTaskRoot) { // 当前类不是该Task的根部，那么之前启动
+            val intent = intent
+            if (intent != null) {
+                val action = intent.action
+                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN == action) { // 当前类是从桌面启动的
+                    finish() // finish掉该类，直接打开该Task中现存的Activity
+                    return
+                }
+            }
+        }
         if (needStatusLayout) {
             val view = layoutInflater.inflate(contentLayoutId, window.decorView as ViewGroup, false)
             statusLayout = StatusLayout.init(view)

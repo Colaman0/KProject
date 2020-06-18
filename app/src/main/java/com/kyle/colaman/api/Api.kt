@@ -60,7 +60,7 @@ object Api : BaseApi<IApi>() {
 
     suspend fun getTixi() = flow { emit(getApi().getTixi().toData()!!) }.io()
 
-    suspend fun getTixiArticle(page: Int, id: String) =
+    suspend fun getTixiArticle(page: Int, id: Int) =
         getApi().getTixiArticles(page, id).toData()
 
     suspend fun collectArticle(id: Int) =

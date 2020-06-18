@@ -11,12 +11,13 @@ import com.kyle.colman.others.emitSuccess
 import com.kyle.colman.others.stateLivedata
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.io.Serializable
 
 /**
  * Author   : kyle
  * Date     : 2020/6/5
  * Function : 主页viewmodel
  */
-class MainViewModel : BaseViewModel() {
+class MainViewModel : BaseViewModel(), Serializable {
 
 }
