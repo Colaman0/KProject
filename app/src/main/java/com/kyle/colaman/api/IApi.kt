@@ -78,4 +78,6 @@ interface IApi {
         @Query("k") query: String
     ): BaseRes<PageDTO<ArticleEntity>>
 
+    @GET("lg/collect/list/{page}/json")
+    suspend fun getCollectArticle(@Path("page") page: Int): BaseRes<PageDTO<ArticleEntity>>
 }

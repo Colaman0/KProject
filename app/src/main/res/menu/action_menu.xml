@@ -8,8 +8,6 @@
 
         <item
             android:id="@+id/collect"
-            android:checked="true"
-            android:enabled="true"
             android:icon="@drawable/ic_uncollect"
             android:title="收藏"
             app:showAsAction="always" />
