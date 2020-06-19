@@ -30,7 +30,7 @@ class MainSource(val viewmodel: MainViewModel) : PagingSource<Int, ArticleEntity
         return try {
             delay(2000)
             LogUtils.d("load page $page")
-            var data: IPageDTO<ArticleEntity>? = null
+            var data: IPageDTO<ArticleEntity>?
 
             if (page == 0) {
                 val topArticles = coroutineScope.async {

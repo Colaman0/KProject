@@ -28,6 +28,7 @@ import com.kyle.colaman.entity.error.LoginError
 import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
 import com.kyle.colaman.viewmodel.MainViewModel
+import com.kyle.colman.helper.getTag
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
@@ -57,12 +58,16 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
-
+        navigation_view.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.collect -> gotoCollect()
+            }
+            true
+        }
     }
 
     init {
         lifecycleScope.launchWhenStarted {
-            LogUtils.d("initview")
             initToolbar()
             initViewPager()
             binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
@@ -210,6 +215,10 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
      */
     fun gotoSearch() {
         startActivity(buildIntent(this, SearchActivity::class.java))
+    }
+
+    fun gotoCollect() {
+        startActivity(buildIntent(this, CollectActivity::class.java))
     }
 }
 

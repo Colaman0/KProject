@@ -1,5 +1,6 @@
 package com.kyle.colaman.viewmodel
 
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.Html
@@ -11,6 +12,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ItemArticleBinding
 import com.kyle.colaman.entity.ArticleEntity
+import com.kyle.colaman.gotoWeb
 import com.kyle.colaman.helper.CollectManager
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.recyclerview.PagingItemView
@@ -38,9 +40,7 @@ class ItemArticleViewModel(
     val lifecycleOwner: LifecycleOwner
 ) :
     PagingItemView<ItemArticleViewModel, ItemArticleBinding>(R.layout.item_article) {
-    val loadingDialog by lazy {
-        CommonDialog(context = context!!)
-    }
+
     val authorText by lazy {
         var text = ""
         if (entity.author.isNotEmpty()) {
@@ -145,6 +145,15 @@ class ItemArticleViewModel(
         }
     }
 
+    override fun onItemClick() {
+        super.onItemClick()
+        gotoWeb(
+            context as Activity,
+            entity.link,
+            entity.title,
+            entity.id
+        )
+    }
 
     override fun areItemsTheSame(data: ItemArticleViewModel): Boolean {
         return entity.id == data.entity.id
