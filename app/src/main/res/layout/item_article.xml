@@ -74,9 +74,8 @@
             android:text="@{viewmodel.authorText}"
             android:textColor="@color/color_second_title"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_date"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/tv_date"
             app:layout_constraintTop_toBottomOf="@id/tab_layout"
             tools:text="分享人:" />
 
@@ -84,14 +83,16 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="@{viewmodel.entity.niceDate}"
             android:textColor="#232F34"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_author"
+            app:layout_constraintLeft_toRightOf="@id/tv_author"
             app:layout_constraintTop_toBottomOf="@id/tab_layout"
+            app:layout_goneMarginLeft="0dp"
             tools:text="2019-1-1" />
 
         <com.like.LikeButton

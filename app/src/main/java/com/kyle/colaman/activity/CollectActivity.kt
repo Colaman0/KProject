@@ -37,11 +37,12 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
         }
+        toolbar.setNavigationOnClickListener { finish() }
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerview.adapter = this.adapter
         status_layout.switchLayout(StatusLayout.STATUS_LOADING)
         status_layout.bindPaingState(adapter) {
-            adapter.retry()
+//            adapter.retry()
         }
         swipe_refreshlayout.bindPagingAdapter(adapter)
         lifecycleScope.launch {

@@ -20,8 +20,8 @@ class CollectSource() : PagingSource<Int, ArticleEntity>() {
         val size = params.loadSize
         return try {
             Api.getCollectArticle(page).toData()!!.toPageResult(params)
-        } catch (e: Exception) {
-            LoadResult.Error(e.toKError())
+        } catch (throwable: Throwable) {
+            LoadResult.Error(throwable.toKError())
         }
     }
 }

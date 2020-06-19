@@ -206,6 +206,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         when (item.itemId) {
             R.id.search -> gotoSearch()
         }
+        drawer_layout.closeDrawer(GravityCompat.START)
         return super.onOptionsItemSelected(item)
     }
 
