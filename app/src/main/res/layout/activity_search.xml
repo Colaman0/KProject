@@ -17,8 +17,10 @@
         tools:context="com.kyle.colaman.activity.SearchActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
             android:elevation="5dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
@@ -39,8 +41,11 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:background="@null"
                 android:maxLines="1"
+                android:singleLine="true"
+                android:text="@={activity.queryText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/ic_back"
                 app:layout_constraintRight_toLeftOf="@id/ic_clear"
@@ -71,7 +76,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_bar" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

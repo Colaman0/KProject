@@ -72,4 +72,10 @@ interface IApi {
     @POST("lg/uncollect_originId/{id}/json")
     suspend fun unCollectArticle(@Path("id") id: String): BaseRes<Nothing>
 
+    @POST("article/query/{page}/json")
+    suspend fun search(
+        @Path("page") page: Int,
+        @Query("k") query: String
+    ): BaseRes<PageDTO<ArticleEntity>>
+
 }

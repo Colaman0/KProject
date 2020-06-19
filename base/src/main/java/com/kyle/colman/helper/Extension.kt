@@ -1,7 +1,9 @@
 package com.kyle.colman.helper
 
 import android.view.View
+import androidx.paging.PagingSource
 import com.blankj.utilcode.util.LogUtils
+import com.kyle.colman.impl.IPageDTO
 import com.kyle.colman.network.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
@@ -118,3 +120,13 @@ fun loge(text: String) {
  * @param T
  */
 fun <T> Flow<T>.io() = flowOn(Dispatchers.IO)
+
+fun <T : Any> IPageDTO<T>.toPageResult(param: PagingSource.LoadParams<Int>): PagingSource.LoadResult<Int,T> {
+    // 如果key是null，那就加载第0页的数据
+    val page = param.key ?: 0
+    return PagingSource.LoadResult.Page(
+        data = pageData(),
+        prevKey = if (param.key ?: 0 == 0) null else page - 1,
+        nextKey = if (isLastPage()) null else page + 1
+    )
+}

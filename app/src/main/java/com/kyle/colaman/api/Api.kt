@@ -68,4 +68,7 @@ object Api : BaseApi<IApi>() {
 
     suspend fun unCollectArticle(id: Int) =
         getApi().unCollectArticle(id.toString()).toData()
+
+
+    suspend fun search(query: String, page: Int) = getApi().search(page, query)
 }
