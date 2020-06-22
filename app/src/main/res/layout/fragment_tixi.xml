@@ -14,7 +14,7 @@
             type="com.kyle.colaman.viewmodel.TixiViewModel" />
     </data>
 
-    <com.colaman.statuslayout.StatusLayout
+    <com.kyle.colman.view.StatusLayout
         android:id="@+id/top_status_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -61,7 +61,7 @@
 
             </LinearLayout>
 
-            <com.colaman.statuslayout.StatusLayout
+            <com.kyle.colman.view.StatusLayout
                 android:id="@+id/recyclerview_statuslayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -75,9 +75,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-            </com.colaman.statuslayout.StatusLayout>
+            </com.kyle.colman.view.StatusLayout>
 
         </LinearLayout>
 
-    </com.colaman.statuslayout.StatusLayout>
+    </com.kyle.colman.view.StatusLayout>
 </layout>

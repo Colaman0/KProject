@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
-import com.colaman.statuslayout.StatusLayout
+import com.kyle.colman.view.StatusLayout
 import com.google.android.material.snackbar.Snackbar
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter

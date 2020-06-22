@@ -1,12 +1,12 @@
 package com.kyle.colaman
 
-import com.colaman.statuslayout.StatusConfig
-import com.colaman.statuslayout.StatusLayout
+import com.kyle.colman.view.StatusLayout
 import com.kyle.colaman.network.RetrofitFactory
 import com.kyle.colaman.activity.LoginFilter
 import com.kyle.colaman.api.UserCookie
 import com.kyle.colaman.helper.UserUtil
 import com.kyle.colman.config.ApiConfig
+import com.kyle.colman.config.StatusConfig
 import com.kyle.colman.network.KResponse
 import com.kyle.colman.view.KApplication
 import okhttp3.logging.HttpLoggingInterceptor

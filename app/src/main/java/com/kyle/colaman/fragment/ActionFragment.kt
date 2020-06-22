@@ -11,8 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
-import com.colaman.statuslayout.StatusConfig
-import com.colaman.statuslayout.StatusLayout
+import com.kyle.colman.view.StatusLayout
 import com.kyle.colaman.R
 import com.kyle.colaman.activity.MainActivity
 import com.kyle.colaman.base.viewmodel.BaseViewModel
@@ -20,6 +19,7 @@ import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.entity.NaviAction
 import com.kyle.colaman.viewmodel.ActionViewModel
 import com.kyle.colaman.viewmodel.ItemArticleViewModel
+import com.kyle.colman.config.StatusConfig
 import com.kyle.colman.databinding.LayoutPagingErrorBinding
 import com.kyle.colman.databinding.LayoutPagingRecyclerviewBinding
 import com.kyle.colman.helper.bindPagingAdapter

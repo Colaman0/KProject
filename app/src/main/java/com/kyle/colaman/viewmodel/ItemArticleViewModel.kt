@@ -55,8 +55,12 @@ class ItemArticleViewModel(
         binding?.starButton?.isLiked = it
     }
 
+    val loadingDialog by lazy {
+        CommonDialog(context!!)
+    }
+
     init {
-        entity.let { CollectManager.putNewArticle(it) }
+        entity.let { CollectManager.putNewArticle(it.id, it.collect) }
     }
 
     @FlowPreview
@@ -127,11 +131,13 @@ class ItemArticleViewModel(
         if (like == entity.collect) {
             return
         }
+        loadingDialog.show()
         binding?.starButton?.isEnabled = false
         lifecycleOwner.lifecycleScope.launch(Dispatchers.IO + kHandler {
             // 请求失败之后重置回原本的收藏状态
             binding?.starButton?.isLiked = entity.collect
             binding?.starButton?.isEnabled = true
+            loadingDialog.dismiss()
         }) {
             if (like) {
                 entity.id.let { CollectManager.collect(it) }
@@ -142,6 +148,7 @@ class ItemArticleViewModel(
             entity.collect = like
             binding?.starButton?.isLiked = like
             binding?.starButton?.isEnabled = true
+            loadingDialog.dismiss()
         }
     }
 

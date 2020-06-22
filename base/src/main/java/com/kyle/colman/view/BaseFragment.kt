@@ -8,7 +8,7 @@ import androidx.annotation.ColorRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.colaman.statuslayout.StatusLayout
+import com.kyle.colman.view.StatusLayout
 import com.gyf.barlibrary.ImmersionBar
 import com.kyle.colman.R
 

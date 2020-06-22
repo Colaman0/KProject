@@ -1,9 +1,6 @@
 package com.kyle.colaman.api
 
-import com.kyle.colaman.entity.ArticleEntity
-import com.kyle.colaman.entity.TixiEntity
-import com.kyle.colaman.entity.UserInfoEntity
-import com.kyle.colaman.entity.PageDTO
+import com.kyle.colaman.entity.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -79,5 +76,5 @@ interface IApi {
     ): BaseRes<PageDTO<ArticleEntity>>
 
     @GET("lg/collect/list/{page}/json")
-    suspend fun getCollectArticle(@Path("page") page: Int): BaseRes<PageDTO<ArticleEntity>>
+    suspend fun getCollectArticle(@Path("page") page: Int): BaseRes<PageDTO<CollectEntity>>
 }

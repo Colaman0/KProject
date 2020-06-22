@@ -54,7 +54,7 @@ ext {
             "glideTrans:"                   : "jp.wasabeef:glide-transformations:3.3.0",
 
             // statuslayotu UI控制
-            "status_layout"                 : "com.github.Colaman0:StatusLayout:1.0.8",
+            "status_layout"                 : "com.github.Colaman0:StatusLayout:1.0.9",
 
             // 知乎图库
             "matisse"                       : "com.zhihu.android:matisse:$version_matisse",

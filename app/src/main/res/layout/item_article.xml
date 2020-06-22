@@ -32,6 +32,7 @@
             android:text="置顶"
             android:textColor="@color/white"
             android:textSize="11sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -71,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
+            bindVisible="@{!viewmodel.authorText.empty}"
             android:text="@{viewmodel.authorText}"
             android:textColor="@color/color_second_title"
             android:textSize="12sp"
