@@ -258,7 +258,7 @@ open class StatusLayout constructor(protected var mContext: Context, attrs: Attr
      * @param status 状态
      * @return
      */
-    protected fun getViewIndexByStatus(status: String?): Int {
+    fun getViewIndexByStatus(status: String?): Int {
         for (position in 0 until childCount) {
             if (getChildAt(position).tag === status) {
                 return position

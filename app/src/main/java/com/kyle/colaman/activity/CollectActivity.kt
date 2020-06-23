@@ -9,6 +9,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kyle.colaman.R
+import com.kyle.colaman.getPagingErrorBinding
+import com.kyle.colaman.setErrorMsg
 import com.kyle.colaman.source.CollectSource
 import com.kyle.colaman.viewmodel.ItemArticleViewModel
 import com.kyle.colaman.viewmodel.ItemCollectViewmodel
@@ -35,6 +37,7 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
     }
     val viewmodel by viewModels<ViewModel>()
 
+
     @OptIn(ExperimentalPagingApi::class)
     override fun initView() {
         setSupportActionBar(toolbar)
@@ -48,7 +51,7 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
         })
         status_layout.switchLayout(StatusLayout.STATUS_LOADING)
         status_layout.bindPaingState(adapter) {
-            status_layout.switchLayout(StatusLayout.STATUS_ERROR)
+            status_layout.setErrorMsg(it.message!!)
         }
         swipe_refreshlayout.bindPagingAdapter(adapter)
         lifecycleScope.launch(Dispatchers.IO) {
@@ -63,10 +66,9 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
             }
         }
 
-        statusLayout?.setLayoutClickListener(object : StatusLayout.OnLayoutClickListener {
+        status_layout?.setLayoutClickListener(object : StatusLayout.OnLayoutClickListener {
             override fun OnLayoutClick(view: View, status: String?) {
                 if (status === StatusLayout.STATUS_ERROR) {
-                    adapter.retry()
                 }
             }
         })

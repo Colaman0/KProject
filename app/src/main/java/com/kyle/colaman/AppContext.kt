@@ -34,5 +34,12 @@ class AppContext : KApplication() {
                 R.layout.layout_loading
             )
         )
+        StatusLayout.setGlobalData(
+            StatusConfig(
+                StatusLayout.STATUS_ERROR,
+                R.layout.layout_paging_error,
+                clickRes = R.id.btn_reload
+            )
+        )
     }
 }

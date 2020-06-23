@@ -4,11 +4,17 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.TextView
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.get
 import com.kyle.colaman.activity.WebActivity
 import com.kyle.colaman.helper.PocketRoom
 import com.kyle.colman.config.Constants
 import com.kyle.colman.view.KApplication
+import com.kyle.colman.databinding.LayoutPagingErrorBinding
+import com.kyle.colman.view.StatusLayout
 import com.kyle.colman.view.buildIntent
 
 /**
@@ -42,6 +48,17 @@ fun copyToBorad(context: Context, text: String) {
         cm.setPrimaryClip(data);
     } catch (e: Exception) {
 
+    }
+}
+
+fun getPagingErrorBinding(context: Context) =
+    LayoutPagingErrorBinding.inflate(LayoutInflater.from(context))
+
+fun StatusLayout.setErrorMsg(text: String) {
+    val view = get(getViewIndexByStatus(StatusLayout.STATUS_ERROR))
+    val textView = view.findViewById<TextView>(R.id.tv_message)
+    if (textView != null) {
+        textView.text = text
     }
 }
 
