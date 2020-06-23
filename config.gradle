@@ -32,6 +32,7 @@ ext {
     def version_walle = "1.1.6"
     def nav_version = "2.3.0-alpha01"
     def paging_version = "3.0.0-alpha01"
+    def room_version = "2.2.5"
 
 
     dependencies = [
@@ -134,7 +135,12 @@ ext {
             "paging_rxjava"                 : "androidx.paging:paging-rxjava2:$paging_version",
 
             // optional - Guava ListenableFuture support
-            "paging_guava"                  : "androidx.paging:paging-guava:$paging_version"
+            "paging_guava"                  : "androidx.paging:paging-guava:$paging_version",
+
+            "room"                          : "androidx.room:room-runtime:$room_version",
+            "room_ktx"                      : "androidx.room:room-ktx:$room_version",
+            "room_std"                      : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     ]
 
     otherDependencies = [
@@ -143,6 +149,7 @@ ext {
 
 
     annotationProcessor = [
-            "glide": "com.github.bumptech.glide:compiler:$version_glide"
+            "glide": "com.github.bumptech.glide:compiler:$version_glide",
+            "room" : "androidx.room:room-compiler:$room_version"
     ]
 }

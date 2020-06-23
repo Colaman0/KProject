@@ -20,13 +20,14 @@
 
     <application
         android:name=".AppContext"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CollectActivity"></activity>
+        <activity android:name=".activity.PocketActivity"></activity>
+        <activity android:name=".activity.CollectActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.WebActivity" />
         <activity

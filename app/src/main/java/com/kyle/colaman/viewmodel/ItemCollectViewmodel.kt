@@ -50,7 +50,6 @@ class ItemCollectViewmodel(
             MaterialDialog(it).show {
                 title(text = "确认取消收藏该文章?")
                 positiveButton(text = "确认", click = { unCollectArticle() })
-
                 negativeButton(text = "取消", click = {
                     binding?.starButton?.isLiked = true
                     dismiss()

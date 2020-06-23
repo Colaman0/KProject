@@ -6,6 +6,7 @@ package com.kyle.colman.config
  * Function :
  */
 object Constants {
+    val DESC = "desc"
     val DOUBLE_CLICK_TIME = 500
     val DATA = "data"
     val ARGUMENTS = "arguments"

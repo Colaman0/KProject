@@ -1,6 +1,5 @@
 package com.kyle.colaman.activity
 
-import android.app.SearchableInfo
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -11,24 +10,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.FragmentAdapter
-import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
-
 import com.kyle.colaman.entity.*
 import com.kyle.colaman.entity.error.LoginError
+import com.kyle.colaman.fragment.ActionFragment
+import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
 import com.kyle.colaman.viewmodel.MainViewModel
-import com.kyle.colman.helper.getTag
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
@@ -59,8 +54,10 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun initView() {
         navigation_view.setNavigationItemSelectedListener {
+            drawer_layout.closeDrawer(GravityCompat.START)
             when (it.itemId) {
                 R.id.collect -> gotoCollect()
+                R.id.pocket -> gotoPocket()
             }
             true
         }
@@ -220,6 +217,10 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun gotoCollect() {
         startActivity(buildIntent(this, CollectActivity::class.java))
+    }
+
+    private fun gotoPocket() {
+        startActivity(buildIntent(this, PocketActivity::class.java))
     }
 }
 

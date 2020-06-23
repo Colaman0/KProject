@@ -6,7 +6,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.core.content.ContextCompat.getSystemService
 import com.kyle.colaman.activity.WebActivity
+import com.kyle.colaman.helper.PocketRoom
 import com.kyle.colman.config.Constants
+import com.kyle.colman.view.KApplication
 import com.kyle.colman.view.buildIntent
 
 /**
@@ -15,11 +17,12 @@ import com.kyle.colman.view.buildIntent
  * Function : 拓展
  */
 
-fun gotoWeb(activity: Activity, url: String, title: String, id: Int) {
+fun gotoWeb(activity: Activity, url: String, title: String, id: Int,desc:String) {
     val intent = buildIntent(activity, WebActivity::class.java)
     intent.putExtra(Constants.DATA, url)
     intent.putExtra(Constants.TITLE, title)
     intent.putExtra(Constants.ID, id)
+    intent.putExtra(Constants.DESC, desc)
     activity.startActivity(intent)
 }
 
@@ -41,3 +44,5 @@ fun copyToBorad(context: Context, text: String) {
 
     }
 }
+
+fun getPocketRoom() = PocketRoom.getDatabase(KApplication.getAppContext()!!).pocketDao()

@@ -1,13 +1,10 @@
 package com.kyle.colaman.activity
 
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityWebBinding
 import com.kyle.colaman.fragment.WebActionFragment
 import com.kyle.colman.config.Constants
-import com.kyle.colman.databinding.LayoutRefreshWebviewBinding
 import com.kyle.colman.view.KActivity
-import com.kyle.colman.view.bindUrl
 import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : KActivity<ActivityWebBinding>(R.layout.activity_web) {
@@ -15,7 +12,12 @@ class WebActivity : KActivity<ActivityWebBinding>(R.layout.activity_web) {
         intent.getStringExtra(Constants.DATA)
     }
     val actionFragment by lazy {
-        WebActionFragment.newInstance(intent.getIntExtra(Constants.ID, 0), url)
+        WebActionFragment.newInstance(
+            intent.getIntExtra(Constants.ID, 0),
+            url,
+            title,
+            intent.getStringExtra(Constants.DESC) ?: ""
+        )
     }
 
     val title by lazy {

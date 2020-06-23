@@ -158,7 +158,8 @@ class ItemArticleViewModel(
             context as Activity,
             entity.link,
             entity.title,
-            entity.id
+            entity.id,
+            entity.desc
         )
     }
 
