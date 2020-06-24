@@ -122,20 +122,24 @@ class WebActionFragment : BottomSheetDialogFragment() {
     }
 
     fun inPocket() {
+        loadingDialog.show()
         appViewmodel.viewModelScope.launch(Dispatchers.IO + kHandler {
             LogUtils.d(it)
-//            loadingDialog.dismiss()
+            loadingDialog.dismiss()
+            dismiss()
         }) {
             getPocketRoom().insertPocketArticle(
                 ArticleRoomEntity(
-                    articleId = id,
+                    articleId = articleId,
                     title = title,
                     desc = desc,
                     addTime = System.currentTimeMillis(),
                     link = url
                 )
             )
+            ToastUtils.showShort("加入成功")
             withContext(Dispatchers.Main) {
+                dismiss()
                 loadingDialog.dismiss()
             }
         }

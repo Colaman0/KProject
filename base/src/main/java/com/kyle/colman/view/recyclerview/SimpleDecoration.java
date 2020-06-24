@@ -35,13 +35,13 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
     private int mOrientation;
 
     private final Rect mBounds = new Rect();
-    private int mWidth;
-    private int mHeight;
-    private int mLeft;
-    private int mRight;
-    private int mTop;
-    private int mBottom;
-    private Context mContext;
+    public int width;
+    public int height;
+    public int left;
+    public int right;
+    public int top;
+    public int bottom;
+    Context mContext;
 
 
     public SimpleDecoration(Context context, int orientation) {
@@ -69,12 +69,12 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
     }
 
     public SimpleDecoration setWidth(@DimenRes int width) {
-        mWidth = getPx(width);
+        this.width = getPx(width);
         return this;
     }
 
     public SimpleDecoration setHeight(@DimenRes int height) {
-        mHeight = getPx(height);
+        this.height = getPx(height);
         return this;
     }
 
@@ -196,50 +196,50 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
 
 
     protected int getDrawHeight() {
-        return mHeight > 0 ? mHeight : mDivider.getIntrinsicHeight();
+        return height > 0 ? height : mDivider.getIntrinsicHeight();
     }
 
     private int getDrawWidth() {
-        return mWidth > 0 ? mWidth : mDivider.getIntrinsicWidth();
+        return width > 0 ? width : mDivider.getIntrinsicWidth();
     }
 
     public int getRight() {
-        return mRight;
+        return right;
     }
 
     public SimpleDecoration setRight(@DimenRes int right) {
-        mRight = getPx(right);
+        this.right = getPx(right);
         return this;
     }
 
     public int getLeft() {
-        return mLeft;
+        return left;
     }
 
     public SimpleDecoration setLeft(@DimenRes int left) {
-        mLeft = getPx(left);
+        this.left = getPx(left);
         return this;
     }
 
     public int getBottom() {
-        return mBottom;
+        return bottom;
     }
 
     public SimpleDecoration setBottom(@DimenRes int bottom) {
-        mBottom = getPx(bottom);
+        this.bottom = getPx(bottom);
         return this;
     }
 
     public int getTop() {
-        return mTop;
+        return top;
     }
 
     public SimpleDecoration setTop(@DimenRes int top) {
-        mTop = getPx(top);
+        this.top = getPx(top);
         return this;
     }
 
-    private int getPx(@DimenRes int res) {
+    private int getPx(int res) {
         if (mContext != null) {
             return mContext.getResources().getDimensionPixelOffset(res);
         }
@@ -248,7 +248,7 @@ public class SimpleDecoration extends RecyclerView.ItemDecoration {
 
     private int isFirst(View view, RecyclerView parent) {
         if (parent.getChildAdapterPosition(view) == 0) {
-            return mTop;
+            return top;
         }
         return 0;
     }

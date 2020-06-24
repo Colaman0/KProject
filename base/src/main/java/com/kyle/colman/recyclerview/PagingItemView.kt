@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.tencent.smtt.utils.p
 
 /**
  * Author   : kyle
@@ -20,7 +21,7 @@ abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layou
         context = holder.itemView.context
         this.holder = holder
         binding = DataBindingUtil.bind(holder.itemView)
-        holder.itemView.setOnClickListener { onItemClick() }
+        holder.itemView.setOnClickListener { onItemClick(position) }
         onBindView(holder, position)
     }
 
@@ -30,7 +31,7 @@ abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layou
     )
 
 
-    open fun onItemClick() {}
+    open fun onItemClick(position: Int) {}
 
     abstract fun areItemsTheSame(data: T): Boolean
 

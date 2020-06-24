@@ -11,6 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
         app:title="稍后再读" />
 
     <com.kyle.colman.view.StatusLayout

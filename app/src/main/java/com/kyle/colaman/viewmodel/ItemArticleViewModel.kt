@@ -152,8 +152,8 @@ class ItemArticleViewModel(
         }
     }
 
-    override fun onItemClick() {
-        super.onItemClick()
+    override fun onItemClick(position: Int) {
+        super.onItemClick(position)
         gotoWeb(
             context as Activity,
             entity.link,
