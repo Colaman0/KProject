@@ -9,10 +9,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kyle.colaman.R
-import com.kyle.colaman.getPagingErrorBinding
 import com.kyle.colaman.setErrorMsg
 import com.kyle.colaman.source.CollectSource
-import com.kyle.colaman.viewmodel.ItemArticleViewModel
 import com.kyle.colaman.viewmodel.ItemCollectViewmodel
 import com.kyle.colman.helper.bindPagingAdapter
 import com.kyle.colman.helper.bindPaingState

@@ -1,8 +1,11 @@
 package com.kyle.colman
 
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import com.kyle.colman.helper.KLaunch
+import com.kyle.colman.helper.kHandler
+import com.tencent.smtt.utils.p
+import kotlinx.coroutines.*
+import java.lang.Exception
+import java.lang.NullPointerException
 
 /**
  * Author   : kyle
@@ -10,7 +13,21 @@ import kotlinx.coroutines.runBlocking
  * Function : 测试
  */
 fun main() = runBlocking {
-    coroutineScope {
-        launch {  }
+    val scope = CoroutineScope(Dispatchers.Default)
+    val handler = CoroutineExceptionHandler { _, exception ->
+        println("CoroutineExceptionHandler got $exception")
     }
+    launch(handler) {
+        println("chong")
+        throw  NullPointerException()
+    }
+    KLaunch.get(scope)
+        .launch {
+            println("chong")
+            throw NullPointerException("----")
+        }
+        .onStart { println("start") }
+        .onDone { println("done") }
+        .onError { println("error") }
+        .run()
 }

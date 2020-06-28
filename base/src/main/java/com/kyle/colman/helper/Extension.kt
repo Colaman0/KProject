@@ -85,7 +85,6 @@ fun kHandler(block: (KError) -> Unit) = CoroutineExceptionHandler { _, exception
     exception.printStackTrace()
     val error = exception.toKError()
     block(error)
-    LogUtils.e(error)
 }
 
 fun catchError() {
@@ -134,3 +133,5 @@ fun <T : Any> IPageDTO<T>.toPageResult(param: PagingSource.LoadParams<Int>): Pag
         nextKey = if (isLastPage()) null else page + 1
     )
 }
+
+

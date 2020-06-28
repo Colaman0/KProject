@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kyle.colaman.FragmentAdapter
 import com.kyle.colaman.R
@@ -24,6 +25,8 @@ import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
 import com.kyle.colaman.viewmodel.MainViewModel
+import com.kyle.colman.helper.KAsync
+import com.kyle.colman.helper.KLaunch
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
@@ -31,10 +34,8 @@ import com.kyle.colman.network.KError
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.lang.NullPointerException
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     var currenAction: NaviAction? = null
@@ -53,6 +54,30 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
+
+        lifecycleScope.launch {
+            val number = KAsync.get<Int>(lifecycleScope)
+                .async {
+                    LogUtils.d("${Thread.currentThread().name}运算开始啦")
+                    1
+                }
+                .onStart {
+                    withContext(Dispatchers.IO) {}
+                    LogUtils.d("${Thread.currentThread().name}开始啦")
+                }
+                .onDone {
+                    withContext(Dispatchers.IO) {}
+                    LogUtils.d("${Thread.currentThread().name}结束")
+                }
+                .onError {
+                    LogUtils.d("${Thread.currentThread().name}出错啦")
+                }
+                .run().await()
+
+            LogUtils.d("number=$number")
+        }
+
+
         navigation_view.setNavigationItemSelectedListener {
             drawer_layout.closeDrawer(GravityCompat.START)
             when (it.itemId) {
