@@ -18,6 +18,10 @@ interface PocketDao {
     @Delete
     fun removePocketArticle(entity: ArticleRoomEntity)
 
+
+    @Query("delete from pocket_article_table")
+    fun clear()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPocketArticle(entity: ArticleRoomEntity)
 }

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.Html
+import android.text.Spanned
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ItemPocketBinding
 import com.kyle.colaman.entity.ArticleRoomEntity
@@ -28,11 +29,15 @@ class ItemPocketViewmodel(
         this.position = position
         binding?.apply {
             viewmodel = this@ItemPocketViewmodel
-            tvDesc.text = Html.fromHtml(entity.desc, Html.ImageGetter {
-                ColorDrawable(Color.TRANSPARENT)
-            }, null)
-
+            tvDesc.text = transToHtmlText(entity.desc)
+            tvTitle.text = transToHtmlText(entity.title)
         }
+    }
+
+    private fun transToHtmlText(text: String): Spanned? {
+        return Html.fromHtml(text, Html.ImageGetter {
+            ColorDrawable(Color.TRANSPARENT)
+        }, null)
     }
 
     override fun onItemClick(position: Int) {

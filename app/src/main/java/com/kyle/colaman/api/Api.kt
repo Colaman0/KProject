@@ -27,16 +27,6 @@ object Api : BaseApi<IApi>() {
     suspend fun register(account: String, password: String, rePassword: String) =
         getApi().register(account, password, rePassword).toData()
 
-    suspend fun logout(): Boolean {
-        return try {
-            getApi().logout()
-            UserUtil.clearCache()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
     suspend fun getHomeArticles(page: Int): PageDTO<ArticleEntity> {
         return getApi().getHomeArticles(page = page).toData()!!
     }

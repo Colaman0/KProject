@@ -2,8 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <group
-        android:id="@+id/group">
+    <group android:id="@+id/group">
 
         <item
             android:id="@+id/collect"
@@ -18,16 +17,11 @@
 
 
         <item
-            android:id="@+id/tixi"
-            android:icon="@mipmap/ic_tixi"
-            android:title="体系"
+            android:id="@+id/login_action"
+            android:icon="@mipmap/ic_login_action"
+            android:title="登录"
             app:showAsAction="always" />
-
-        <!--        <item-->
-        <!--            android:id="@+id/gongzhonghao"-->
-        <!--            android:icon="@mipmap/ic_gongzhonghao"-->
-        <!--            android:title="公众号"-->
-        <!--            app:showAsAction="always" />-->
+        
     </group>
 
 

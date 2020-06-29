@@ -9,7 +9,9 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
@@ -24,9 +26,8 @@ import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
+import com.kyle.colaman.viewmodel.AppViewmodel
 import com.kyle.colaman.viewmodel.MainViewModel
-import com.kyle.colman.helper.KAsync
-import com.kyle.colman.helper.KLaunch
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
@@ -34,8 +35,10 @@ import com.kyle.colman.network.KError
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
-import java.lang.NullPointerException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     var currenAction: NaviAction? = null
@@ -54,35 +57,18 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
-
-        lifecycleScope.launch {
-            val number = KAsync.get<Int>(lifecycleScope)
-                .async {
-                    LogUtils.d("${Thread.currentThread().name}运算开始啦")
-                    1
-                }
-                .onStart {
-                    withContext(Dispatchers.IO) {}
-                    LogUtils.d("${Thread.currentThread().name}开始啦")
-                }
-                .onDone {
-                    withContext(Dispatchers.IO) {}
-                    LogUtils.d("${Thread.currentThread().name}结束")
-                }
-                .onError {
-                    LogUtils.d("${Thread.currentThread().name}出错啦")
-                }
-                .run().await()
-
-            LogUtils.d("number=$number")
-        }
-
-
         navigation_view.setNavigationItemSelectedListener {
             drawer_layout.closeDrawer(GravityCompat.START)
             when (it.itemId) {
                 R.id.collect -> gotoCollect()
                 R.id.pocket -> gotoPocket()
+                R.id.login_action -> {
+                    if (UserUtil.isLogin()) {
+                        gotoLogout()
+                    } else {
+                        gotoLogin()
+                    }
+                }
             }
             true
         }
@@ -107,7 +93,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
                 true
             }
-            UserUtil.isLogin()
             switchContent(ActionMain)
         }
 
@@ -115,6 +100,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
 
     fun initViewPager() {
+        initUser()
         viewpagerAdapter.addFragment(
             ActionFragment.newInstance(ActionMain, MainSource(viewModel))
         )
@@ -155,8 +141,13 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     fun initUser() {
         setAccountUIShow(UserUtil.isLogin())
         if (UserUtil.isLogin()) {
+            navigation_view.getHeaderView(0).visibility = View.VISIBLE
+            navigation_view.menu.get(navigation_view.menu.size() - 1).title = "注销"
             navigation_view.getHeaderView(0).findViewById<TextView>(R.id.user_name).text =
                 UserUtil.getUserInfo()!!.nickname
+        } else {
+            navigation_view.getHeaderView(0).visibility = View.GONE
+            navigation_view.menu.get(navigation_view.menu.size() - 1).title = "登录"
         }
     }
 
@@ -246,6 +237,31 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun gotoPocket() {
         startActivity(buildIntent(this, PocketActivity::class.java))
+    }
+
+    fun gotoLogin() {
+        startActivity(buildIntent(this, LoginRegisterActivity::class.java))
+    }
+
+    fun gotoLogout() {
+        MaterialDialog(this).show {
+            cancelable(false)
+            title(text = "退出登录")
+            message(text = "退出后本地信息将被清除")
+            negativeButton(text = "取消") {
+                dismiss()
+            }
+            positiveButton(text = "确认") {
+                AppViewmodel.viewModelScope.launch {
+                    UserUtil.clearCache(context)
+                }
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        LogUtils.d("onnewIntent")
     }
 }
 

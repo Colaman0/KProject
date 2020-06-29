@@ -1,9 +1,17 @@
 package com.kyle.colaman.helper
 
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.reflect.TypeToken
+import com.kyle.colaman.AppContext
+import com.kyle.colaman.activity.MainActivity
 import com.kyle.colaman.entity.UserInfoEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Cookie
 
 /**
@@ -22,7 +30,8 @@ object UserUtil {
     fun init() {
         val json = SPUtils.getInstance().getString("user")
         if (json.isNotBlank()) {
-            val datas = GsonUtils.fromJson<List<Cookie>>(json, object : TypeToken<List<Cookie>>() {}.type)
+            val datas =
+                GsonUtils.fromJson<List<Cookie>>(json, object : TypeToken<List<Cookie>>() {}.type)
             if (!datas.isNullOrEmpty()) {
                 _cookies.addAll(datas as MutableList<Cookie>)
             }
@@ -46,9 +55,16 @@ object UserUtil {
         SPUtils.getInstance().put("user", GsonUtils.toJson(cookies))
     }
 
-    fun clearCache() {
-        _cookies.clear()
-        SPUtils.getInstance().put("user", "")
+    suspend fun clearCache(context: Context) {
+        withContext(Dispatchers.IO) {
+            _cookies.clear()
+            SPUtils.getInstance().put("user", "")
+            PocketRoom.getDatabase(context).pocketDao().clear()
+        }
+        val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP)
+        context.startActivity(intent)
     }
 
 

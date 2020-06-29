@@ -1,8 +1,8 @@
-package com.kyle.colman.helper
+package com.kyle.colman.coroutine
 
+import com.kyle.colman.helper.toKError
 import com.kyle.colman.network.KError
 import kotlinx.coroutines.*
-import java.lang.Exception
 
 /**
  * Author   : kyle
