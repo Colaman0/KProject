@@ -1,8 +1,4 @@
-/**
- * Author   : kyle
- * Date     : 2020/6/20
- * Function :
- */
+
 package com.kyle.colman.view
 
 import android.content.Context

@@ -4,40 +4,42 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
+import com.kyle.colaman.entity.Constants
+import com.kyle.colaman.entity.ListActivityConfig
 import com.kyle.colaman.setErrorMsg
 import com.kyle.colaman.source.CollectSource
 import com.kyle.colaman.viewmodel.ItemCollectViewmodel
-import com.kyle.colman.helper.*
+import com.kyle.colman.helper.bindPagingAdapter
+import com.kyle.colman.helper.bindPaingState
 import com.kyle.colman.network.KError
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.StatusLayout
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_collect.*
+import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
-
 
 @OptIn(ExperimentalPagingApi::class)
-class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
+class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
+    val listConfig by lazy {
+        intent.getSerializableExtra(Constants.data) as ListActivityConfig<Any>
+    }
+
     val adapter by lazy {
         PagingAdapter(context)
     }
     val pager by lazy {
         Pager(
             PagingConfig(pageSize = 20, prefetchDistance = 1),
-            pagingSourceFactory = { CollectSource() }).flow
+            pagingSourceFactory = { listConfig.source as PagingSource<Any, Any> }).flow
     }
+
     val loadmoreAdapter by lazy {
         LoadMoreAdapter {
             adapter.retry()
@@ -50,15 +52,10 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
         initToolbar()
         initRecyclerView()
         initStatusLayout()
-
         lifecycleScope.launch(Dispatchers.IO) {
-            pager.collect {
+            pager.collectLatest {
                 adapter.submitItem(it.map {
-                    ItemCollectViewmodel(
-                        it, this@CollectActivity, {
-                            adapter.notifyItemRemoved(it)
-                        }
-                    )
+                    listConfig.uiTrans.invoke(it, adapter, this@ListActivity)
                 })
             }
         }
@@ -68,6 +65,7 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
+            title = listConfig.title
         }
         toolbar.setNavigationOnClickListener { finish() }
     }

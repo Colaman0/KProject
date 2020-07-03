@@ -41,6 +41,7 @@ import java.io.Serializable
  * Date     : 2020/5/13
  * Function : 首页不同Tab的fragment基类
  */
+@OptIn(ExperimentalPagingApi::class)
 class ActionFragment<T>() :
     Fragment(R.layout.fragment_action),
     IActionFragment {
@@ -100,7 +101,6 @@ class ActionFragment<T>() :
     }
 
 
-    @OptIn(ExperimentalPagingApi::class)
     fun initStatusLayout() {
         val errorBinding = LayoutPagingErrorBinding.inflate(LayoutInflater.from(context!!))
         status_layout.bindPaingState(adapter) {

@@ -6,13 +6,14 @@ import com.kyle.colaman.entity.CollectEntity
 import com.kyle.colman.helper.toData
 import com.kyle.colman.helper.toKError
 import com.kyle.colman.helper.toPageResult
+import java.io.Serializable
 
 /**
  * Author   : kyle
  * Date     : 2020/6/19
  * Function : 收藏
  */
-class CollectSource() : PagingSource<Int, CollectEntity>() {
+class CollectSource() : PagingSource<Int, CollectEntity>(), Serializable {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CollectEntity> {
         val page = params.key ?: 0
         val size = params.loadSize

@@ -80,7 +80,6 @@ abstract class KActivity<B : ViewDataBinding>(
         mImmersionBar!!
             .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
             .keyboardEnable(true)
-            .transparentBar()
             .statusBarDarkFont(true, 0.2f)
             .statusBarColor(statusbarColor)
             .init()
@@ -111,7 +110,6 @@ abstract class KActivity<B : ViewDataBinding>(
 
     override fun onDestroy() {
         super.onDestroy()
-        mImmersionBar?.barColor(statusbarColor)
         mImmersionBar?.destroy()
     }
 

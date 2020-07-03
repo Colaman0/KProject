@@ -1,5 +1,6 @@
 package com.kyle.colman.helper
 
+import android.content.Context
 import android.view.View
 import androidx.paging.PagingSource
 import com.blankj.utilcode.util.LogUtils
@@ -8,6 +9,7 @@ import com.kyle.colman.network.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
+import me.jessyan.autosize.utils.AutoSizeUtils
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -133,5 +135,45 @@ fun <T : Any> IPageDTO<T>.toPageResult(param: PagingSource.LoadParams<Int>): Pag
         nextKey = if (isLastPage()) null else page + 1
     )
 }
+
+
+fun dp2px(context: Context, value: Int) = if (value > 0) {
+    AutoSizeUtils.dp2px(context, value.toFloat())
+} else {
+    value
+}
+
+val Any.tags by lazy {
+    return@lazy HashMap<String, Any>()
+}
+
+inline fun <reified T> Any.getTag(key: String): T? {
+    val data = tags[key]
+    if (data is T) {
+        return data
+    }
+    return null
+}
+
+fun Any.putTag(key: String, value: Any) {
+    tags[key] = value
+}
+
+/**
+ * 作为布尔值判断的lamda简写
+ */
+fun Boolean?.yes(callback: () -> Unit) {
+    if (this == true) {
+        callback()
+    }
+}
+
+
+fun Boolean?.no(callback: () -> Unit) {
+    if (this == false) {
+        callback()
+    }
+}
+
 
 

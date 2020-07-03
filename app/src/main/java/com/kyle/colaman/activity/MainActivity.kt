@@ -26,19 +26,26 @@ import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
+import com.kyle.colaman.source.CollectSource
 import com.kyle.colaman.viewmodel.AppViewmodel
+import com.kyle.colaman.viewmodel.ItemCollectViewmodel
 import com.kyle.colaman.viewmodel.MainViewModel
+import com.kyle.colman.helper.bindLifeCycle
+import com.kyle.colman.helper.fullSub
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     var currenAction: NaviAction? = null
@@ -57,6 +64,8 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
+
+
         navigation_view.setNavigationItemSelectedListener {
             drawer_layout.closeDrawer(GravityCompat.START)
             when (it.itemId) {
@@ -232,7 +241,19 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     fun gotoCollect() {
-        startActivity(buildIntent(this, CollectActivity::class.java))
+
+        val intent = buildIntent(this, ListActivity::class.java)
+        val source = CollectSource()
+        intent.putExtra(Constants.data, ListActivityConfig<CollectEntity>(
+            title = "收藏", source = source
+        ) { data, adapter, activity ->
+            ItemCollectViewmodel(
+                data, activity, {
+                    adapter.notifyItemRemoved(0)
+                }
+            )
+        })
+        startActivity(intent)
     }
 
     private fun gotoPocket() {

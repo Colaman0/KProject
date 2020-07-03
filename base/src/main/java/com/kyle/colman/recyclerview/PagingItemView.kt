@@ -16,6 +16,7 @@ abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layou
     lateinit var holder: PagingVHolder
     var binding: B? = null
     var context: Context? = null
+    var isRemoved = false
 
     open fun bindView(holder: PagingVHolder, position: Int) {
         context = holder.itemView.context

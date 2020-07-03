@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.afollestad.materialdialogs.MaterialDialog
+import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ItemCollectBinding
 import com.kyle.colaman.entity.CollectEntity
@@ -34,6 +35,7 @@ class ItemCollectViewmodel(
     var itemPosition = 0
     val collectObserver = Observer<Boolean> {
         if (!it) {
+            isRemoved = true
             unCollectCallback.invoke(itemPosition)
         }
     }
@@ -74,6 +76,7 @@ class ItemCollectViewmodel(
 
     override fun onBindView(holder: PagingVHolder, position: Int) {
         itemPosition = position
+        LogUtils.d("item ${entity.title}   position = $position")
         CollectManager.getCollectLiveDataById(entity.originId!!)
             ?.observe(lifecycleOwner, collectObserver)
         binding?.run {

@@ -26,7 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.PocketActivity"></activity>
+        <activity android:name=".activity.ListActivity"></activity>
+        <activity android:name=".activity.PocketActivity" />
         <activity android:name=".activity.CollectActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.WebActivity" />

@@ -1,5 +1,6 @@
 package com.kyle.colaman.base.viewmodel
 
+import androidx.databinding.Observable
 import androidx.lifecycle.ViewModel
 
 /**
@@ -11,7 +12,18 @@ import androidx.lifecycle.ViewModel
  * </pre>
  */
 open class BaseViewModel : ViewModel() {
+    private val _clearCallback by lazy {
+        mutableListOf<() -> Unit>()
+    }
 
+    fun addClearCallback(callback: () -> Unit) {
+        _clearCallback.add(callback)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        _clearCallback.forEach { it.invoke() }
+    }
 }
 
 

@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 
 /**
  * Author   : kyle
@@ -20,7 +21,7 @@ class PagingAdapter(context: Context) :
                 oldItem: PagingItemView<Any, *>,
                 newItem: PagingItemView<Any, *>
             ): Boolean {
-                return oldItem.areItemsTheSame(newItem)
+                return oldItem.areItemsTheSame(newItem) || (oldItem.isRemoved || newItem.isRemoved)
             }
 
             override fun areContentsTheSame(
