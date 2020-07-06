@@ -36,6 +36,7 @@ import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
+import com.kyle.colman.recyclerview.PagingItemView
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
 import io.reactivex.Observable
@@ -243,15 +244,17 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     fun gotoCollect() {
 
         val intent = buildIntent(this, ListActivity::class.java)
-        val source = CollectSource()
         intent.putExtra(Constants.data, ListActivityConfig<CollectEntity>(
-            title = "收藏", source = source
+            title = "收藏", source = { CollectSource() }
         ) { data, adapter, activity ->
-            ItemCollectViewmodel(
-                data, activity, {
-                    adapter.notifyItemRemoved(0)
+            val item = ItemCollectViewmodel(
+                data, activity
+            ).apply {
+                unCollectCallback = {
+                    activity.remove(listOf(this))
                 }
-            )
+            }
+            item
         })
         startActivity(intent)
     }

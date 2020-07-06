@@ -21,7 +21,7 @@ class PagingAdapter(context: Context) :
                 oldItem: PagingItemView<Any, *>,
                 newItem: PagingItemView<Any, *>
             ): Boolean {
-                return oldItem.areItemsTheSame(newItem) || (oldItem.isRemoved || newItem.isRemoved)
+                return oldItem.areItemsTheSame(newItem)
             }
 
             override fun areContentsTheSame(

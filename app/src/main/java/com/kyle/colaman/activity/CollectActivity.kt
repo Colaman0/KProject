@@ -52,15 +52,15 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
         initStatusLayout()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            pager.collect {
-                adapter.submitItem(it.map {
-                    ItemCollectViewmodel(
-                        it, this@CollectActivity, {
-                            adapter.notifyItemRemoved(it)
-                        }
-                    )
-                })
-            }
+//            pager.collect {
+//                adapter.submitItem(it.map {
+//                    ItemCollectViewmodel(
+//                        it, this@CollectActivity, {
+//                            adapter.notifyItemRemoved(it)
+//                        }
+//                    )
+//                })
+//            }
         }
     }
 

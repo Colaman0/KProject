@@ -28,15 +28,15 @@ import kotlinx.coroutines.launch
  */
 class ItemCollectViewmodel(
     val entity: CollectEntity,
-    val lifecycleOwner: LifecycleOwner,
-    val unCollectCallback: (Int) -> Unit
+    val lifecycleOwner: LifecycleOwner
 ) :
     PagingItemView<ItemCollectViewmodel, ItemCollectBinding>(R.layout.item_collect) {
     var itemPosition = 0
+    var unCollectCallback: ((Int) -> Unit)? = null
     val collectObserver = Observer<Boolean> {
         if (!it) {
             isRemoved = true
-            unCollectCallback.invoke(itemPosition)
+            unCollectCallback?.invoke(itemPosition)
         }
     }
     val loadingDialog by lazy {
@@ -76,7 +76,6 @@ class ItemCollectViewmodel(
 
     override fun onBindView(holder: PagingVHolder, position: Int) {
         itemPosition = position
-        LogUtils.d("item ${entity.title}   position = $position")
         CollectManager.getCollectLiveDataById(entity.originId!!)
             ?.observe(lifecycleOwner, collectObserver)
         binding?.run {

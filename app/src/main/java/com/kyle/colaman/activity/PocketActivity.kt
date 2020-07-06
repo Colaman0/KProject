@@ -9,7 +9,6 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.MergeAdapter
 import com.blankj.utilcode.util.ScreenUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.api.PocketDao

@@ -31,7 +31,7 @@ ext {
     def version_webview = "1.1.2"
     def version_walle = "1.1.6"
     def nav_version = "2.3.0-alpha01"
-    def paging_version = "3.0.0-alpha01"
+    def paging_version = "3.0.0-alpha02"
     def room_version = "2.2.5"
 
 

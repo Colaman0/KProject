@@ -1,28 +1,30 @@
 package com.kyle.colaman.activity
 
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.entity.Constants
 import com.kyle.colaman.entity.ListActivityConfig
 import com.kyle.colaman.setErrorMsg
-import com.kyle.colaman.source.CollectSource
-import com.kyle.colaman.viewmodel.ItemCollectViewmodel
+import com.kyle.colaman.viewmodel.ListViewmodel
 import com.kyle.colman.helper.bindPagingAdapter
 import com.kyle.colman.helper.bindPaingState
 import com.kyle.colman.network.KError
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter
+import com.kyle.colman.recyclerview.PagingItemView
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.StatusLayout
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagingApi::class)
@@ -37,7 +39,7 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
     val pager by lazy {
         Pager(
             PagingConfig(pageSize = 20, prefetchDistance = 1),
-            pagingSourceFactory = { listConfig.source as PagingSource<Any, Any> }).flow
+            pagingSourceFactory = { listConfig.source.invoke() as PagingSource<Any, Any> }).flow
     }
 
     val loadmoreAdapter by lazy {
@@ -45,20 +47,65 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
             adapter.retry()
         }
     }
-    val viewmodel by viewModels<ViewModel>()
+    val viewmodel by viewModels<ListViewmodel>()
 
+    val pagingItems = mutableListOf<PagingItemView<*, *>>()
+
+    var removeCallbacks: MutableList<removeItem> = mutableListOf()
+
+    val removeFlow = flow<PagingItemView<*, *>> {
+        removeCallbacks.add(object : removeItem {
+            override fun remove(item: PagingItemView<*, *>) {
+                lifecycleScope.launch {
+                    emit(item)
+                }
+            }
+        })
+    }
 
     override fun initView() {
         initToolbar()
         initRecyclerView()
         initStatusLayout()
         lifecycleScope.launch(Dispatchers.IO) {
-            pager.collectLatest {
-                adapter.submitItem(it.map {
-                    listConfig.uiTrans.invoke(it, adapter, this@ListActivity)
-                })
-            }
+            pager
+                .cachedIn(viewmodel.viewModelScope)
+                .collectLatest {
+                    adapter.submitItem(it.map {
+                        listConfig.uiTrans.invoke(
+                            it,
+                            adapter,
+                            this@ListActivity
+                        )
+                    })
+                }
         }
+    }
+
+    fun remove(item: List<PagingItemView<*, *>>) {
+        lifecycleScope.launch(Dispatchers.Default) {
+            var time = 0
+
+            pager
+                .combine(flow { emit(item) }) { pagingData, removed ->
+                    pagingData.filter {
+                        time++
+                        Log.d("kyle", "filter ${it !in removed}")
+                        it !in removed
+                    }
+                }
+                .collectLatest {
+                    Log.d("kyle", "-------")
+                    adapter.submitItem(it.map {
+                        listConfig.uiTrans.invoke(
+                            it,
+                            adapter,
+                            this@ListActivity
+                        )
+                    })
+                }
+        }
+
     }
 
     private fun initToolbar() {
@@ -78,7 +125,7 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
                 loadmoreAdapter.loadState = LoadState.NotLoading(endOfPaginationReached = true)
             }
         }
-        swipe_refreshlayout.bindPagingAdapter(adapter)
+        swipe_refreshlayout.bindPagingAdapter(adapter, pagingItems)
     }
 
     fun initStatusLayout() {
@@ -95,4 +142,8 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
             status_layout.setErrorMsg((it as KError).kTips)
         }
     }
+}
+
+interface removeItem {
+    fun remove(item: PagingItemView<*, *>)
 }

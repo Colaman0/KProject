@@ -22,7 +22,7 @@ object CollectManager {
         val livedata = articleCollectMap[id]
         if (livedata != null) {
             if (livedata.value != collect) {
-                livedata.value = collect
+                livedata.postValue(collect)
             }
         } else {
             articleCollectMap.put(id, EmptyCallLiveData(collect) {

@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.tencent.smtt.utils.p
+import java.io.Serializable
 
 /**
  * Author   : kyle
@@ -12,11 +13,13 @@ import com.tencent.smtt.utils.p
  * Function : item view
  */
 
-abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layoutRes: Int) {
+abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layoutRes: Int) :
+    Serializable {
     lateinit var holder: PagingVHolder
     var binding: B? = null
     var context: Context? = null
     var isRemoved = false
+    var pageItems: MutableList<PagingItemView<*, *>>? = null
 
     open fun bindView(holder: PagingVHolder, position: Int) {
         context = holder.itemView.context

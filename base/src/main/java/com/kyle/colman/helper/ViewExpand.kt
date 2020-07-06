@@ -16,6 +16,7 @@ import com.kyle.colman.view.StatusLayout
 import com.google.android.material.snackbar.Snackbar
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter
+import com.kyle.colman.recyclerview.PagingItemView
 import com.kyle.colman.view.recyclerview.layoutmanager.WrapLinearlayoutManager
 import com.kyle.colman.view.recyclerview.adapter.BaseRecyclerViewAdapter
 import kotlinx.coroutines.newFixedThreadPoolContext
@@ -221,8 +222,13 @@ fun View.visible() {
 }
 
 @OptIn(ExperimentalPagingApi::class)
-fun SwipeRefreshLayout.bindPagingAdapter(adapter: PagingAdapter) {
+fun SwipeRefreshLayout.bindPagingAdapter(
+    adapter: PagingAdapter,
+    items: MutableList<PagingItemView<*, *>> = mutableListOf()
+) {
+    var actionRefresh = false
     setOnRefreshListener {
+        actionRefresh = true
         adapter.refresh()
     }
 
@@ -233,8 +239,14 @@ fun SwipeRefreshLayout.bindPagingAdapter(adapter: PagingAdapter) {
         addLoadStateListener { loadState ->
             when (loadState.refresh) {
                 is LoadState.Error -> isRefreshing = false
-                is LoadState.NotLoading -> isRefreshing = false
+                is LoadState.NotLoading -> {
+                    isRefreshing = false
+                    if (actionRefresh) {
+                        items.clear()
+                    }
+                }
             }
+            actionRefresh = false
         }
     }
 }
