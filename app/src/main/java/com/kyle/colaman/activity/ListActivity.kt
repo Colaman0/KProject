@@ -39,7 +39,7 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
     val pager by lazy {
         Pager(
             PagingConfig(pageSize = 20, prefetchDistance = 1),
-            pagingSourceFactory = { listConfig.source.invoke() as PagingSource<Any, Any> }).flow
+            pagingSourceFactory = { (listConfig.source.invoke() as PagingSource<Any, Any>) }).flow
     }
 
     val loadmoreAdapter by lazy {
@@ -53,15 +53,9 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
 
     var removeCallbacks: MutableList<removeItem> = mutableListOf()
 
-    val removeFlow = flow<PagingItemView<*, *>> {
-        removeCallbacks.add(object : removeItem {
-            override fun remove(item: PagingItemView<*, *>) {
-                lifecycleScope.launch {
-                    emit(item)
-                }
-            }
-        })
-    }
+    private var _removedItemsFlow = MutableStateFlow(listOf<PagingItemView<*, *>>())
+    private val removedItemsFlow: Flow<List<PagingItemView<*, *>>> get() = _removedItemsFlow
+
 
     override fun initView() {
         initToolbar()
@@ -70,7 +64,12 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
         lifecycleScope.launch(Dispatchers.IO) {
             pager
                 .cachedIn(viewmodel.viewModelScope)
+                .combine(removedItemsFlow) { pagingData, removed ->
+                    pagingData.filter { it !in removed }
+                }
+                .cachedIn(viewmodel.viewModelScope)
                 .collectLatest {
+                    LogUtils.d(" 更新")
                     adapter.submitItem(it.map {
                         listConfig.uiTrans.invoke(
                             it,
@@ -83,29 +82,7 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
     }
 
     fun remove(item: List<PagingItemView<*, *>>) {
-        lifecycleScope.launch(Dispatchers.Default) {
-            var time = 0
-
-            pager
-                .combine(flow { emit(item) }) { pagingData, removed ->
-                    pagingData.filter {
-                        time++
-                        Log.d("kyle", "filter ${it !in removed}")
-                        it !in removed
-                    }
-                }
-                .collectLatest {
-                    Log.d("kyle", "-------")
-                    adapter.submitItem(it.map {
-                        listConfig.uiTrans.invoke(
-                            it,
-                            adapter,
-                            this@ListActivity
-                        )
-                    })
-                }
-        }
-
+        _removedItemsFlow.value = item
     }
 
     private fun initToolbar() {

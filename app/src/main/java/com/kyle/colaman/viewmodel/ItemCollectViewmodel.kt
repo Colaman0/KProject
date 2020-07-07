@@ -98,7 +98,7 @@ class ItemCollectViewmodel(
                     ColorDrawable(Color.TRANSPARENT)
                 }, null)
             }
-
+            starButton.isLiked = true
             starButton.setOnLikeListener(object : OnLikeListener {
                 override fun liked(likeButton: LikeButton?) {
 
