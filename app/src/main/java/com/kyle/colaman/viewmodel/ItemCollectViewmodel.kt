@@ -36,7 +36,7 @@ class ItemCollectViewmodel(
     val collectObserver = Observer<Boolean> {
         if (!it) {
             isRemoved = true
-            unCollectCallback?.invoke(itemPosition)
+            entity.id?.let { it1 -> unCollectCallback?.invoke(it1) }
         }
     }
     val loadingDialog by lazy {

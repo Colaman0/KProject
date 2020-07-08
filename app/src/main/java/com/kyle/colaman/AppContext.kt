@@ -39,6 +39,11 @@ class AppContext : KApplication() {
                 StatusLayout.STATUS_ERROR,
                 R.layout.layout_paging_error,
                 clickRes = R.id.btn_reload
+            ),
+            StatusConfig(
+                StatusLayout.STATUS_EMPTY,
+                R.layout.layout_empty,
+                clickRes = R.id.btn_reload
             )
         )
     }

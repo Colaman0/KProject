@@ -251,7 +251,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
                 data, activity
             ).apply {
                 unCollectCallback = {
-                    activity.remove(listOf(this))
+                    activity.remove(mutableListOf(it))
                 }
             }
             item

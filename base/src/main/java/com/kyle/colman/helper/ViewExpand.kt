@@ -263,7 +263,11 @@ fun StatusLayout.bindPaingState(adapter: PagingAdapter, erroBlock: (Throwable) -
         }
     }
     adapter.addDataRefreshListener {
-        showDefaultContent()
+        if (it) {
+            switchLayout(StatusLayout.STATUS_EMPTY)
+        } else {
+            showDefaultContent()
+        }
     }
 }
 

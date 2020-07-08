@@ -10,6 +10,7 @@ import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
+import com.kyle.colaman.entity.CollectEntity
 import com.kyle.colaman.entity.Constants
 import com.kyle.colaman.entity.ListActivityConfig
 import com.kyle.colaman.setErrorMsg
@@ -53,8 +54,8 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
 
     var removeCallbacks: MutableList<removeItem> = mutableListOf()
 
-    private var _removedItemsFlow = MutableStateFlow(listOf<PagingItemView<*, *>>())
-    private val removedItemsFlow: Flow<List<PagingItemView<*, *>>> get() = _removedItemsFlow
+    private var _removedItemsFlow = MutableStateFlow(mutableListOf<Int>())
+    private val removedItemsFlow: Flow<MutableList<Int>> get() = _removedItemsFlow
 
 
     override fun initView() {
@@ -65,9 +66,8 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
             pager
                 .cachedIn(viewmodel.viewModelScope)
                 .combine(removedItemsFlow) { pagingData, removed ->
-                    pagingData.filter { it !in removed }
+                    pagingData.filter { (it as CollectEntity).id !in removed }
                 }
-                .cachedIn(viewmodel.viewModelScope)
                 .collectLatest {
                     LogUtils.d(" 更新")
                     adapter.submitItem(it.map {
@@ -81,7 +81,9 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
         }
     }
 
-    fun remove(item: List<PagingItemView<*, *>>) {
+    fun remove(item: MutableList<Int>) {
+        val removes = _removedItemsFlow.value
+        item.addAll(removes)
         _removedItemsFlow.value = item
     }
 
@@ -110,6 +112,9 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
             override fun OnLayoutClick(view: View, status: String?) {
                 if (status === StatusLayout.STATUS_ERROR) {
                     adapter.retry()
+                } else if (status === StatusLayout.STATUS_EMPTY) {
+                    adapter.refresh()
+                    status_layout.switchLayout(StatusLayout.STATUS_LOADING)
                 }
             }
         })
