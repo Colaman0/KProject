@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="似乎没有数据了"
+        android:text="似乎没有找到数据"
         android:textColor="@color/black"
         android:textSize="17sp" />
 

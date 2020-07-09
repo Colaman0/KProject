@@ -1,15 +1,17 @@
 package com.kyle.colaman
 
-import com.kyle.colman.view.StatusLayout
-import com.kyle.colaman.network.RetrofitFactory
+import androidx.appcompat.app.AppCompatDelegate
 import com.kyle.colaman.activity.LoginFilter
 import com.kyle.colaman.api.UserCookie
 import com.kyle.colaman.helper.UserUtil
+import com.kyle.colaman.network.RetrofitFactory
 import com.kyle.colman.config.ApiConfig
 import com.kyle.colman.config.StatusConfig
 import com.kyle.colman.network.KResponse
 import com.kyle.colman.view.KApplication
+import com.kyle.colman.view.StatusLayout
 import okhttp3.logging.HttpLoggingInterceptor
+
 
 /**
  * Author   : kyle
@@ -17,6 +19,10 @@ import okhttp3.logging.HttpLoggingInterceptor
  * Function :
  */
 class AppContext : KApplication() {
+    init {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
+
     override fun onCreate() {
         super.onCreate()
         UserUtil.init()

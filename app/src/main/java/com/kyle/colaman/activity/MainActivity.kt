@@ -8,6 +8,9 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
@@ -238,7 +241,8 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
      *
      */
     fun gotoSearch() {
-        startActivity(buildIntent(this, SearchActivity::class.java))
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+//        startActivity(buildIntent(this, SearchActivity::class.java))
     }
 
     fun gotoCollect() {

@@ -26,7 +26,6 @@ class PocketSource : PagingSource<Int, ArticleRoomEntity>() {
         return try {
             withContext(Dispatchers.IO) {
                 val datas = dao.getPocketArticles()
-                LogUtils.d("pocket 数量 ${datas.size}")
                 LoadResult.Page(
                     datas, prevKey = if (params.key ?: 0 == 0) null else page - 1,
                     nextKey = if (datas.size < pageSize) null else page + 1

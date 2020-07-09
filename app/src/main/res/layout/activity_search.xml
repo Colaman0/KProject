@@ -73,12 +73,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+        <com.kyle.colman.view.StatusLayout
+            android:id="@+id/status_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_bar" />
+            app:layout_constraintTop_toBottomOf="@id/layout_bar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.kyle.colman.view.StatusLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
