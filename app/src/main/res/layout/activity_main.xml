@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="@color/white"
+            android:background="?attr/colorSurface"
             app:menu="@menu/search_menu"
             app:title="首页" />
 
@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@color/white"
+                    android:background="?attr/colorSurface"
                     app:menu="@menu/main_menu" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

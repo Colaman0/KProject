@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white" />
+        android:background="?attr/colorSurface" />
 
     <com.kyle.colman.view.StatusLayout
         android:id="@+id/status_layout"

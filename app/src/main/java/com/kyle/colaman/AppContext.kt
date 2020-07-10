@@ -1,6 +1,7 @@
 package com.kyle.colaman
 
 import androidx.appcompat.app.AppCompatDelegate
+import com.blankj.utilcode.util.SPUtils
 import com.kyle.colaman.activity.LoginFilter
 import com.kyle.colaman.api.UserCookie
 import com.kyle.colaman.helper.UserUtil
@@ -19,12 +20,14 @@ import okhttp3.logging.HttpLoggingInterceptor
  * Function :
  */
 class AppContext : KApplication() {
-    init {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-    }
 
     override fun onCreate() {
         super.onCreate()
+        if (SPUtils.getInstance().getBoolean("night", false)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
         UserUtil.init()
         RetrofitFactory.apiConfig = ApiConfig(
             url = "https://www.wanandroid.com/",

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSurface"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -13,6 +13,7 @@
         android:layout_height="64dp"
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="?attr/colorOnSurface"
         android:src="@mipmap/ic_empty"
         app:layout_constraintBottom_toTopOf="@id/btn_reload"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="似乎没有找到数据"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="17sp" />
 
     <com.google.android.material.button.MaterialButton
@@ -34,6 +35,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:text="重试"
+        android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

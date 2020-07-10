@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
+            android:background="?attr/colorSurface"
             android:elevation="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -58,7 +58,7 @@
                 android:clickable="true"
                 android:onClick="@{()->activity.showBottomAction()}"
                 android:padding="16dp"
-                android:src="@mipmap/ic_more"
+                android:src="@drawable/lb_ic_more"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,8 +21,20 @@
             android:icon="@mipmap/ic_login_action"
             android:title="登录"
             app:showAsAction="always" />
-        
+
+
+
     </group>
 
+    <group
+        android:id="@+id/ui">
+
+        <item
+            android:id="@+id/ui_mode"
+            app:actionLayout="@layout/item_ui_mode"
+            android:title="@null"
+            android:icon="@null"
+            app:showAsAction="always" />
+    </group>
 
 </menu>

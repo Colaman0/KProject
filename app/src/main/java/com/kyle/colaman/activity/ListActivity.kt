@@ -62,14 +62,18 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
         initToolbar()
         initRecyclerView()
         initStatusLayout()
+        var size = 0
         lifecycleScope.launch(Dispatchers.IO) {
             pager
                 .cachedIn(viewmodel.viewModelScope)
                 .combine(removedItemsFlow) { pagingData, removed ->
-                    pagingData.filter { (it as CollectEntity).id !in removed }
+                    size = 0
+                    pagingData.filter {
+                        (it as CollectEntity).id !in removed
+                    }
                 }
+                .cachedIn(viewmodel.viewModelScope)
                 .collectLatest {
-                    LogUtils.d(" 更新")
                     adapter.submitItem(it.map {
                         listConfig.uiTrans.invoke(
                             it,

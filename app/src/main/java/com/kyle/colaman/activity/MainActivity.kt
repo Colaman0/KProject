@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.view.GravityCompat
+import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kyle.colaman.FragmentAdapter
 import com.kyle.colaman.R
@@ -114,6 +117,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun initViewPager() {
         initUser()
+        initUIMode()
         viewpagerAdapter.addFragment(
             ActionFragment.newInstance(ActionMain, MainSource(viewModel))
         )
@@ -153,14 +157,39 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun initUser() {
         setAccountUIShow(UserUtil.isLogin())
-        if (UserUtil.isLogin()) {
-            navigation_view.getHeaderView(0).visibility = View.VISIBLE
-            navigation_view.menu.get(navigation_view.menu.size() - 1).title = "注销"
-            navigation_view.getHeaderView(0).findViewById<TextView>(R.id.user_name).text =
-                UserUtil.getUserInfo()!!.nickname
-        } else {
-            navigation_view.getHeaderView(0).visibility = View.GONE
-            navigation_view.menu.get(navigation_view.menu.size() - 1).title = "登录"
+        navigation_view.menu.forEach {
+            if (it.itemId == R.id.login_action) {
+                if (UserUtil.isLogin()) {
+                    navigation_view.getHeaderView(0).visibility = View.VISIBLE
+                    it.title = "注销"
+                    navigation_view.getHeaderView(0).findViewById<TextView>(R.id.user_name).text =
+                        UserUtil.getUserInfo()!!.nickname
+                } else {
+                    navigation_view.getHeaderView(0).visibility = View.GONE
+                    it.title = "登录"
+                }
+            }
+        }
+    }
+
+
+    fun initUIMode() {
+        navigation_view.menu.forEach {
+            if (it.itemId == R.id.ui_mode) {
+                it.actionView.findViewById<Switch>(R.id.ui_switch).apply {
+                    isChecked = (SPUtils.getInstance().getBoolean("night", false))
+                    text="夜间模式"
+                    setOnCheckedChangeListener{view,check->
+                        SPUtils.getInstance().put("night", check)
+                        if (check) {
+                            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+                        }else{
+                            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+                        }
+                    }
+                }
+
+            }
         }
     }
 
@@ -229,6 +258,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         when (item.itemId) {
             R.id.search -> gotoSearch()
         }
@@ -241,12 +271,10 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
      *
      */
     fun gotoSearch() {
-        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-//        startActivity(buildIntent(this, SearchActivity::class.java))
+        startActivity(buildIntent(this, SearchActivity::class.java))
     }
 
     fun gotoCollect() {
-
         val intent = buildIntent(this, ListActivity::class.java)
         intent.putExtra(Constants.data, ListActivityConfig<CollectEntity>(
             title = "收藏", source = { CollectSource() }
