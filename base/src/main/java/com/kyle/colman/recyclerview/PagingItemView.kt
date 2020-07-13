@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.kyle.colman.impl.IDiffComparator
 import com.tencent.smtt.utils.p
 import java.io.Serializable
 
@@ -14,12 +15,10 @@ import java.io.Serializable
  */
 
 abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layoutRes: Int) :
-    Serializable {
+    Serializable,IDiffComparator<T> {
     lateinit var holder: PagingVHolder
     var binding: B? = null
     var context: Context? = null
-    var isRemoved = false
-    var pageItems: MutableList<PagingItemView<*, *>>? = null
 
     open fun bindView(holder: PagingVHolder, position: Int) {
         context = holder.itemView.context

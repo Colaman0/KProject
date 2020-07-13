@@ -1,14 +1,11 @@
 package com.kyle.colaman.activity
 
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.entity.CollectEntity
 import com.kyle.colaman.entity.Constants
@@ -25,7 +22,10 @@ import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.StatusLayout
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagingApi::class)
@@ -52,8 +52,6 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
 
     val pagingItems = mutableListOf<PagingItemView<*, *>>()
 
-    var removeCallbacks: MutableList<removeItem> = mutableListOf()
-
     private var _removedItemsFlow = MutableStateFlow(mutableListOf<Int>())
     private val removedItemsFlow: Flow<MutableList<Int>> get() = _removedItemsFlow
 
@@ -62,12 +60,10 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
         initToolbar()
         initRecyclerView()
         initStatusLayout()
-        var size = 0
         lifecycleScope.launch(Dispatchers.IO) {
             pager
                 .cachedIn(viewmodel.viewModelScope)
                 .combine(removedItemsFlow) { pagingData, removed ->
-                    size = 0
                     pagingData.filter {
                         (it as CollectEntity).id !in removed
                     }
@@ -128,8 +124,4 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
             status_layout.setErrorMsg((it as KError).kTips)
         }
     }
-}
-
-interface removeItem {
-    fun remove(item: PagingItemView<*, *>)
 }
