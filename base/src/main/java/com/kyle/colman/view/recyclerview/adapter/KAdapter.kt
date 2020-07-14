@@ -2,21 +2,18 @@ package com.kyle.colman.view.recyclerview.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.base.viewmodel.BaseLoadmoreView
 import com.kyle.colman.helper.copy
 import com.kyle.colman.helper.isNotNullOrEmpty
-import com.kyle.colman.viewmodel.CommonLoadMoreV
-import com.kyle.colman.view.recyclerview.RecyclerItemView
 import com.kyle.colman.view.recyclerview.CommonDiffCallBack
-import kotlinx.coroutines.*
+import com.kyle.colman.view.recyclerview.RecyclerItemView
+import com.kyle.colman.viewmodel.CommonLoadMoreV
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 /**
@@ -127,7 +124,7 @@ class KAdapter(
     }
 
     fun finishLoadmore() {
-        loadmoreIng = false
+         loadmoreIng = false
     }
 
     fun disableLoadmore(disable: Boolean) {
@@ -186,7 +183,9 @@ class KAdapter(
      * @param item BaseLoadmoreViewModel<*, *>?
      */
     fun setLoadMoreItem(item: BaseLoadmoreView<ViewDataBinding, Any>?) {
-        loadMoreItemViewModel = item
+
+
+                    loadMoreItemViewModel = item
     }
 
 

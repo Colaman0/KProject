@@ -48,6 +48,8 @@ class ListActivity : KActivity<Nothing>(R.layout.activity_list) {
             adapter.retry()
         }
     }
+
+
     val viewmodel by viewModels<ListViewmodel>()
 
     val pagingItems = mutableListOf<PagingItemView<*, *>>()
