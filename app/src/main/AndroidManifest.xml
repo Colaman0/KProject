@@ -26,7 +26,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ListActivity"></activity>
+        <activity android:name=".ListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.ListActivity" />
         <activity android:name=".activity.PocketActivity" />
         <activity android:name=".activity.CollectActivity" />
         <activity android:name=".activity.SearchActivity" />
@@ -37,11 +44,7 @@
             android:clearTaskOnLaunch="false"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginRegisterActivity"

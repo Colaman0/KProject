@@ -35,7 +35,6 @@ class ItemCollectViewmodel(
     var unCollectCallback: ((Int) -> Unit)? = null
     val collectObserver = Observer<Boolean> {
         if (!it) {
-            isRemoved = true
             entity.id?.let { it1 -> unCollectCallback?.invoke(it1) }
         }
     }
@@ -111,11 +110,13 @@ class ItemCollectViewmodel(
         }
     }
 
-    override fun areItemsTheSame(data: ItemCollectViewmodel): Boolean {
+    override fun isUISame(data: ItemCollectViewmodel): Boolean {
         return entity.id == data.entity.id
+
     }
 
-    override fun areContentsTheSame(data: ItemCollectViewmodel): Boolean {
+    override fun isItemSame(data: ItemCollectViewmodel): Boolean {
         return entity.id == data.entity.id
+
     }
 }

@@ -36,7 +36,4 @@ abstract class PagingItemView<T : Any, B : ViewDataBinding>(@LayoutRes val layou
 
     open fun onItemClick(position: Int) {}
 
-    abstract fun areItemsTheSame(data: T): Boolean
-
-    abstract fun areContentsTheSame(data: T): Boolean
 }

@@ -11,6 +11,7 @@ import com.kyle.colman.R
 import com.kyle.colman.recyclerview.PagingItemView
 import com.kyle.colman.recyclerview.PagingVHolder
 import com.kyle.colman.view.recyclerview.CommonDiffCallBack
+import com.tencent.smtt.utils.p
 
 /**
  * Author   : kyle
@@ -26,7 +27,7 @@ class CommonAdapter(val context: Context) : RecyclerView.Adapter<PagingVHolder>(
     var loadmoreAdapter: LoadmoreAdadpter? = null
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position).layoutRes
+        return items[position].layoutRes
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagingVHolder {
@@ -72,5 +73,4 @@ class CommonAdapter(val context: Context) : RecyclerView.Adapter<PagingVHolder>(
         adapter.addAdapter(loadmoreAdapter)
         recyclerView.adapter = adapter
     }
-
 }

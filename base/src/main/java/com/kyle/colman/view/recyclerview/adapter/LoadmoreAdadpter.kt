@@ -20,6 +20,9 @@ class LoadmoreAdadpter(
 ) : RecyclerView.Adapter<PagingVHolder>() {
     var rootView: View? = null
     var disableLoadmore = true
+    val callbacks = mutableListOf<() -> Unit>()
+    var loadmoreIng = false
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -33,10 +36,23 @@ class LoadmoreAdadpter(
     }
 
     override fun onBindViewHolder(holder: PagingVHolder, position: Int) {
+        if (!loadmoreIng) {
+            loadmoreIng = true
+            callbacks.forEach { it.invoke() }
+        }
     }
 
     fun disableLoadmore(disable: Boolean) {
         disableLoadmore = disable
-        notifyItemChanged(0)
+        loadmoreIng = false
+        if (disable) {
+            notifyItemInserted(0)
+        } else {
+            notifyItemRemoved(0)
+        }
+    }
+
+    fun addLoadmoreCallback(callback: () -> Unit) {
+        callbacks.add(callback)
     }
 }

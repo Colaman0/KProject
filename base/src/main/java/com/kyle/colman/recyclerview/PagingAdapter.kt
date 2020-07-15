@@ -21,14 +21,14 @@ class PagingAdapter(context: Context) :
                 oldItem: PagingItemView<Any, *>,
                 newItem: PagingItemView<Any, *>
             ): Boolean {
-                return oldItem.areItemsTheSame(newItem)
+                return oldItem.isItemSame(newItem)
             }
 
             override fun areContentsTheSame(
                 oldItem: PagingItemView<Any, *>,
                 newItem: PagingItemView<Any, *>
             ): Boolean {
-                return oldItem.areContentsTheSame(newItem)
+                return oldItem.isUISame(newItem)
             }
         }
     ) {

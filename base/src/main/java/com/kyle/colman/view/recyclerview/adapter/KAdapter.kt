@@ -124,7 +124,7 @@ class KAdapter(
     }
 
     fun finishLoadmore() {
-         loadmoreIng = false
+        loadmoreIng = false
     }
 
     fun disableLoadmore(disable: Boolean) {
@@ -183,9 +183,7 @@ class KAdapter(
      * @param item BaseLoadmoreViewModel<*, *>?
      */
     fun setLoadMoreItem(item: BaseLoadmoreView<ViewDataBinding, Any>?) {
-
-
-                    loadMoreItemViewModel = item
+        loadMoreItemViewModel = item
     }
 
 

@@ -45,11 +45,12 @@ class ItemPocketViewmodel(
         gotoWeb(context as Activity, entity.link, entity.title, entity.articleId, entity.desc)
     }
 
-    override fun areItemsTheSame(data: ItemPocketViewmodel): Boolean {
+    override fun isUISame(data: ItemPocketViewmodel): Boolean {
         return entity.articleId == data.entity.articleId
     }
 
-    override fun areContentsTheSame(data: ItemPocketViewmodel): Boolean {
+    override fun isItemSame(data: ItemPocketViewmodel): Boolean {
         return entity.articleId == data.entity.articleId
     }
+
 }
