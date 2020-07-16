@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import com.kyle.colman.R
 import com.kyle.colman.recyclerview.PagingVHolder
 
 /**
@@ -18,10 +17,10 @@ class LoadmoreAdadpter(
     @LayoutRes val layoutRes: Int,
     val context: Context
 ) : RecyclerView.Adapter<PagingVHolder>() {
-    var rootView: View? = null
-    var disableLoadmore = true
-    val callbacks = mutableListOf<() -> Unit>()
-    var loadmoreIng = false
+    private var rootView: View? = null
+    private var disableLoadmore = false
+    private val callbacks = mutableListOf<() -> Unit>()
+    private var loadmoreIng = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,8 +42,11 @@ class LoadmoreAdadpter(
     }
 
     fun disableLoadmore(disable: Boolean) {
-        disableLoadmore = disable
         loadmoreIng = false
+        if (disable == disableLoadmore) {
+            return
+        }
+        disableLoadmore = disable
         if (disable) {
             notifyItemInserted(0)
         } else {

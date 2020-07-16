@@ -10,6 +10,7 @@ import com.kyle.colaman.databinding.ItemTextBinding
 import com.kyle.colman.recyclerview.PagingItemView
 import com.kyle.colman.recyclerview.PagingVHolder
 import com.kyle.colman.view.recyclerview.adapter.CommonAdapter
+import com.tencent.smtt.sdk.b.a.i
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.activity_list.recyclerview
 import kotlinx.android.synthetic.main.activity_list2.*
@@ -28,8 +29,17 @@ class ListActivity : AppCompatActivity() {
         var size = 0
         btn_1.setOnClickListener {
             size++
-            adapter.getEditableItems().add(0, ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
+            adapter.getEditableItems().add(ItemText(size.toString()))
             adapter.diffNotify()
+            adapter.loadmoreAdapter?.disableLoadmore(
+                true
+            )
         }
         btn_2.setOnClickListener {
             adapter.getEditableItems().removeAt(0)
@@ -43,18 +53,17 @@ class ListActivity : AppCompatActivity() {
     }
 }
 
-class ItemText(val text: String) : PagingItemView<ItemText, ItemTextBinding>(R.layout.item_text) {
+class ItemText(val text: String) :
+    PagingItemView<ItemText, ItemTextBinding>(R.layout.item_test_text) {
     override fun onBindView(holder: PagingVHolder, position: Int) {
         holder.itemView.findViewById<TextView>(R.id.textview).text = text
     }
 
     override fun isUISame(data: ItemText): Boolean {
         return data.text == text
-
     }
 
     override fun isItemSame(data: ItemText): Boolean {
         return data.text == text
-
     }
 }

@@ -18,13 +18,16 @@ import com.tencent.smtt.utils.p
  * Date     : 2020/7/13
  * Function : 通用adapter
  */
-class CommonAdapter(val context: Context) : RecyclerView.Adapter<PagingVHolder>() {
+open class CommonAdapter(val context: Context) : RecyclerView.Adapter<PagingVHolder>() {
     val items = mutableListOf<PagingItemView<*, *>>()
     val oldItems = mutableListOf<PagingItemView<*, *>>()
     val layoutInflater by lazy {
         LayoutInflater.from(context)
     }
     var loadmoreAdapter: LoadmoreAdadpter? = null
+    val loadmoreLamda = {
+        onLoadmore()
+    }
 
     override fun getItemViewType(position: Int): Int {
         return items[position].layoutRes
@@ -33,7 +36,6 @@ class CommonAdapter(val context: Context) : RecyclerView.Adapter<PagingVHolder>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagingVHolder {
         return PagingVHolder(layoutInflater.inflate(viewType, parent, false))
     }
-
 
     private fun getItem(position: Int): PagingItemView<*, *> {
         return oldItems[position]
@@ -72,5 +74,18 @@ class CommonAdapter(val context: Context) : RecyclerView.Adapter<PagingVHolder>(
         adapter.addAdapter(this)
         adapter.addAdapter(loadmoreAdapter)
         recyclerView.adapter = adapter
+        addLoadmoreCallback(loadmoreLamda)
+    }
+
+    fun disableLoadmore(disable: Boolean) {
+        loadmoreAdapter?.disableLoadmore(disable)
+    }
+
+    fun addLoadmoreCallback(callback: () -> Unit) {
+        loadmoreAdapter?.addLoadmoreCallback(callback)
+    }
+
+    open fun onLoadmore() {
+
     }
 }
