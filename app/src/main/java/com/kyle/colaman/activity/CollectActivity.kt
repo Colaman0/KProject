@@ -11,15 +11,18 @@ import androidx.paging.PagingConfig
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
+import com.kyle.colaman.entity.CollectEntity
 import com.kyle.colaman.setErrorMsg
 import com.kyle.colaman.source.CollectSource
 import com.kyle.colaman.viewmodel.ItemCollectViewmodel
 import com.kyle.colman.helper.*
+import com.kyle.colman.impl.COMPLETED
 import com.kyle.colman.network.KError
 import com.kyle.colman.recyclerview.LoadMoreAdapter
 import com.kyle.colman.recyclerview.PagingAdapter
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.StatusLayout
+import com.kyle.colman.view.recyclerview.adapter.PageAdapter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_collect.*
 import kotlinx.coroutines.Dispatchers
@@ -74,27 +77,35 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
 
     fun initRecyclerView() {
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerview.adapter = this.adapter.withLoadStateFooter(loadmoreAdapter)
-        adapter.addLoadStateListener {
-            if (it.refresh is LoadState.Error) {
-                loadmoreAdapter.loadState = LoadState.NotLoading(endOfPaginationReached = true)
+//        recyclerview.adapter = this.adapter.withLoadStateFooter(loadmoreAdapter)
+        val adapter = PageAdapter<CollectEntity>(context).apply {
+            addLoadResultCallback {
+                swipe_refreshlayout.isRefreshing = false
             }
         }
-        swipe_refreshlayout.bindPagingAdapter(adapter)
+        recyclerview.adapter = adapter
+
+//        adapter.addLoadStateListener {
+//
+//            if (it.refresh is LoadState.Error) {
+//                loadmoreAdapter.loadState = LoadState.NotLoading(endOfPaginationReached = true)
+//            }
+//        }
+//        swipe_refreshlayout.bindPagingAdapter(adapter)
     }
 
     fun initStatusLayout() {
-        status_layout?.setLayoutClickListener(object : StatusLayout.OnLayoutClickListener {
-            override fun OnLayoutClick(view: View, status: String?) {
-                if (status === StatusLayout.STATUS_ERROR) {
-                    adapter.retry()
-                }
-            }
-        })
-
-        status_layout.switchLayout(StatusLayout.STATUS_LOADING)
-        status_layout.bindPaingState(adapter) {
-            status_layout.setErrorMsg((it as KError).kTips)
-        }
+//        status_layout?.setLayoutClickListener(object : StatusLayout.OnLayoutClickListener {
+//            override fun OnLayoutClick(view: View, status: String?) {
+//                if (status === StatusLayout.STATUS_ERROR) {
+//                    adapter.retry()
+//                }
+//            }
+//        })
+//
+//        status_layout.switchLayout(StatusLayout.STATUS_LOADING)
+//        status_layout.bindPaingState(adapter) {
+//            status_layout.setErrorMsg((it as KError).kTips)
+//        }
     }
 }
