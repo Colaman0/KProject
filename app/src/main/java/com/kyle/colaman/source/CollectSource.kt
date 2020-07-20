@@ -39,7 +39,7 @@ class CollectPageSource(coroutineScope: CoroutineScope,val lifecycleOwner: Lifec
         return PageResult.SUCCESS(data = response!!.datas, nextPage = response.nextApiPage())
     }
 
-    override fun resultToPageItem(data: CollectEntity): ItemCollectViewmodel {
+    override fun resultToPageItem(data: CollectEntity): PagingItemView<*,*> {
         return ItemCollectViewmodel(data,lifecycleOwner = lifecycleOwner)
     }
 

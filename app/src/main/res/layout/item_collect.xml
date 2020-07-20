@@ -85,8 +85,8 @@
 
             <com.like.LikeButton
                 android:id="@+id/star_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 app:icon_size="16dp"
                 app:icon_type="star"
                 app:liked="true" />

@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
-import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +26,7 @@ import com.kyle.colaman.FragmentAdapter
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
 import com.kyle.colaman.entity.*
-import com.kyle.colaman.entity.error.LoginError
+import com.kyle.colaman.entity.error.LoginKErrorType
 import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
@@ -36,16 +35,12 @@ import com.kyle.colaman.source.CollectSource
 import com.kyle.colaman.viewmodel.AppViewmodel
 import com.kyle.colaman.viewmodel.ItemCollectViewmodel
 import com.kyle.colaman.viewmodel.MainViewModel
-import com.kyle.colman.helper.bindLifeCycle
-import com.kyle.colman.helper.fullSub
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
-import com.kyle.colman.recyclerview.PagingItemView
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -327,7 +322,7 @@ object LoginFilter : IExceptionFilter {
     }
 
     override fun createKError(throwable: Throwable): KError {
-        return KError(throwable, errorType = LoginError)
+        return KError(throwable, KErrorTypeType = LoginKErrorType)
     }
 
     override fun onCatch() {

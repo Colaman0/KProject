@@ -2,6 +2,7 @@ package com.kyle.colman.helper
 
 import androidx.lifecycle.*
 import com.kyle.colaman.base.viewmodel.BaseViewModel
+import com.kyle.colman.impl.IBindStatus
 import com.tencent.smtt.utils.s
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -38,31 +39,29 @@ fun <T> Observable<T>.fullSub(
     statusList: List<IBindStatus> = listOf()
 ) =
     doFinally {
-        statusList.forEach { it.onStatus(BindableDone) }
+        statusList.forEach { it.onStatus(BindableStatus.BindableDone) }
     }.subscribe(
         {
             // 收到数据
-            statusList.forEach { it.onStatus(BindableSuccess) }
+            statusList.forEach { it.onStatus(BindableStatus.BindableSuccess) }
         }, { throwable ->
             // 处理错误
-            statusList.forEach { it.onStatus(BindableError(throwable.toKError())) }
+            statusList.forEach { it.onStatus(BindableStatus.BindableError(throwable.toKError())) }
         }, {
             // 任务完成
-            statusList.forEach { it.onStatus(BindableSuccessDone) }
+            statusList.forEach { it.onStatus(BindableStatus.BindableSuccessDone) }
         }, {
             // 开始
-            statusList.forEach { it.onStatus(BindableLoading) }
+            statusList.forEach { it.onStatus(BindableStatus.BindableLoading) }
         }
     )
 
 
-sealed class BindableStatus
-object BindableLoading : BindableStatus()
-object BindableSuccess : BindableStatus()
-class BindableError(throwable: Throwable) : BindableStatus()
-object BindableDone : BindableStatus()
-object BindableSuccessDone : BindableStatus()
-
-open interface IBindStatus {
-    fun onStatus(status: BindableStatus)
+sealed class BindableStatus {
+    object BindableLoading : BindableStatus()
+    object BindableSuccess : BindableStatus()
+    class BindableError(throwable: Throwable) : BindableStatus()
+    object BindableDone : BindableStatus()
+    object BindableSuccessDone : BindableStatus()
 }
+

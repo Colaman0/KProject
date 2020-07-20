@@ -20,7 +20,7 @@ abstract class IPageSource<T>(
 
     abstract suspend fun onResult(pageSize: Int, page: Int): PageResult.SUCCESS<T>
 
-    abstract fun resultToPageItem(data: T): PagingItemView<Any, ViewDataBinding>
+    abstract fun resultToPageItem(data: T): PagingItemView<*, *>
 
     /**
      * 刷新数据

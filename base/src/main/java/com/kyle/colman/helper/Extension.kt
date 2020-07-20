@@ -65,6 +65,9 @@ fun <T> KResponse<T>.toData(dataNullable: Boolean = true): T? {
  */
 fun Throwable.toKError(): KError {
     var error: KError? = null
+    if (this is ApiException) {
+        return KError(kThrowable = this, KErrorType = KErrorType.Api)
+    }
     KResponse.exceptionFilters.forEach { filter ->
         if (filter.isCreate(this)) {
             error = filter.createKError(this)
@@ -72,10 +75,7 @@ fun Throwable.toKError(): KError {
             return@forEach
         }
     }
-    return error ?: KError(
-        kThrowable = this,
-        errorType = if (this is ApiException) ApiError else UnknownError
-    )
+    return error ?: KError(kThrowable = this, KErrorType = KErrorType.Unknown)
 }
 
 /**
@@ -126,7 +126,7 @@ fun loge(text: String) {
  */
 fun <T> Flow<T>.io() = flowOn(Dispatchers.IO)
 
-fun <T : Any> IPageDTO<T>.toPageResult(param: PagingSource.LoadParams<Int>): PagingSource.LoadResult<Int,T> {
+fun <T : Any> IPageDTO<T>.toPageResult(param: PagingSource.LoadParams<Int>): PagingSource.LoadResult<Int, T> {
     // 如果key是null，那就加载第0页的数据
     val page = param.key ?: 0
     return PagingSource.LoadResult.Page(

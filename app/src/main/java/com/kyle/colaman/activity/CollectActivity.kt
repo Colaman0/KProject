@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.kyle.colaman.R
 import com.kyle.colaman.entity.CollectEntity
 import com.kyle.colaman.setErrorMsg
+import com.kyle.colaman.source.CollectPageSource
 import com.kyle.colaman.source.CollectSource
 import com.kyle.colaman.viewmodel.ItemCollectViewmodel
 import com.kyle.colman.helper.*
@@ -83,7 +84,9 @@ class CollectActivity : KActivity<Nothing>(R.layout.activity_collect) {
                 swipe_refreshlayout.isRefreshing = false
             }
         }
+        adapter.bindPageSource(CollectPageSource(lifecycleScope, lifecycleOwner = this))
         recyclerview.adapter = adapter
+
 
 //        adapter.addLoadStateListener {
 //

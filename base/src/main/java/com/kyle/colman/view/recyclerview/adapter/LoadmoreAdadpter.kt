@@ -18,7 +18,7 @@ class LoadmoreAdadpter(
     val context: Context
 ) : RecyclerView.Adapter<PagingVHolder>() {
     private var rootView: View? = null
-    private var disableLoadmore = false
+    var disableLoadmore = false
     private val callbacks = mutableListOf<() -> Unit>()
     private var loadmoreIng = false
 
