@@ -26,7 +26,6 @@ import com.kyle.colaman.FragmentAdapter
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
 import com.kyle.colaman.entity.*
-import com.kyle.colaman.entity.error.LoginKErrorType
 import com.kyle.colaman.fragment.ActionFragment
 import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
@@ -39,15 +38,15 @@ import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
+import com.kyle.colman.network.KErrorType
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     var currenAction: NaviAction? = null
@@ -66,8 +65,6 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
-
-
         navigation_view.setNavigationItemSelectedListener {
             drawer_layout.closeDrawer(GravityCompat.START)
             when (it.itemId) {
@@ -173,12 +170,12 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
             if (it.itemId == R.id.ui_mode) {
                 it.actionView.findViewById<Switch>(R.id.ui_switch).apply {
                     isChecked = (SPUtils.getInstance().getBoolean("night", false))
-                    text="夜间模式"
-                    setOnCheckedChangeListener{view,check->
+                    text = "夜间模式"
+                    setOnCheckedChangeListener { view, check ->
                         SPUtils.getInstance().put("night", check)
                         if (check) {
                             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-                        }else{
+                        } else {
                             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
                         }
                     }
@@ -322,7 +319,7 @@ object LoginFilter : IExceptionFilter {
     }
 
     override fun createKError(throwable: Throwable): KError {
-        return KError(throwable, KErrorTypeType = LoginKErrorType)
+        return KError(throwable, KErrorType = KErrorType.Login)
     }
 
     override fun onCatch() {

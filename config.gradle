@@ -12,7 +12,7 @@ ext {
 
     def version_okhttp = "3.9.0"
     def version_okhttp_log = "4.2.1"
-    def version_rxjava = "2.2.13"
+    def version_rxjava = "3.0.4"
     def version_rxandroid = "2.1.1"
     def version_glide = "4.8.0"
     def version_matisse = "0.5.2-beta3"
@@ -46,7 +46,7 @@ ext {
             "statusBar"                     : "com.gyf.immersionbar:immersionbar:2.3.3-beta09",
 
             // rxjava
-            "rxjava"                        : "io.reactivex.rxjava2:rxjava:$version_rxjava",
+            "rxjava"                        : "io.reactivex.rxjava3:rxjava:$version_rxjava",
             "rxAndroid"                     : "io.reactivex.rxjava2:rxandroid:$version_rxandroid",
 
             // glide图片加载

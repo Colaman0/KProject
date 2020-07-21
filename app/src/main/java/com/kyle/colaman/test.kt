@@ -1,10 +1,9 @@
 package com.kyle.colaman
 
-import com.kyle.colman.helper.BindableStatus
-import com.kyle.colman.helper.IBindStatus
-import com.kyle.colman.helper.fullSub
-import com.kyle.colman.network.ApiException
-import io.reactivex.subjects.PublishSubject
+import android.util.Log
+import io.reactivex.rxjava3.core.Flowable
+import java.lang.String
+import java.util.concurrent.TimeUnit
 
 /**
  * Author   : kyle
@@ -13,26 +12,10 @@ import io.reactivex.subjects.PublishSubject
  */
 
 fun main() {
-
-    val a = PublishSubject.create<Int>()
-
-    a
-        .doOnNext {
-            println("value = $it")
-
-        }
-        .doOnError { println(it) }
-        .fullSub(statusList = listOf(B()))
-
-    a.onNext(1)
-    a.onNext(2)
-    a.onNext(3)
-}
-
-class B : IBindStatus {
-    override fun onStatus(status: BindableStatus) {
-        println("status = $status")
-    }
-
+    Flowable.merge(
+        Flowable.intervalRange(0, 3, 1, 1, TimeUnit.SECONDS),
+        Flowable.intervalRange(3, 3, 1, 1, TimeUnit.SECONDS)
+    )
+        .subscribe({ ele -> println(ele.toString()) })
 }
 

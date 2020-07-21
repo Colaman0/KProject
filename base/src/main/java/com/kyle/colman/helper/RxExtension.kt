@@ -4,8 +4,10 @@ import androidx.lifecycle.*
 import com.kyle.colaman.base.viewmodel.BaseViewModel
 import com.kyle.colman.impl.IBindStatus
 import com.tencent.smtt.utils.s
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observable.fromAction
+import io.reactivex.rxjava3.functions.Action
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * Author   : kyle
@@ -19,6 +21,8 @@ fun <T> Observable<T>.bindViewModel(viewmodel: BaseViewModel): Observable<T> {
     viewmodel.addClearCallback {
         source.onNext(true)
     }
+
+
     return takeUntil(source)
 }
 
@@ -40,21 +44,23 @@ fun <T> Observable<T>.fullSub(
 ) =
     doFinally {
         statusList.forEach { it.onStatus(BindableStatus.BindableDone) }
-    }.subscribe(
-        {
-            // 收到数据
-            statusList.forEach { it.onStatus(BindableStatus.BindableSuccess) }
-        }, { throwable ->
-            // 处理错误
-            statusList.forEach { it.onStatus(BindableStatus.BindableError(throwable.toKError())) }
-        }, {
-            // 任务完成
-            statusList.forEach { it.onStatus(BindableStatus.BindableSuccessDone) }
-        }, {
+    }
+        .doOnSubscribe {
             // 开始
             statusList.forEach { it.onStatus(BindableStatus.BindableLoading) }
         }
-    )
+        .subscribe(
+            {
+                // 收到数据
+                statusList.forEach { it.onStatus(BindableStatus.BindableSuccess) }
+            }, { throwable ->
+                // 处理错误
+                statusList.forEach { it.onStatus(BindableStatus.BindableError(throwable.toKError())) }
+            }, {
+                // 任务完成
+                statusList.forEach { it.onStatus(BindableStatus.BindableSuccessDone) }
+            }
+        )
 
 
 sealed class BindableStatus {

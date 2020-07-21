@@ -12,5 +12,6 @@ sealed class KErrorType {
     object Unknown : KErrorType()
     object Cancel : KErrorType()
     object TimeOut : KErrorType()
+    object Login : KErrorType()
 }
 
