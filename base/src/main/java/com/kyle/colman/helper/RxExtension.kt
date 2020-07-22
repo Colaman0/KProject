@@ -2,10 +2,13 @@ package com.kyle.colman.helper
 
 import androidx.lifecycle.*
 import com.kyle.colaman.base.viewmodel.BaseViewModel
+import com.kyle.colman.CacheObservable
+import com.kyle.colman.CacheOpreat
 import com.kyle.colman.impl.IBindStatus
 import com.tencent.smtt.utils.s
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.fromAction
+import io.reactivex.rxjava3.core.ObservableOperator
 import io.reactivex.rxjava3.functions.Action
 import io.reactivex.rxjava3.subjects.PublishSubject
 
@@ -61,6 +64,8 @@ fun <T> Observable<T>.fullSub(
                 statusList.forEach { it.onStatus(BindableStatus.BindableSuccessDone) }
             }
         )
+
+fun <T> Observable<T>.cacheHistory() = lift<T>(CacheOpreat<T>() as ObservableOperator<out T, in T>)
 
 
 sealed class BindableStatus {

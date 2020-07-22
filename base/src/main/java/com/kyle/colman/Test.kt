@@ -1,8 +1,8 @@
 package com.kyle.colman
 
-import com.kyle.colman.coroutine.KLaunch
-import kotlinx.coroutines.*
-import java.lang.NullPointerException
+import com.kyle.colman.helper.cacheHistory
+import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.runBlocking
 
 /**
  * Author   : kyle
@@ -10,21 +10,18 @@ import java.lang.NullPointerException
  * Function : 测试
  */
 fun main() = runBlocking {
-    val scope = CoroutineScope(Dispatchers.Default)
-    val handler = CoroutineExceptionHandler { _, exception ->
-        println("CoroutineExceptionHandler got $exception")
+    val subject = PublishSubject.create<Int>()
+    val observable = subject.cacheHistory()
+
+    observable.subscribe {
+        println("1 =  $it")
     }
-    launch(handler) {
-        println("chong")
-        throw  NullPointerException()
-    }
-    KLaunch.get(scope)
-        .launch {
-            println("chong")
-            throw NullPointerException("----")
+
+    subject.onNext(1)
+    observable
+        .subscribe {
+            println("2 =  $it")
         }
-        .onStart { println("start") }
-        .onDone { println("done") }
-        .onError { println("error") }
-        .run()
+    subject.onNext(2)
+
 }
