@@ -28,8 +28,6 @@ class MainSource(val viewmodel: MainViewModel) : PagingSource<Int, ArticleEntity
         val pageSize = params.loadSize
         val coroutineScope = viewmodel.viewModelScope
         return try {
-            delay(2000)
-            LogUtils.d("load page $page")
             var data: IPageDTO<ArticleEntity>?
 
             if (page == 0) {

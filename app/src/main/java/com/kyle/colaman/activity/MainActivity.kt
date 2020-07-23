@@ -46,6 +46,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -65,6 +66,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
+
         navigation_view.setNavigationItemSelectedListener {
             drawer_layout.closeDrawer(GravityCompat.START)
             when (it.itemId) {
