@@ -12,7 +12,6 @@ import com.kyle.colman.recyclerview.PagingVHolder
 import com.kyle.colman.view.recyclerview.adapter.CommonAdapter
 import com.tencent.smtt.sdk.b.a.i
 import kotlinx.android.synthetic.main.activity_list.*
-import kotlinx.android.synthetic.main.activity_list.recyclerview
 import kotlinx.android.synthetic.main.activity_list2.*
 
 class ListActivity : AppCompatActivity() {

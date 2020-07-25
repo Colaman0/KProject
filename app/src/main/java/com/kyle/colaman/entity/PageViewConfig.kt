@@ -14,7 +14,7 @@ import java.io.Serializable
  * Function : 列表activity配置
  */
 
-data class ListActivityConfig<T : Any>(
+data class PageViewConfig<T : Any>(
     val title: String,
     val source: () -> PagingSource<*, *>,
     val uiTrans: (

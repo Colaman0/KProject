@@ -10,10 +10,10 @@ import com.kyle.colman.impl.*
  * Function : 分页adapter
  */
 
-class PageAdapter<T>(context: Context) : CommonAdapter(context = context) {
+open class PageAdapter<T>(context: Context) : CommonAdapter(context = context) {
     private lateinit var currentSource: IPageSource<*>
     private val loadResultCallback = mutableListOf<(RESULT) -> Unit>()
-
+    var isRefresh = true
     fun <T> bindPageSource(source: IPageSource<T>) {
         this.currentSource = source
         source.listen {
@@ -22,22 +22,22 @@ class PageAdapter<T>(context: Context) : CommonAdapter(context = context) {
                     updateUI(it, source)
                 }
                 is PageResult.ERROR -> {
-                    loadResultCallback.forEach { it.invoke(FAILED) }
+                    loadResultCallback.forEach { it.invoke(RESULT.FAILED) }
                 }
             }
         }
     }
 
     fun <T> updateUI(data: PageResult.SUCCESS<*>, source: IPageSource<T>) {
-        if (data.nextPage != null) {
-            if (data.data.isNotNullOrEmpty()) {
-                getEditableItems().addAll(data.data.map { source.resultToPageItem(it as T) })
-                diffNotify()
-            }
-        } else {
-            disableLoadmore(false)
+        if (isRefresh) {
+            getEditableItems().clear()
         }
-        loadResultCallback.forEach { it.invoke(COMPLETED) }
+        if (data.data.isNotNullOrEmpty()) {
+            getEditableItems().addAll(data.data.map { source.resultToPageItem(it as T) })
+            diffNotify()
+        }
+        disableLoadmore(data.nextPage != null)
+        loadResultCallback.forEach { it.invoke(RESULT.COMPLETED) }
     }
 
     override fun onLoadmore() {
@@ -46,10 +46,14 @@ class PageAdapter<T>(context: Context) : CommonAdapter(context = context) {
     }
 
     fun refresh() {
+        isRefresh = true
         currentSource.refresh()
     }
 
     fun addLoadResultCallback(callback: (RESULT) -> Unit) {
         loadResultCallback.add(callback)
+    }
+
+    fun retry() {
     }
 }

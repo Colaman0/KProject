@@ -13,20 +13,9 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface" />
 
-    <com.kyle.colman.view.StatusLayout
-        android:id="@+id/status_layout"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/recyclerview_framgent"
+        android:name="com.kyle.colman.recyclerview.RecyclerViewFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refreshlayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </com.kyle.colman.view.StatusLayout>
+        android:layout_height="match_parent"/>
 </LinearLayout>

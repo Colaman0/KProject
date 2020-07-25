@@ -7,6 +7,7 @@ package com.kyle.colaman.entity
  */
 
 object Constants {
+    val TITLE = "title"
     val data = "data"
     val id = "id"
 }

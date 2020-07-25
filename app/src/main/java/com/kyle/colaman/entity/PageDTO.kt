@@ -47,7 +47,11 @@ data class PageDTO<T>(
         return 0
     }
 
-    override fun nextApiPage(): Int {
-        return curPage
+    override fun nextApiPage(): Int? {
+        return if (isLastPage()) {
+            null
+        } else {
+            curPage
+        }
     }
 }

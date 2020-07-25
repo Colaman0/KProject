@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
@@ -41,12 +42,10 @@ import com.kyle.colman.network.KError
 import com.kyle.colman.network.KErrorType
 import com.kyle.colman.view.KActivity
 import com.kyle.colman.view.buildIntent
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -113,7 +112,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         initUser()
         initUIMode()
         viewpagerAdapter.addFragment(
-            ActionFragment.newInstance(ActionMain, MainSource(viewModel))
+            ActionFragment.newInstance(ActionMain, MainSource())
         )
         viewpagerAdapter.addFragment(
             ActionFragment.newInstance(
@@ -269,19 +268,7 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     fun gotoCollect() {
-        val intent = buildIntent(this, ListActivity::class.java)
-        intent.putExtra(Constants.data, ListActivityConfig<CollectEntity>(
-            title = "收藏", source = { CollectSource() }
-        ) { data, adapter, activity ->
-            val item = ItemCollectViewmodel(
-                data, activity
-            ).apply {
-                unCollectCallback = {
-                    activity.remove(mutableListOf(it))
-                }
-            }
-            item
-        })
+        val intent = buildIntent(this, CollectActivity::class.java)
         startActivity(intent)
     }
 

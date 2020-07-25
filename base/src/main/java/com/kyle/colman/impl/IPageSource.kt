@@ -4,6 +4,8 @@ import androidx.databinding.ViewDataBinding
 import com.kyle.colman.coroutine.KLaunch
 import com.kyle.colman.recyclerview.PagingItemView
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Author   : kyle
@@ -44,7 +46,9 @@ abstract class IPageSource<T>(
                 .launch {
                     val result = onResult(pageSize, page)
                     nextPage = result.nextPage
-                    dataCallback.invoke(result)
+                    withContext(Dispatchers.Main) {
+                        dataCallback.invoke(result)
+                    }
                 }
                 .onError {
                     dataCallback.invoke(PageResult.ERROR(it))

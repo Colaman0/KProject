@@ -20,25 +20,23 @@ import java.io.Serializable
  * Function : datacreator
  */
 
-class MainSource(val viewmodel: MainViewModel) : PagingSource<Int, ArticleEntity>(), Serializable {
+class MainSource() : PagingSource<Int, ArticleEntity>(), Serializable {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleEntity> {
         // 如果key是null，那就加载第0页的数据
         val page = params.key ?: 0
         // 每一页的数据长度
         val pageSize = params.loadSize
-        val coroutineScope = viewmodel.viewModelScope
         return try {
             var data: IPageDTO<ArticleEntity>?
 
             if (page == 0) {
-                val topArticles = coroutineScope.async {
+                val topArticles =
                     Api.getHomeTopArticles().apply {
                         forEach { it.topArticle = true }
                     }
-                }
-                val articles = coroutineScope.async { Api.getHomeArticles(page) }
-                val totals = articles.await()
-                totals.datas.addAll(0, topArticles.await())
+                val articles = Api.getHomeArticles(page)
+                val totals = articles
+                totals.datas.addAll(0, topArticles)
                 data = totals
             } else {
                 data = Api.getHomeArticles(page)
