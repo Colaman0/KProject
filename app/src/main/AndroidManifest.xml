@@ -20,30 +20,31 @@
 
     <application
         android:name=".AppContext"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".paging.PageActivity">
-            <intent-filter>
-                <data
-                    android:host="colaman"
-                    android:scheme="kyle" />
+        <activity android:name=".ListActivity">
 
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        <activity android:name=".activity.ListActivity" />
+        <activity android:name=".activity.PocketActivity" />
+        <activity android:name=".activity.CollectActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.WebActivity" />
         <activity
             android:name=".activity.MainActivity"
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginRegisterActivity"

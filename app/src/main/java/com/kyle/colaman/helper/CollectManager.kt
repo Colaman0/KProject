@@ -18,19 +18,18 @@ object CollectManager {
         return articleCollectMap[id]
     }
 
-    fun putNewArticle(entity: ArticleEntity) {
-        entity.id.let { id ->
-            val livedata = articleCollectMap[id]
-            if (livedata != null) {
-                if (livedata.value != entity.collect) {
-                    livedata.value = entity.collect
-                }
-            } else {
-                articleCollectMap.put(id, EmptyCallLiveData(entity.collect ?: false) {
-                    articleCollectMap.remove(id)
-                })
+    fun putNewArticle(id: Int, collect: Boolean) {
+        val livedata = articleCollectMap[id]
+        if (livedata != null) {
+            if (livedata.value != collect) {
+                livedata.postValue(collect)
             }
+        } else {
+            articleCollectMap.put(id, EmptyCallLiveData(collect) {
+                articleCollectMap.remove(id)
+            })
         }
+
     }
 
     suspend fun collect(id: Int) {

@@ -1,48 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.kyle.colaman.activity.SearchActivity">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.kyle.colaman.activity.SearchActivity" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:elevation="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="com.kyle.colaman.activity.SearchActivity">
 
-        <ImageView
-            android:id="@+id/ic_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:src="@mipmap/ic_search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/ic_search"
-            app:layout_constraintRight_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurface"
+            android:elevation="5dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <View
+            <ImageView
+                android:id="@+id/ic_back"
+                style="@style/RoundRipple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="@{()->activity.finish()}"
+                android:padding="8dp"
+                android:src="?attr/homeAsUpIndicator"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@={activity.queryText}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ic_back"
+                app:layout_constraintRight_toLeftOf="@id/ic_clear"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_marginBottom="4dp"
+                android:background="@color/color_d4d4d4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ic_back"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <ImageView
+                android:id="@+id/ic_clear"
+                style="@style/RoundRipple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->activity.clearQuery()}"
+                android:padding="8dp"
+                android:src="@drawable/ic_clear"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.kyle.colman.view.StatusLayout
+            android:id="@+id/status_layout"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginBottom="4dp"
-            android:background="@color/color_d4d4d4"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layout_bar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.kyle.colman.view.StatusLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

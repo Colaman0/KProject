@@ -2,46 +2,39 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <group
-        android:id="@+id/group"
-        android:checkableBehavior="single">
+    <group android:id="@+id/group">
 
         <item
             android:id="@+id/collect"
-            android:checked="true"
-            android:enabled="true"
             android:icon="@drawable/ic_uncollect"
             android:title="收藏"
             app:showAsAction="always" />
         <item
             android:id="@+id/pocket"
-            android:icon="@mipmap/ic_guangchang"
-            android:title="稍后阅读"
+            android:icon="@mipmap/ic_pocket"
+            android:title="稍后再读"
             app:showAsAction="always" />
 
-        <item
-            android:id="@+id/xiangmu"
-            android:icon="@mipmap/ic_xiangmu"
-            android:title="项目"
-            app:showAsAction="always" />
-        <item
-            android:id="@+id/wenda"
-            android:icon="@mipmap/ic_wenda"
-            android:title="问答"
-            app:showAsAction="always" />
 
         <item
-            android:id="@+id/tixi"
-            android:icon="@mipmap/ic_tixi"
-            android:title="体系"
+            android:id="@+id/login_action"
+            android:icon="@mipmap/ic_login_action"
+            android:title="登录"
             app:showAsAction="always" />
 
-        <!--        <item-->
-        <!--            android:id="@+id/gongzhonghao"-->
-        <!--            android:icon="@mipmap/ic_gongzhonghao"-->
-        <!--            android:title="公众号"-->
-        <!--            app:showAsAction="always" />-->
+
+
     </group>
 
+    <group
+        android:id="@+id/ui">
+
+        <item
+            android:id="@+id/ui_mode"
+            app:actionLayout="@layout/item_ui_mode"
+            android:title="@null"
+            android:icon="@null"
+            app:showAsAction="always" />
+    </group>
 
 </menu>

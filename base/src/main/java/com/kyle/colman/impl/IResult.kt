@@ -7,11 +7,13 @@ package com.kyle.colman.impl
  *     desc   : 表示结果的接口
  * </pre>
  */
-sealed class RESULT
-object SUCCESS : RESULT()
-object FAILED : RESULT()
-object LOGINDG : RESULT()
-object COMPLETED : RESULT()
+sealed class RESULT{
+    object SUCCESS : RESULT()
+    object FAILED : RESULT()
+    object LOGINDG : RESULT()
+    object COMPLETED : RESULT()
+}
+
 
 interface IResult {
     val state: RESULT

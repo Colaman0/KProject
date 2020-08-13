@@ -2,6 +2,7 @@ package com.kyle.colman.network
 
 import com.google.gson.JsonIOException
 import com.google.gson.JsonParseException
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.serialization.json.JsonUnknownKeyException
 import org.json.JSONException
 import retrofit2.HttpException
@@ -9,6 +10,7 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.CancellationException
+import java.util.concurrent.TimeoutException
 
 /**
  * Author   : kyle
@@ -36,13 +38,13 @@ class DataNullException() : Throwable(message = "网络请求返回数据为空"
  *
  * @property kThrowable
  * @property kMessage
- * @property errorType
+ * @property KErrorTypeType
  * @property kTips
  */
 data class KError(
     val kThrowable: Throwable,
     val kMessage: String = kThrowable.message.toString(),
-    val errorType: ERROR = UnknownError,
+    val KErrorType: KErrorType,
     val kTips: String = ""
 ) : Throwable(kMessage, kThrowable)
 
@@ -71,7 +73,7 @@ class JsonFilter : IExceptionFilter {
     }
 
     override fun createKError(throwable: Throwable): KError {
-        return KError(throwable, kTips = "Json解析错误", errorType = JsonError)
+        return KError(throwable, kTips = "Json解析错误", KErrorType = KErrorType.Json)
     }
 
     override fun onCatch() {
@@ -92,7 +94,7 @@ class NetworkFilter : IExceptionFilter {
     }
 
     override fun createKError(throwable: Throwable): KError {
-        return KError(throwable, kTips = "网络异常", errorType = NetWorkError)
+        return KError(throwable, kTips = "网络异常", KErrorType = KErrorType.NetWork)
     }
 
     override fun onCatch() {
@@ -110,10 +112,25 @@ class CancelFilter : IExceptionFilter {
     }
 
     override fun createKError(throwable: Throwable): KError {
-        return KError(throwable, kTips = "任务取消", errorType = Cancel)
+        return KError(throwable, kTips = "任务取消", KErrorType = KErrorType.Cancel)
     }
 
     override fun onCatch() {
     }
 }
+
+class TimeOutFilter : IExceptionFilter {
+    override fun isCreate(throwable: Throwable): Boolean {
+        return throwable is TimeoutException ||
+                throwable is TimeoutCancellationException
+    }
+
+    override fun createKError(throwable: Throwable): KError {
+        return KError(throwable, kTips = "超时异常", KErrorType = KErrorType.TimeOut)
+    }
+
+    override fun onCatch() {
+    }
+}
+
 

@@ -27,16 +27,6 @@ object Api : BaseApi<IApi>() {
     suspend fun register(account: String, password: String, rePassword: String) =
         getApi().register(account, password, rePassword).toData()
 
-    suspend fun logout(): Boolean {
-        return try {
-            getApi().logout()
-            UserUtil.clearCache()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
     suspend fun getHomeArticles(page: Int): PageDTO<ArticleEntity> {
         return getApi().getHomeArticles(page = page).toData()!!
     }
@@ -60,7 +50,7 @@ object Api : BaseApi<IApi>() {
 
     suspend fun getTixi() = flow { emit(getApi().getTixi().toData()!!) }.io()
 
-    suspend fun getTixiArticle(page: Int, id: String) =
+    suspend fun getTixiArticle(page: Int, id: Int) =
         getApi().getTixiArticles(page, id).toData()
 
     suspend fun collectArticle(id: Int) =
@@ -68,4 +58,8 @@ object Api : BaseApi<IApi>() {
 
     suspend fun unCollectArticle(id: Int) =
         getApi().unCollectArticle(id.toString()).toData()
+
+    suspend fun search(query: String, page: Int) = getApi().search(page, query)
+
+    suspend fun getCollectArticle(page: Int) = getApi().getCollectArticle(page)
 }

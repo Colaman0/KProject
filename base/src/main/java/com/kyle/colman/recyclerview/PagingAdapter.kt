@@ -2,17 +2,12 @@ package com.kyle.colman.recyclerview
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableBoolean
-import androidx.paging.LoadState
-import androidx.paging.LoadStateAdapter
+import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.kyle.colman.R
-import com.kyle.colman.databinding.ItemLoadmoreBinding
+import com.blankj.utilcode.util.LogUtils
 
 /**
  * Author   : kyle
@@ -20,20 +15,20 @@ import com.kyle.colman.databinding.ItemLoadmoreBinding
  * Function : pagingadapter
  */
 class PagingAdapter(context: Context) :
-    PagingDataAdapter<PagingItemView<Any,*>, RecyclerView.ViewHolder>(
-        object : DiffUtil.ItemCallback<PagingItemView<Any,*>>() {
+    PagingDataAdapter<PagingItemView<Any, *>, RecyclerView.ViewHolder>(
+        object : DiffUtil.ItemCallback<PagingItemView<Any, *>>() {
             override fun areItemsTheSame(
-                oldItem: PagingItemView<Any,*>,
-                newItem: PagingItemView<Any,*>
+                oldItem: PagingItemView<Any, *>,
+                newItem: PagingItemView<Any, *>
             ): Boolean {
-                return oldItem.areItemsTheSame(newItem)
+                return oldItem.isItemSame(newItem)
             }
 
             override fun areContentsTheSame(
-                oldItem: PagingItemView<Any,*>,
-                newItem: PagingItemView<Any,*>
+                oldItem: PagingItemView<Any, *>,
+                newItem: PagingItemView<Any, *>
             ): Boolean {
-                return oldItem.areContentsTheSame(newItem)
+                return oldItem.isUISame(newItem)
             }
         }
     ) {
@@ -44,8 +39,12 @@ class PagingAdapter(context: Context) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
-            getItem(position)?.onBindView(holder = holder as PagingVHolder, position = position)
+            getItem(position)?.bindView(holder = holder as PagingVHolder, position = position)
         }
+    }
+
+    suspend fun submitItem(pagingData: PagingData<in PagingItemView<Any, *>>) {
+        super.submitData(pagingData as PagingData<PagingItemView<Any, *>>)
     }
 
     override fun getItemViewType(position: Int): Int {

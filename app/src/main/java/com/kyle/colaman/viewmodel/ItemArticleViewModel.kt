@@ -4,8 +4,8 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.Html
-import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils
@@ -15,9 +15,9 @@ import com.kyle.colaman.entity.ArticleEntity
 import com.kyle.colaman.gotoWeb
 import com.kyle.colaman.helper.CollectManager
 import com.kyle.colman.helper.kHandler
+import com.kyle.colman.recyclerview.PagingItemView
+import com.kyle.colman.recyclerview.PagingVHolder
 import com.kyle.colman.view.CommonDialog
-import com.kyle.colman.view.recyclerview.RecyclerItemView
-import com.kyle.colman.view.recyclerview.adapter.BaseViewHolder
 import com.like.LikeButton
 import com.like.OnLikeListener
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +35,12 @@ import kotlinx.coroutines.launch
  * Date     : 2020/5/7
  * Function : 文章item
  */
-class ItemArticleViewModel(val entity: ArticleEntity) :
-    RecyclerItemView<ItemArticleBinding, ItemArticleViewModel>(R.layout.item_article) {
-    val loadingDialog by lazy {
-        CommonDialog(context!!)
-    }
+class ItemArticleViewModel(
+    val entity: ArticleEntity,
+    val lifecycleOwner: LifecycleOwner
+) :
+    PagingItemView<ItemArticleViewModel, ItemArticleBinding>(R.layout.item_article) {
+
     val authorText by lazy {
         var text = ""
         if (entity.author.isNotEmpty()) {
@@ -54,18 +55,23 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
         binding?.starButton?.isLiked = it
     }
 
+    val loadingDialog by lazy {
+        CommonDialog(context!!)
+    }
+
     init {
-        entity.let { CollectManager.putNewArticle(it) }
+        entity.let { CollectManager.putNewArticle(it.id, it.collect) }
     }
 
     @FlowPreview
     @ExperimentalCoroutinesApi
-    override fun onBindView(holder: BaseViewHolder<ItemArticleBinding>) {
-        lifecycleOwner?.let {
+    override fun onBindView(holder: PagingVHolder, position: Int) {
+        lifecycleOwner.let {
             CollectManager.getCollectLiveDataById(entity.id)
                 ?.observe(it, collectStatusObserver)
         }
         binding?.let { binding ->
+            binding.viewmodel = this
             binding.tabLayout.removeAllViews()
             entity.title.apply {
                 binding.tvTitle.text = Html.fromHtml(this, Html.ImageGetter {
@@ -97,7 +103,7 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
                 awaitClose()
             }.debounce(1000).onEach {
                 actionLike(it)
-            }.launchIn(lifecycleOwner!!.lifecycleScope)
+            }.launchIn(lifecycleOwner.lifecycleScope)
         }
     }
 
@@ -125,11 +131,13 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
         if (like == entity.collect) {
             return
         }
+        loadingDialog.show()
         binding?.starButton?.isEnabled = false
-        lifecycleOwner!!.lifecycleScope.launch(Dispatchers.IO + kHandler {
+        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO + kHandler {
             // 请求失败之后重置回原本的收藏状态
             binding?.starButton?.isLiked = entity.collect
             binding?.starButton?.isEnabled = true
+            loadingDialog.dismiss()
         }) {
             if (like) {
                 entity.id.let { CollectManager.collect(it) }
@@ -140,12 +148,19 @@ class ItemArticleViewModel(val entity: ArticleEntity) :
             entity.collect = like
             binding?.starButton?.isLiked = like
             binding?.starButton?.isEnabled = true
+            loadingDialog.dismiss()
         }
     }
 
-    override fun onItemClick(position: Int, itemView: View?) {
-        super.onItemClick(position, itemView)
-        gotoWeb(context as Activity, entity.link, entity.title, entity.id)
+    override fun onItemClick(position: Int) {
+        super.onItemClick(position)
+        gotoWeb(
+            context as Activity,
+            entity.link,
+            entity.title,
+            entity.id,
+            entity.desc
+        )
     }
 
     override fun isUISame(data: ItemArticleViewModel): Boolean {

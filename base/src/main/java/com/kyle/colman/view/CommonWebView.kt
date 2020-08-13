@@ -52,12 +52,8 @@ class CommonWebView : FrameLayout {
             LogUtils.d("load url = $url")
         }
 
-        tecent_webview.getViewTreeObserver().addOnScrollChangedListener(OnScrollChangedListener {
-            if (tecent_webview.webScrollY == 0) {
-                refresh_layout.setEnabled(true)
-            } else {
-                refresh_layout.setEnabled(false)
-            }
+        tecent_webview.viewTreeObserver.addOnScrollChangedListener(OnScrollChangedListener {
+            refresh_layout.isEnabled = tecent_webview.webScrollY == 0
         })
     }
 
@@ -106,18 +102,18 @@ class CommonWebView : FrameLayout {
     @SuppressLint("SetJavaScriptEnabled")
     private fun initDefaultConfig() {
         tecent_webview.settings?.run {
-            javaScriptEnabled = true;                    //支持Javascript 与js交互
-            javaScriptCanOpenWindowsAutomatically = true;//支持通过JS打开新窗口
-            allowFileAccess = true;                      //设置可以访问文件
-            this.setSupportZoom(true);                          //支持缩放
-            builtInZoomControls = true;                  //设置内置的缩放控件
-            useWideViewPort = true;                      //自适应屏幕
-            setSupportMultipleWindows(true);               //多窗口
-            defaultTextEncodingName = "utf-8";            //设置编码格式
-            setAppCacheEnabled(true);
-            domStorageEnabled = true;
-            this.setAppCacheMaxSize(Long.MAX_VALUE);
-            cacheMode = WebSettings.LOAD_NO_CACHE;       //缓存模式
+            javaScriptEnabled = true                    //支持Javascript 与js交互
+            javaScriptCanOpenWindowsAutomatically = true//支持通过JS打开新窗口
+            allowFileAccess = true                      //设置可以访问文件
+            this.setSupportZoom(true)                          //支持缩放
+            builtInZoomControls = true                  //设置内置的缩放控件
+            useWideViewPort = true                      //自适应屏幕
+            setSupportMultipleWindows(true)               //多窗口
+            defaultTextEncodingName = "utf-8"            //设置编码格式
+            setAppCacheEnabled(true)
+            domStorageEnabled = true
+            this.setAppCacheMaxSize(Long.MAX_VALUE)
+            cacheMode = WebSettings.LOAD_NO_CACHE       //缓存模式
         }
         tecent_webview.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(
@@ -132,7 +128,7 @@ class CommonWebView : FrameLayout {
             override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
                 return try {
                     if (url.startsWith("http:") || url.startsWith("https:")) {
-                     false
+                        false
                     } else {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                         startActivity(context, intent, null)

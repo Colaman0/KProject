@@ -4,9 +4,17 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.TextView
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.get
 import com.kyle.colaman.activity.WebActivity
+import com.kyle.colaman.helper.PocketRoom
 import com.kyle.colman.config.Constants
+import com.kyle.colman.view.KApplication
+import com.kyle.colman.databinding.LayoutPagingErrorBinding
+import com.kyle.colman.view.StatusLayout
 import com.kyle.colman.view.buildIntent
 
 /**
@@ -15,11 +23,12 @@ import com.kyle.colman.view.buildIntent
  * Function : 拓展
  */
 
-fun gotoWeb(activity: Activity, url: String, title: String, id: Int) {
+fun gotoWeb(activity: Activity, url: String, title: String, id: Int,desc:String) {
     val intent = buildIntent(activity, WebActivity::class.java)
     intent.putExtra(Constants.DATA, url)
     intent.putExtra(Constants.TITLE, title)
     intent.putExtra(Constants.ID, id)
+    intent.putExtra(Constants.DESC, desc)
     activity.startActivity(intent)
 }
 
@@ -41,3 +50,16 @@ fun copyToBorad(context: Context, text: String) {
 
     }
 }
+
+fun getPagingErrorBinding(context: Context) =
+    LayoutPagingErrorBinding.inflate(LayoutInflater.from(context))
+
+fun StatusLayout.setErrorMsg(text: String) {
+    val view = get(getViewIndexByStatus(StatusLayout.STATUS_ERROR))
+    val textView = view.findViewById<TextView>(R.id.tv_message)
+    if (textView != null) {
+        textView.text = text
+    }
+}
+
+fun getPocketRoom() = PocketRoom.getDatabase(KApplication.getAppContext()!!).pocketDao()

@@ -2,38 +2,51 @@ package com.kyle.colaman.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.view.GravityCompat
-import androidx.paging.Pager
+import androidx.core.view.forEach
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.kyle.colaman.ActionFragment
 import com.kyle.colaman.FragmentAdapter
-import com.kyle.colaman.IActionFragment
 import com.kyle.colaman.R
 import com.kyle.colaman.databinding.ActivityMainBinding
-
 import com.kyle.colaman.entity.*
-import com.kyle.colaman.entity.error.LoginError
+import com.kyle.colaman.fragment.ActionFragment
+import com.kyle.colaman.fragment.IActionFragment
 import com.kyle.colaman.fragment.TixiFragment
 import com.kyle.colaman.helper.*
+import com.kyle.colaman.source.CollectSource
+import com.kyle.colaman.viewmodel.AppViewmodel
+import com.kyle.colaman.viewmodel.ItemCollectViewmodel
 import com.kyle.colaman.viewmodel.MainViewModel
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.network.ApiException
 import com.kyle.colman.network.IExceptionFilter
 import com.kyle.colman.network.KError
+import com.kyle.colman.network.KErrorType
 import com.kyle.colman.view.KActivity
+import com.kyle.colman.view.buildIntent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-
 
 class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     var currenAction: NaviAction? = null
@@ -52,24 +65,54 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initView() {
-        initToolbar()
-        initViewPager()
-        binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
-            var action: NaviAction? = null
-            when (item.itemId) {
-                // TODO: 2020/6/13 导航栏功能
+
+        navigation_view.setNavigationItemSelectedListener {
+            drawer_layout.closeDrawer(GravityCompat.START)
+            when (it.itemId) {
+                R.id.collect -> gotoCollect()
+                R.id.pocket -> gotoPocket()
+                R.id.login_action -> {
+                    if (UserUtil.isLogin()) {
+                        gotoLogout()
+                    } else {
+                        gotoLogin()
+                    }
+                }
             }
-            binding?.drawerLayout?.closeDrawer(GravityCompat.START)
             true
         }
-        UserUtil.isLogin()
-        switchContent(ActionMain)
+    }
+
+    init {
+        lifecycleScope.launchWhenStarted {
+            initToolbar()
+            initViewPager()
+            binding?.bottomBar?.setOnNavigationItemSelectedListener { item ->
+                var action: NaviAction? = null
+                when (item.itemId) {
+                    R.id.guangchang -> action = ActionGuangchang
+                    R.id.tixi -> action = ActionTixi
+                    R.id.wenda -> action = ActionWenda
+                    R.id.xiangmu -> action = ActionXiangmu
+                    R.id.shouye -> action = ActionMain
+                }
+                binding!!.drawerLayout.closeDrawer(GravityCompat.START)
+                action?.run {
+                    switchContent(this)
+                }
+                true
+            }
+            switchContent(ActionMain)
+        }
+
     }
 
 
     fun initViewPager() {
+        initUser()
+        initUIMode()
         viewpagerAdapter.addFragment(
-            ActionFragment.newInstance(ActionMain, MainDataCreator())
+            ActionFragment.newInstance(ActionMain, MainSource())
         )
         viewpagerAdapter.addFragment(
             ActionFragment.newInstance(
@@ -107,11 +150,42 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun initUser() {
         setAccountUIShow(UserUtil.isLogin())
-        if (UserUtil.isLogin()) {
-            navigation_view.getHeaderView(0).findViewById<TextView>(R.id.user_name).text =
-                UserUtil.getUserInfo()!!.nickname
+        navigation_view.menu.forEach {
+            if (it.itemId == R.id.login_action) {
+                if (UserUtil.isLogin()) {
+                    navigation_view.getHeaderView(0).visibility = View.VISIBLE
+                    it.title = "注销"
+                    navigation_view.getHeaderView(0).findViewById<TextView>(R.id.user_name).text =
+                        UserUtil.getUserInfo()!!.nickname
+                } else {
+                    navigation_view.getHeaderView(0).visibility = View.GONE
+                    it.title = "登录"
+                }
+            }
         }
     }
+
+
+    fun initUIMode() {
+        navigation_view.menu.forEach {
+            if (it.itemId == R.id.ui_mode) {
+                it.actionView.findViewById<Switch>(R.id.ui_switch).apply {
+                    isChecked = (SPUtils.getInstance().getBoolean("night", false))
+                    text = "夜间模式"
+                    setOnCheckedChangeListener { view, check ->
+                        SPUtils.getInstance().put("night", check)
+                        if (check) {
+                            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
     /**
      * 切换内容，重新请求
      */
@@ -169,6 +243,63 @@ class MainActivity : KActivity<ActivityMainBinding>(R.layout.activity_main) {
         navigation_view.menu.setGroupVisible(R.id.group_account, false)
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.search -> gotoSearch()
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * 跳转到搜索页面
+     *
+     */
+    fun gotoSearch() {
+        startActivity(buildIntent(this, SearchActivity::class.java))
+    }
+
+    fun gotoCollect() {
+        val intent = buildIntent(this, CollectActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun gotoPocket() {
+        startActivity(buildIntent(this, PocketActivity::class.java))
+    }
+
+    fun gotoLogin() {
+        startActivity(buildIntent(this, LoginRegisterActivity::class.java))
+    }
+
+    fun gotoLogout() {
+        MaterialDialog(this).show {
+            cancelable(false)
+            title(text = "退出登录")
+            message(text = "退出后本地信息将被清除")
+            negativeButton(text = "取消") {
+                dismiss()
+            }
+            positiveButton(text = "确认") {
+                AppViewmodel.viewModelScope.launch {
+                    UserUtil.clearCache(context)
+                }
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        LogUtils.d("onnewIntent")
+    }
 }
 
 object LoginFilter : IExceptionFilter {
@@ -177,7 +308,7 @@ object LoginFilter : IExceptionFilter {
     }
 
     override fun createKError(throwable: Throwable): KError {
-        return KError(throwable, errorType = LoginError)
+        return KError(throwable, KErrorType = KErrorType.Login)
     }
 
     override fun onCatch() {

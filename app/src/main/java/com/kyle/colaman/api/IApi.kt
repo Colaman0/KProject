@@ -1,9 +1,6 @@
 package com.kyle.colaman.api
 
-import com.kyle.colaman.entity.ArticleEntity
-import com.kyle.colaman.entity.TixiEntity
-import com.kyle.colaman.entity.UserInfoEntity
-import com.kyle.colaman.entity.PageDTO
+import com.kyle.colaman.entity.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -62,7 +59,7 @@ interface IApi {
     @GET("article/list/{page}/json")
     suspend fun getTixiArticles(
         @Path("page") page: Int,
-        @Query("cid") id: String
+        @Query("cid") id: Int
     ): BaseRes<PageDTO<ArticleEntity>>
 
     @POST("lg/collect/{id}/json")
@@ -72,4 +69,12 @@ interface IApi {
     @POST("lg/uncollect_originId/{id}/json")
     suspend fun unCollectArticle(@Path("id") id: String): BaseRes<Nothing>
 
+    @POST("article/query/{page}/json")
+    suspend fun search(
+        @Path("page") page: Int,
+        @Query("k") query: String
+    ): BaseRes<PageDTO<ArticleEntity>>
+
+    @GET("lg/collect/list/{page}/json")
+    suspend fun getCollectArticle(@Path("page") page: Int): BaseRes<PageDTO<CollectEntity>>
 }

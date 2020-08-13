@@ -3,8 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.kyle.colman.view.RefreshRecyclerview
-        android:id="@+id/refresh_recyclerview"
+    <com.kyle.colman.view.StatusLayout
+        android:id="@+id/status_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/paging_recyclerview"
+            layout="@layout/layout_paging_recyclerview" />
+    </com.kyle.colman.view.StatusLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

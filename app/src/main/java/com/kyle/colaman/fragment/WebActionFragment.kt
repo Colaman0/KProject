@@ -1,5 +1,6 @@
 package com.kyle.colaman.fragment
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,19 +8,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kyle.colaman.R
 import com.kyle.colaman.copyToBorad
 import com.kyle.colaman.databinding.LayoutWebBottomActionBinding
+import com.kyle.colaman.entity.ArticleRoomEntity
+import com.kyle.colaman.getPocketRoom
 import com.kyle.colaman.helper.CollectManager
+import com.kyle.colaman.viewmodel.AppViewmodel
 import com.kyle.colman.config.Constants
 import com.kyle.colman.helper.FilterTime
 import com.kyle.colman.helper.kHandler
 import com.kyle.colman.view.CommonDialog
+import com.kyle.colman.view.KApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Author   : kyle
@@ -29,6 +37,13 @@ import kotlinx.coroutines.launch
 class WebActionFragment : BottomSheetDialogFragment() {
     private var articleId = 0
     private var url = ""
+    private var title = ""
+    private var desc = ""
+
+    val appViewmodel by lazy {
+        AppViewmodel
+    }
+
     private val loadingDialog by lazy {
         CommonDialog(context!!)
     }
@@ -57,14 +72,18 @@ class WebActionFragment : BottomSheetDialogFragment() {
         if (arguments != null) {
             articleId = arguments!!.getInt(Constants.DATA)
             url = arguments!!.getString(Constants.URL).toString()
+            title = arguments!!.getString(Constants.TITLE).toString()
+            desc = arguments!!.getString(Constants.DESC).toString()
         }
     }
 
     companion object {
-        fun newInstance(id: Int, url: String): WebActionFragment {
+        fun newInstance(id: Int, url: String, title: String, desc: String): WebActionFragment {
             val args = Bundle()
             args.putInt(Constants.DATA, id)
             args.putString(Constants.URL, url)
+            args.putString(Constants.TITLE, title)
+            args.putString(Constants.DESC, desc)
             val fragment = WebActionFragment()
             fragment.arguments = args
             return fragment
@@ -102,7 +121,29 @@ class WebActionFragment : BottomSheetDialogFragment() {
         ToastUtils.showShort("链接已复制")
     }
 
-    fun inPocket() {}
+    fun inPocket() {
+        loadingDialog.show()
+        appViewmodel.viewModelScope.launch(Dispatchers.IO + kHandler {
+            LogUtils.d(it)
+            loadingDialog.dismiss()
+            dismiss()
+        }) {
+            getPocketRoom().insertPocketArticle(
+                ArticleRoomEntity(
+                    articleId = articleId,
+                    title = title,
+                    desc = desc,
+                    addTime = System.currentTimeMillis(),
+                    link = url
+                )
+            )
+            ToastUtils.showShort("加入成功")
+            withContext(Dispatchers.Main) {
+                dismiss()
+                loadingDialog.dismiss()
+            }
+        }
+    }
 
     fun openBrowser() {
         val uri = Uri.parse(url)

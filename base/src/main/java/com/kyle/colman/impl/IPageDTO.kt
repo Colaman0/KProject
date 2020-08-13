@@ -10,7 +10,7 @@ package com.kyle.colman.impl
 open interface IPageDTO<T> {
     fun currentPage(): Int
 
-    fun nextApiPage(): Int
+    fun nextApiPage(): Int?
 
     fun pageData(): List<T>
 
